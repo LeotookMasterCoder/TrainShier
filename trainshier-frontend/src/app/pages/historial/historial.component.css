@@ -1,0 +1,21 @@
+table {
+  width:100%;
+  border-collapse:collapse
+}
+
+th,td{
+  border:1px solid #ccc;
+  padding:10px;
+  text-align:center
+}
+
+.Fallida{
+  background:red;
+  color:white;
+  padding:5px
+}
+.Completada{
+  background:green;
+  color:white;
+  padding:5px
+}

@@ -1,0 +1,31 @@
+<h1>GENERACIÓN DE REPORTES</h1>
+
+<div class="filtros">
+  <input placeholder="Aprendiz">
+  <button>Generar reporte</button>
+</div>
+
+<table>
+  <tr>
+    <th>Fecha</th>
+    <th>Producto</th>
+    <th>Total</th>
+    <th>Estado</th>
+  </tr>
+
+  <tr *ngFor="let d of datos">
+    <td>{{d.fecha}}</td>
+    <td>{{d.producto}}</td>
+    <td>{{d.total}}</td>
+    <td><span [ngClass]="d.estado">{{d.estado}}</span></td>
+  </tr>
+</table>
+
+<div class="cards">
+  <div class="card azul">{{datos.length}}</div>
+  <div class="card rojo">{{getCanceladas()}}</div>
+  <div class="card verde">{{getEfectividad()}}%</div>
+</div>
+
+<button>PDF</button>
+<button>EXCEL</button>

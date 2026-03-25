@@ -1,0 +1,13 @@
+h1{text-align:center}
+table{width:100%;border-collapse:collapse;background:white}
+th,td{border:1px solid #ccc;padding:10px;text-align:center}
+
+.Completada{background:green;color:white;padding:5px}
+.Cancelada{background:red;color:white;padding:5px}
+.Pendiente{background:orange;color:white;padding:5px}
+
+.cards{display:flex;justify-content:space-around;margin:20px}
+.card{padding:20px;color:white;border-radius:10px}
+.azul{background:blue}
+.rojo{background:red}
+.verde{background:green}

@@ -1,0 +1,21 @@
+.cards{
+  display:flex;
+  justify-content:space-around
+}
+.card{
+  padding:20px;
+  border-radius:10px;
+  color:white
+}
+.azul{
+  background:#3b82f6
+}
+.rojo{
+  background:#ef4444
+}
+.verde{
+  background:#22c55e
+}
+.gris{
+  background:#999
+}

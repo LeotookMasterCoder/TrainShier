@@ -1,0 +1,16 @@
+<h2>HISTORIAL DE PRACTICAS</h2>
+
+<table>
+  <tr>
+    <th>Fecha</th><th>Practica</th><th>Duracion</th><th>Estado</th>
+  </tr>
+
+  <tr *ngFor="let d of datos">
+    <td>{{d.fecha}}</td>
+    <td>{{d.practica}}</td>
+    <td>{{d.duracion}}</td>
+    <td>
+      <span [ngClass]="d.estado">{{d.estado}}</span>
+    </td>
+  </tr>
+</table>
