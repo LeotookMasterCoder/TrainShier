@@ -1,31 +1,40 @@
-package com.trainshier.controller;
+package com.trainshier.security;
 
-import com.trainshier.dto.TransaccionDTO;
-import com.trainshier.entity.Transaccion;
-import com.trainshier.service.TransaccionService;
-import org.springframework.web.bind.annotation.*;
+import com.trainshier.service.JwtService;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.io.IOException;
 
-@RestController
-@RequestMapping("/api/transacciones")
-@CrossOrigin("*")
-public class TransaccionController {
+/**
+ * @param jwt filter
+ */
+@Component
+@RequiredArgsConstructor
+public class JwtFilter implements Filter {
 
-    private final TransaccionService service;
+    private final JwtService jwtService;
 
-    public TransaccionController(TransaccionService service){
-        this.service = service;
+    /**
+     * @param request http request
+     * @param response http response
+     * @param chain filter chain
+     */
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+
+        HttpServletRequest req = (HttpServletRequest) request;
+
+        String header = req.getHeader("Authorization");
+
+        if(header != null && header.startsWith("Bearer ")){
+            String token = header.substring(7);
+            jwtService.validateToken(token);
+        }
+
+        chain.doFilter(request, response);
     }
-
-    @PostMapping
-    public Transaccion guardar(@RequestBody TransaccionDTO dto){
-        return service.guardar(dto);
-    }
-
-    @GetMapping
-    public List<Transaccion> listar(){
-        return service.listar();
-    }
-
 }

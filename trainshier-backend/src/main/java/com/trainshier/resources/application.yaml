@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+jwt:
+  secret: trainshier-secret-key
+  expiration: 86400000
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/trainshier
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
