@@ -2,9 +2,9 @@ package com.trainshier.service;
 
 import com.trainshier.dto.TransactionRequest;
 import com.trainshier.entity.Transaction;
-import com.trainshier.entity.User;
+import com.trainshier.entity.Usuario;
 import com.trainshier.repository.TransactionRepository;
-import com.trainshier.repository.UserRepository;
+import com.trainshier.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
-    private final UserRepository userRepository;
+    private final UsuarioRepository userRepository;
 
     /**
      * @param request transaction data
@@ -27,7 +27,7 @@ public class TransactionService {
      */
     public Transaction save(TransactionRequest request){
 
-        User user = userRepository.findById(request.getUserId())
+        Usuario user = userRepository.findById(request.getUserId())
                 .orElseThrow();
 
         Transaction t = new Transaction();
