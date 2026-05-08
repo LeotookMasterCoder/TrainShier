@@ -1,0 +1,33 @@
+<div class="comments-container">
+
+  <h2>Instructor Feedback</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <input
+      type="text"
+      placeholder="Apprentice"
+      formControlName="apprentice"
+    >
+
+    <textarea
+      rows="5"
+      placeholder="Instructor comment"
+      formControlName="comment"
+    ></textarea>
+
+    <button type="submit">
+      Save Comment
+    </button>
+
+  </form>
+
+  <div class="comment-card" *ngFor="let item of comments">
+
+    <h4>{{item.apprentice}}</h4>
+
+    <p>{{item.comment}}</p>
+
+  </div>
+
+</div>

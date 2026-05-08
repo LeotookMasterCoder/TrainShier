@@ -5,6 +5,7 @@ import { TransactionService } from '../../../core/services/transaction.service';
 @Component({
   selector: 'app-transaction-form',
   templateUrl: './transaction-form.component.html'
+  styleUrl: './transaction-form.component.scss'
 })
 export class TransactionFormComponent {
 
