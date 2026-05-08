@@ -9,8 +9,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// Components
+import { ReportListComponent } from './features/evaluation/report-list/report-list.component';
+import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
+import { StatisticsComponent } from './features/evaluation/statistics/statistics.component';
+
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { TransactionListComponent } from './features/transactions/transaction-list/transaction-list.component';
@@ -23,12 +27,16 @@ import { TransactionFormComponent } from './features/transactions/transaction-fo
     RegisterComponent,
     TransactionListComponent,
     TransactionFormComponent
+    ReportListComponent,
+    InstructorCommentsComponent,
+    StatisticsComponent
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    CoreModule
+    CoreModule,
+    FormsModule
   ],
   providers: [
     {

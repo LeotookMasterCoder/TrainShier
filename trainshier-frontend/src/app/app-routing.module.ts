@@ -3,13 +3,51 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
+
 import { TransactionListComponent } from './features/transactions/transaction-list/transaction-list.component';
 
+import { ReportListComponent } from './features/evaluation/report-list/report-list.component';
+import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
+import { StatisticsComponent } from './features/evaluation/statistics/statistics.component';
+
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'transactions', component: TransactionListComponent }
+
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+
+  {
+    path: 'transactions',
+    component: TransactionListComponent
+  },
+
+  {
+    path: 'reports',
+    component: ReportListComponent
+  },
+
+  {
+    path: 'comments',
+    component: InstructorCommentsComponent
+  },
+
+  {
+    path: 'statistics',
+    component: StatisticsComponent
+  }
+
 ];
 
 @NgModule({
