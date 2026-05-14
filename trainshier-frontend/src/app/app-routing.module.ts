@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { HomeComponent } from './features/home/home.component';
+
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
+import { RecoverPasswordComponent } from './features/auth/recover-password/recover-password.component';
 
 import { TransactionListComponent } from './features/transactions/transaction-list/transaction-list.component';
 
@@ -14,8 +18,12 @@ const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
+    component: DashboardComponent
+  },
+
+  {
+    path: 'home',
+    component: HomeComponent
   },
 
   {
@@ -26,6 +34,11 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+
+  {
+    path: 'recover-password',
+    component: RecoverPasswordComponent
   },
 
   {

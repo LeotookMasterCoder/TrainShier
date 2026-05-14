@@ -1,31 +1,77 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { AuthService } from '../../../core/services/auth.service';
 import { TokenService } from '../../../core/services/token.service';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html'
-  styleUrl: './login.component.scss'
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+
+  errorMessage = '';
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private token: TokenService
+    private token: TokenService,
+    private router: Router
   ){}
 
   form = this.fb.group({
-    email: ['', [Validators.required]],
-    password: ['', [Validators.required]]
+    email: [
+      '',
+      [
+        Validators.required,
+        Validators.email
+      ]
+    ],
+    password: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[\W_]).+$/)
+      ]
+    ]
   });
 
   submit(){
-    if(this.form.valid){
-      this.auth.login(this.form.value).subscribe((res: any)=>{
-        this.token.save(res.token);
-      });
+
+    if(this.form.invalid){
+      this.form.markAllAsTouched();
+      return;
     }
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.auth.login(this.form.value).subscribe({
+
+      next: (res: any) => {
+
+        this.token.save(res.token);
+
+        const role = res.role || 'APPRENTICE';
+
+        alert(`Welcome to TrainShier (${role})`);
+
+        this.router.navigate(['/home']);
+
+        this.loading = false;
+      },
+
+      error: () => {
+
+        this.errorMessage =
+          'Invalid credentials or server error';
+
+        this.loading = false;
+      }
+    });
   }
 }

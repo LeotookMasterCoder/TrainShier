@@ -9,7 +9,10 @@ import { TokenService } from './core/services/token.service';
 })
 export class AppComponent {
 
-  constructor(private router: Router, private token: TokenService){}
+  constructor(
+    private router: Router,
+    private token: TokenService
+  ){}
 
   logout(){
     this.token.clear();
@@ -19,4 +22,15 @@ export class AppComponent {
   isLogged(){
     return this.token.get() != null;
   }
+
+  showNavbar(): boolean {
+
+    return ![
+      '/login',
+      '/register',
+      '/recover-password'
+    ].includes(this.router.url);
+
+  }
+
 }

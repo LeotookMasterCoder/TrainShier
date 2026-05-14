@@ -1,19 +1,148 @@
-.auth-box {
-  max-width: 300px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.auth-container{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:#f3f4f6;
+}
 
-  input {
-    padding: 8px;
-    border: 1px solid #ccc;
+.auth-left{
+  background:#111827;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:60px;
+  text-align:center;
+}
+
+.logo{
+  width:180px;
+  height:180px;
+  border-radius:20px;
+  background-image:url('/assets/img/Logo_TrainShier2.jpeg');
+  background-size:cover;
+  background-position:center;
+  margin-bottom:25px;
+  border:3px solid #22c55e;
+}
+
+.auth-left h1{
+  font-size:42px;
+  margin-bottom:15px;
+}
+
+.auth-left p{
+  max-width:400px;
+  line-height:1.7;
+  color:#d1d5db;
+}
+
+.auth-right{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:40px;
+}
+
+.form-card{
+  width:100%;
+  max-width:420px;
+  background:white;
+  padding:40px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+  animation:fade .4s ease;
+}
+
+@keyframes fade{
+
+  from{
+    opacity:0;
+    transform:translateY(20px);
   }
 
-  button {
-    background: #22c55e;
-    border: none;
-    padding: 10px;
-    color: white;
+  to{
+    opacity:1;
+    transform:translateY(0);
   }
+}
+
+.form-card h2{
+  margin-bottom:30px;
+  font-size:32px;
+  color:#111827;
+}
+
+.input-group{
+  display:flex;
+  flex-direction:column;
+  margin-bottom:20px;
+}
+
+input{
+  padding:14px;
+  border-radius:10px;
+  border:2px solid #d1d5db;
+  font-size:15px;
+  transition:0.3s;
+}
+
+input:focus{
+  outline:none;
+  border-color:#22c55e;
+}
+
+input.ng-valid.ng-touched{
+  border-color:#22c55e;
+}
+
+.invalid{
+  border-color:#ef4444 !important;
+  background:#fef2f2;
+}
+
+small{
+  color:#ef4444;
+  margin-top:6px;
+  font-size:13px;
+}
+
+.server-error{
+  background:#fef2f2;
+  color:#dc2626;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:20px;
+  border:1px solid #fecaca;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:#22c55e;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#16a34a;
+}
+
+button:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+
+a{
+  color:#2563eb;
+  text-decoration:none;
+}
+
+p{
+  margin-top:20px;
 }

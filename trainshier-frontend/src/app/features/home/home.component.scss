@@ -1,0 +1,41 @@
+.navbar {
+  height: 75px;
+
+  background: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 30px;
+
+  border-bottom: 1px solid #d1d5db;
+}
+
+.banner {
+  width: 180px;
+  height: 55px;
+
+  background-image:
+    url('/assets/img/BannerTrainShier2.jpeg');
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.links {
+  display: flex;
+  gap: 25px;
+}
+
+a {
+  text-decoration: none;
+
+  color: #374151;
+  font-weight: 600;
+}
+
+.home-content {
+  padding: 60px;
+}

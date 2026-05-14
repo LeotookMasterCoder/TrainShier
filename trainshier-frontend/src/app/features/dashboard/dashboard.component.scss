@@ -1,0 +1,136 @@
+.dashboard-container {
+  min-height: 100vh;
+
+  display: flex;
+
+  background: #ececec;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.dashboard-container::before,
+.dashboard-container::after {
+  content: '';
+
+  position: absolute;
+
+  width: 4px;
+  height: 100%;
+
+  background: #d89a00;
+}
+
+.dashboard-container::before {
+  left: 30px;
+}
+
+.dashboard-container::after {
+  right: 30px;
+}
+
+.left-panel {
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-right: 2px solid #111;
+}
+
+.logo {
+  width: 340px;
+  height: 340px;
+
+  background-image:
+    url('/assets/img/Logo_TrainShier2.jpeg');
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.right-panel {
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  width: 100%;
+  max-width: 360px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+h1 {
+  font-size: 42px;
+
+  color: #111827;
+
+  margin-bottom: 12px;
+
+  letter-spacing: 2px;
+}
+
+p {
+  color: #525252;
+
+  margin-bottom: 35px;
+
+  line-height: 1.5;
+}
+
+button {
+  width: 230px;
+
+  padding: 13px;
+
+  border: none;
+  border-radius: 8px;
+
+  margin-bottom: 18px;
+
+  background: #d89a00;
+
+  color: white;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+.register-btn {
+  background: #b67b00;
+}
+
+.observer {
+  margin-top: 25px;
+
+  cursor: pointer;
+
+  color: #111827;
+
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.observer:hover {
+  transform: scale(1.05);
+}
