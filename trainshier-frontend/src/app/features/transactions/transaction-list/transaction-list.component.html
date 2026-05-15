@@ -1,0 +1,7 @@
+<app-transaction-form (created)="load()"></app-transaction-form>
+
+<ul>
+  <li *ngFor="let t of data">
+    {{t.total}} - {{t.method}} - {{t.status}}
+  </li>
+</ul>

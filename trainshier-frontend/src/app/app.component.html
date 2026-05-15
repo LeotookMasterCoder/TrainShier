@@ -1,11 +1,43 @@
-<nav class="nav">
+<nav class="navbar">
+
   <h2>TrainShier</h2>
-  <div>
-    <a routerLink="/reportes">Reportes</a>
-    <a routerLink="/estadisticas">Estadísticas</a>
-    <a routerLink="/transacciones">Transacciones</a>
-    <a routerLink="/historial">Historial</a>
+
+  <div class="links">
+
+    <a routerLink="/transactions" *ngIf="isLogged()">
+      POS
+    </a>
+
+    <a routerLink="/reports" *ngIf="isLogged()">
+      Reports
+    </a>
+
+    <a routerLink="/statistics" *ngIf="isLogged()">
+      Statistics
+    </a>
+
+    <a routerLink="/comments" *ngIf="isLogged()">
+      Instructor Comments
+    </a>
+
+    <a routerLink="/login" *ngIf="!isLogged()">
+      Login
+    </a>
+
+    <a routerLink="/register" *ngIf="!isLogged()">
+      Register
+    </a>
+
+    <button *ngIf="isLogged()" (click)="logout()">
+      Logout
+    </button>
+
   </div>
+
 </nav>
 
-<router-outlet></router-outlet>
+<div class="container">
+
+  <router-outlet></router-outlet>
+
+</div>

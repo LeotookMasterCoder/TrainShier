@@ -1,0 +1,18 @@
+<div class="form-box">
+
+  <h3>Create Transaction</h3>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <input type="number" formControlName="total" placeholder="Total">
+
+    <select formControlName="method">
+      <option value="CASH">Cash</option>
+      <option value="CARD">Card</option>
+    </select>
+
+    <button type="submit">Save</button>
+
+  </form>
+
+</div>

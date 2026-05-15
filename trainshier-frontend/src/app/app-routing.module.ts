@@ -1,16 +1,53 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ReportesComponent } from './pages/reportes/reportes.component';
-import { EstadisticasComponent } from './pages/estadisticas/estadisticas.component';
-import { TransaccionesComponent } from './pages/transacciones/transacciones.component';
-import { HistorialComponent } from './pages/historial/historial.component';
+
+import { LoginComponent } from './features/auth/login/login.component';
+import { RegisterComponent } from './features/auth/register/register.component';
+
+import { TransactionListComponent } from './features/transactions/transaction-list/transaction-list.component';
+
+import { ReportListComponent } from './features/evaluation/report-list/report-list.component';
+import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
+import { StatisticsComponent } from './features/evaluation/statistics/statistics.component';
 
 const routes: Routes = [
-  { path: 'reportes', component: ReportesComponent },
-  { path: 'estadisticas', component: EstadisticasComponent },
-  { path: 'transacciones', component: TransaccionesComponent },
-  { path: 'historial', component: HistorialComponent },
-  { path: '', redirectTo: 'reportes', pathMatch: 'full' }
+
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+
+  {
+    path: 'transactions',
+    component: TransactionListComponent
+  },
+
+  {
+    path: 'reports',
+    component: ReportListComponent
+  },
+
+  {
+    path: 'comments',
+    component: InstructorCommentsComponent
+  },
+
+  {
+    path: 'statistics',
+    component: StatisticsComponent
+  }
+
 ];
 
 @NgModule({

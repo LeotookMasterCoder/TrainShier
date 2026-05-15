@@ -1,11 +1,11 @@
-package com.trainshier.security;
+package com.trainshier.config;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class JwtFilter implements Filter {
-
+    //se crean los headers de filtro
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
