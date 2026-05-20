@@ -25,7 +25,7 @@ import { TransactionFormComponent } from './features/transactions/transaction-fo
 import { ReportListComponent } from './features/evaluation/report-list/report-list.component';
 import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
 import { StatisticsComponent } from './features/evaluation/statistics/statistics.component';
-
+import { SimulatorModule } from './features/simulator/simulator.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +42,7 @@ import { StatisticsComponent } from './features/evaluation/statistics/statistics
 
     ReportListComponent,
     InstructorCommentsComponent,
-    StatisticsComponent
+    StatisticsComponent,
   ],
 
   imports: [
@@ -50,7 +50,8 @@ import { StatisticsComponent } from './features/evaluation/statistics/statistics
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    CoreModule
+    CoreModule,
+    SimulatorModule
   ],
 
   providers: [

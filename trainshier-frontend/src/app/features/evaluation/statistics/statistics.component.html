@@ -1,34 +1,52 @@
-<div class="statistics-container" *ngIf="data">
+<div class="statistics-page">
 
-  <div class="stat-card">
+  <h2 class="title">
+    Estadisticas de simulación
+  </h2>
 
-    <h3>Total Simulations</h3>
+  <div class="statistics-container" *ngIf="data">
 
-    <p>{{data.totalSimulations}}</p>
+    <div class="stat-card success">
+
+      <h3>Total de Simulaciones</h3>
+
+      <p>{{data.totalSimulations || 0}}</p>
+
+    </div>
+
+    <div class="stat-card">
+
+      <h3>Tiempo Fijo</h3>
+
+      <p>{{data.averageScore || 0}}</p>
+
+    </div>
+
+    <div class="stat-card success">
+
+      <h3>Pagos completados</h3>
+
+      <p>{{data.successPayments || 0}}</p>
+
+    </div>
+
+    <div class="stat-card danger">
+
+      <h3>Ventas rechazadas</h3>
+
+      <p>{{data.rejectedSales || 0}}</p>
+
+    </div>
 
   </div>
 
-  <div class="stat-card">
+  <div class="empty-state" *ngIf="!data">
 
-    <h3>Average Score</h3>
+    <h3>No hay estadisticas para visualziar</h3>
 
-    <p>{{data.averageScore}}</p>
-
-  </div>
-
-  <div class="stat-card">
-
-    <h3>Successful Payments</h3>
-
-    <p>{{data.successPayments}}</p>
-
-  </div>
-
-  <div class="stat-card">
-
-    <h3>Rejected Sales</h3>
-
-    <p>{{data.rejectedSales}}</p>
+    <p>
+      No se puede cargar los datos de estadistica
+    </p>
 
   </div>
 

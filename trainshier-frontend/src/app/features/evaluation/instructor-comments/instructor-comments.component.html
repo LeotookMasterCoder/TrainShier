@@ -1,23 +1,23 @@
 <div class="comments-container">
 
-  <h2>Instructor Feedback</h2>
+  <h2>Correciones del instructor</h2>
 
   <form [formGroup]="form" (ngSubmit)="submit()">
 
     <input
       type="text"
-      placeholder="Apprentice"
+      placeholder="Aprendiz"
       formControlName="apprentice"
     >
 
     <textarea
       rows="5"
-      placeholder="Instructor comment"
+      placeholder="Comentario_Instructor"
       formControlName="comment"
     ></textarea>
 
     <button type="submit">
-      Save Comment
+      Guardar comentario
     </button>
 
   </form>

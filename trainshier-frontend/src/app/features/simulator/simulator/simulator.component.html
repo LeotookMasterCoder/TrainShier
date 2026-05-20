@@ -1,0 +1,157 @@
+<div class="simulator-container">
+
+  <div class="left-panel">
+
+    <div class="client-card">
+
+      <h2>
+        Simulated Client
+      </h2>
+
+      <h3>
+        {{currentClient.name}}
+      </h3>
+
+      <p>
+        Mood:
+        {{currentClient.mood}}
+      </p>
+
+      <p>
+        Budget:
+        $ {{currentClient.budget}}
+      </p>
+
+      <button
+        class="next-btn"
+        (click)="nextClient()"
+      >
+        Next Client
+      </button>
+
+    </div>
+
+    <div class="products">
+
+      <h2>
+        Products
+      </h2>
+
+      <div
+        class="product-card"
+        *ngFor="let product of products"
+      >
+
+        <div>
+
+          <h4>
+            {{product.name}}
+          </h4>
+
+          <p>
+            $ {{product.price}}
+          </p>
+
+        </div>
+
+        <button
+          (click)="addProduct(product)"
+        >
+          Add
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="right-panel">
+
+    <div class="cashier-box">
+
+      <h2>
+        POS Simulator
+      </h2>
+
+      <div class="cart">
+
+        <div
+          class="cart-item"
+          *ngFor="let item of cart"
+        >
+
+          <span>
+            {{item.name}}
+          </span>
+
+          <span>
+            $ {{item.price}}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="summary">
+
+        <h3>
+          Total:
+          $ {{total}}
+        </h3>
+
+        <input
+          type="number"
+          placeholder="Money received"
+          [(ngModel)]="received"
+        >
+
+        <div class="buttons">
+
+          <button
+            class="discount"
+            (click)="applyDiscount()"
+          >
+            Apply Discount
+          </button>
+
+          <button
+            class="pay"
+            (click)="processPayment()"
+          >
+            Process Payment
+          </button>
+
+          <button
+            class="cancel"
+            (click)="cancelSale()"
+          >
+            Cancel Sale
+          </button>
+
+        </div>
+
+        <div
+          class="result"
+          [ngClass]="statusType"
+          *ngIf="statusMessage"
+        >
+
+          <p>
+            {{statusMessage}}
+          </p>
+
+          <p *ngIf="change > 0">
+            Change:
+            $ {{change}}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

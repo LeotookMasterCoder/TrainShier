@@ -8,13 +8,13 @@
 
     <tr>
       <th>ID</th>
-      <th>Date</th>
-      <th>Type</th>
-      <th>Client</th>
-      <th>Product</th>
-      <th>Quantity</th>
+      <th>Fecha</th>
+      <th>Tipo</th>
+      <th>Cliente</th>
+      <th>Producto</th>
+      <th>Cantidad</th>
       <th>Total</th>
-      <th>Status</th>
+      <th>Estado</th>
     </tr>
 
     </thead>
@@ -35,8 +35,8 @@
 
           <span
             class="status"
-            [class.success]="t.status === 'SUCCESS'"
-            [class.error]="t.status === 'FAILED'"
+            [class.success]="t.status === 'COMPLETADO'"
+            [class.error]="t.status === 'NO TERMINADO'"
           ></span>
 
       </td>

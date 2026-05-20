@@ -1,0 +1,155 @@
+.simulator-container{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+  padding:30px;
+  background:#f3f4f6;
+  min-height:100vh;
+}
+
+.left-panel{
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+}
+
+.client-card{
+  background:#111827;
+  color:white;
+  padding:25px;
+  border-radius:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+.client-card h2{
+  margin-bottom:15px;
+}
+
+.client-card h3{
+  color:#22c55e;
+  margin-bottom:10px;
+}
+
+.next-btn{
+  margin-top:20px;
+  width:100%;
+  background:#f59e0b;
+  border:none;
+  padding:12px;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.products{
+  background:white;
+  padding:25px;
+  border-radius:18px;
+}
+
+.product-card{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+.product-card button{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.right-panel{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+.cashier-box{
+  width:100%;
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+.cart{
+  margin-top:25px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  background:#f9fafb;
+  padding:12px;
+  border-radius:10px;
+}
+
+.summary{
+  margin-top:30px;
+}
+
+.summary input{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  border-radius:10px;
+  border:2px solid #d1d5db;
+}
+
+.buttons{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+  margin-top:20px;
+}
+
+.discount{
+  background:#f59e0b;
+}
+
+.pay{
+  background:#22c55e;
+}
+
+.cancel{
+  background:#ef4444;
+}
+
+.buttons button{
+  border:none;
+  padding:14px;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.result{
+  margin-top:25px;
+  padding:18px;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+.success{
+  background:#dcfce7;
+  color:#166534;
+  border:1px solid #86efac;
+}
+
+.error{
+  background:#fee2e2;
+  color:#991b1b;
+  border:1px solid #fca5a5;
+}

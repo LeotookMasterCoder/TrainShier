@@ -13,7 +13,7 @@ import { TransactionListComponent } from './features/transactions/transaction-li
 import { ReportListComponent } from './features/evaluation/report-list/report-list.component';
 import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
 import { StatisticsComponent } from './features/evaluation/statistics/statistics.component';
-
+import { SimulatorComponent } from './features/simulator/simulator/simulator.component';
 const routes: Routes = [
 
   {
@@ -39,6 +39,10 @@ const routes: Routes = [
   {
     path: 'recover-password',
     component: RecoverPasswordComponent
+  },
+  {
+      path: 'simulator',
+      component: SimulatorComponent
   },
 
   {

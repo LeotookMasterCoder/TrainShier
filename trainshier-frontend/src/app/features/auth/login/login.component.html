@@ -7,8 +7,8 @@
     <h1>TrainShier</h1>
 
     <p>
-      Cashier training simulation platform
-      for SENA apprentices and instructors.
+      Entrenamiento de caja registradora para Instructores y aprendices <br>
+      con articulación con el Sena.
     </p>
 
   </div>
@@ -17,7 +17,7 @@
 
     <div class="form-card">
 
-      <h2>Login</h2>
+      <h2>Iniciar Sesión</h2>
 
       <form
         [formGroup]="form"
@@ -42,7 +42,7 @@
               form.get('email')?.touched
             "
           >
-            Email is required
+            Se requiere email
           </small>
 
           <small
@@ -51,7 +51,7 @@
               form.get('email')?.touched
             "
           >
-            Invalid email format
+            Formato de email incorrecto
           </small>
 
         </div>
@@ -60,7 +60,7 @@
 
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Contraseña"
             formControlName="password"
             [class.invalid]="
               form.get('password')?.invalid &&
@@ -74,7 +74,7 @@
               form.get('password')?.touched
             "
           >
-            Password is required
+            Se requiere contraseña
           </small>
 
           <small
@@ -83,7 +83,7 @@
               form.get('password')?.touched
             "
           >
-            Minimum 8 characters
+            Minimo 8 caracteres
           </small>
 
           <small
@@ -110,11 +110,11 @@
         >
 
           <span *ngIf="!loading">
-            Login
+            Inicio Sesión
           </span>
 
           <span *ngIf="loading">
-            Loading...
+            Cargando...
           </span>
 
         </button>
@@ -122,13 +122,13 @@
       </form>
 
       <a routerLink="/recover-password">
-        Forgot password?
+        ¿Olvidaste la contraseña?
       </a>
 
       <p>
-        Don't have an account?
+        No tienes cuenta? Creala
         <a routerLink="/register">
-          Register
+          Registrarse
         </a>
       </p>
 

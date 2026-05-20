@@ -20,7 +20,7 @@ export class RecoverPasswordComponent {
 
     if(this.form.invalid){
 
-      alert('Please enter a valid email');
+      alert('Entra un email válido con cuenta');
 
       return;
     }
@@ -29,10 +29,10 @@ export class RecoverPasswordComponent {
       Math.floor(100000 + Math.random() * 900000);
 
     this.message =
-      `Verification code sent successfully: ${code}`;
+      `Código de verificación enviado correctamente: ${code}`;
 
     alert(
-      `Recovery code sent to ${this.form.value.email}`
+      `Código de recuperación enviado a:  ${this.form.value.email}`
     );
 
   }

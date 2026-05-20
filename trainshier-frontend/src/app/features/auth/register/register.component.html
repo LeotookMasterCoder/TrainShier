@@ -7,7 +7,7 @@
     <h1>TrainShier</h1>
 
     <p>
-      Create your cashier simulation account.
+     Crea tu propia cuenta en TrainShier para mas funcionalidades.
     </p>
 
   </div>
@@ -16,7 +16,7 @@
 
     <div class="form-card">
 
-      <h2>Register</h2>
+      <h2>Crear Cuenta</h2>
 
       <form
         [formGroup]="form"
@@ -27,7 +27,7 @@
 
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Nombre Usuario"
             formControlName="username"
             [class.invalid]="
               form.get('username')?.invalid &&
@@ -41,7 +41,7 @@
               form.get('username')?.touched
             "
           >
-            Format example: Darwing#5462
+            Ejemplo Aceptable: prueba#5462
           </small>
 
         </div>
@@ -50,7 +50,7 @@
 
           <input
             type="text"
-            placeholder="Full Name"
+            placeholder="Nombre Completo"
             formControlName="name"
           >
 
@@ -70,7 +70,7 @@
 
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Contraseña"
             formControlName="password"
           >
 
@@ -80,7 +80,7 @@
               form.get('password')?.touched
             "
           >
-            Minimum 8 characters
+            Minimo 8 caracteres
           </small>
 
           <small
@@ -89,7 +89,7 @@
               form.get('password')?.touched
             "
           >
-            Must contain uppercase and special character
+          Debe contener una mayúscula y un caracter especial
           </small>
 
         </div>
@@ -105,11 +105,11 @@
           </option>
 
           <option value="APPRENTICE">
-            Apprentice
+            Aprendiz
           </option>
 
           <option value="OBSERVER">
-            Observer
+            Observador
           </option>
 
         </select>

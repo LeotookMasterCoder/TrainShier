@@ -1,17 +1,17 @@
 <div class="form-box">
 
-  <h3>Create Transaction</h3>
+  <h3>Crea tu transacción</h3>
 
   <form [formGroup]="form" (ngSubmit)="submit()">
 
     <input type="number" formControlName="total" placeholder="Total">
 
     <select formControlName="method">
-      <option value="CASH">Cash</option>
-      <option value="CARD">Card</option>
+      <option value="CASH">Pago Fisico</option>
+      <option value="CARD">Pagar con tarjeta</option>
     </select>
 
-    <button type="submit">Save</button>
+    <button type="submit">Guardar</button>
 
   </form>
 
