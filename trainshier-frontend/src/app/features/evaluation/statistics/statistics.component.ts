@@ -21,19 +21,23 @@ export class StatisticsComponent implements OnInit {
     this.service.getStatistics().subscribe({
 
       next: (res: any) => {
-        this.data = res;
-      },
-
-      error: () => {
 
         this.data = {
-          totalSimulations: 0,
-          averageScore: 0,
-          successPayments: 0,
-          rejectedSales: 0
+
+          totalSimulations:
+            res.totalSimulations || 0,
+
+          averageScore:
+            res.averageScore || 0,
+
+          successPayments:
+            res.successPayments || 0,
+
+          rejectedSales:
+            res.rejectedSales || 0
         };
 
-      }
+      },
 
     });
 

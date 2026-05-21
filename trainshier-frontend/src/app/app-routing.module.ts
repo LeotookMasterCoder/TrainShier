@@ -13,7 +13,11 @@ import { TransactionListComponent } from './features/transactions/transaction-li
 import { ReportListComponent } from './features/evaluation/report-list/report-list.component';
 import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
 import { StatisticsComponent } from './features/evaluation/statistics/statistics.component';
+
 import { SimulatorComponent } from './features/simulator/simulator/simulator.component';
+
+import { ProfileComponent } from './features/profile/profile.component';
+
 const routes: Routes = [
 
   {
@@ -40,9 +44,10 @@ const routes: Routes = [
     path: 'recover-password',
     component: RecoverPasswordComponent
   },
+
   {
-      path: 'simulator',
-      component: SimulatorComponent
+    path: 'simulator',
+    component: SimulatorComponent
   },
 
   {
@@ -63,6 +68,11 @@ const routes: Routes = [
   {
     path: 'statistics',
     component: StatisticsComponent
+  },
+
+  {
+    path: 'profile',
+    component: ProfileComponent
   }
 
 ];

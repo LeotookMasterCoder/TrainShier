@@ -1,14 +1,12 @@
+// src/app/app.module.ts
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-
 import { AppRoutingModule } from './app-routing.module';
-
-import { CoreModule } from './core/core.module';
 
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
@@ -25,43 +23,51 @@ import { TransactionFormComponent } from './features/transactions/transaction-fo
 import { ReportListComponent } from './features/evaluation/report-list/report-list.component';
 import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
 import { StatisticsComponent } from './features/evaluation/statistics/statistics.component';
+
 import { SimulatorModule } from './features/simulator/simulator.module';
+
+import { ProfileComponent } from './features/profile/profile.component';
+
 @NgModule({
+
   declarations: [
     AppComponent,
-
     DashboardComponent,
     HomeComponent,
-
     LoginComponent,
     RegisterComponent,
     RecoverPasswordComponent,
-
     TransactionListComponent,
     TransactionFormComponent,
-
     ReportListComponent,
     InstructorCommentsComponent,
     StatisticsComponent,
+    ProfileComponent
   ],
 
   imports: [
+
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    CoreModule,
     SimulatorModule
+
   ],
 
   providers: [
+
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
     }
+
   ],
 
   bootstrap: [AppComponent]
+
 })
+
 export class AppModule {}

@@ -1,1 +1,68 @@
-<router-outlet></router-outlet>
+<div [class.dark-mode]="darkMode">
+
+  <nav
+    class="navbar"
+    *ngIf="showNavbar()"
+  >
+
+    <div
+      class="brand-banner"
+      routerLink="/home"
+    ></div>
+
+    <div class="links">
+
+      <a routerLink="/home">
+        Inicio
+      </a>
+
+      <a routerLink="/simulator">
+        Simulador IA
+      </a>
+
+      <a routerLink="/transactions">
+        Transacciones
+      </a>
+
+      <a routerLink="/reports">
+        Reportes
+      </a>
+
+      <a routerLink="/statistics">
+        Estadísticas
+      </a>
+
+      <a routerLink="/comments">
+        Instructor
+      </a>
+
+    </div>
+
+    <div class="right-actions">
+
+      <button
+        class="theme-btn"
+        (click)="toggleTheme()"
+      >
+        {{darkMode ? '☀ Claro' : '🌙 Oscuro'}}
+      </button>
+
+      <div
+        class="profile"
+        routerLink="/profile"
+      ></div>
+
+      <button
+        class="logout-btn"
+        (click)="logout()"
+      >
+        Salir
+      </button>
+
+    </div>
+
+  </nav>
+
+  <router-outlet></router-outlet>
+
+</div>

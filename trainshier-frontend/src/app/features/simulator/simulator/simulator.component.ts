@@ -5,37 +5,69 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './simulator.component.html',
   styleUrls: ['./simulator.component.scss']
 })
+
 export class SimulatorComponent implements OnInit {
+
+  tutorialVisible = true;
+
+  currentTip = '';
+
+  copilotMessage = '';
+
+  currentClient: any;
 
   products = [
 
     {
-      name: 'Milk',
-      price: 2000
+      name:'Leche',
+      price:4000
     },
 
     {
-      name: 'Bread',
-      price: 3500
+      name:'Pan',
+      price:3000
     },
 
     {
-      name: 'Rice',
-      price: 5000
+      name:'Huevos',
+      price:14000
     },
 
     {
-      name: 'Eggs',
-      price: 12000
+      name:'Pollo',
+      price:28000
     },
 
     {
-      name: 'Chicken',
-      price: 18000
+      name:'Arroz',
+      price:6000
     }
+
   ];
 
-  cart: any[] = [];
+  clients = [
+
+    {
+      name:'Carlos',
+      mood:'Molesto',
+      budget:20000
+    },
+
+    {
+      name:'Laura',
+      mood:'Feliz',
+      budget:50000
+    },
+
+    {
+      name:'Andres',
+      mood:'Apurado',
+      budget:15000
+    }
+
+  ];
+
+  cart:any[] = [];
 
   total = 0;
 
@@ -47,49 +79,51 @@ export class SimulatorComponent implements OnInit {
 
   statusType = '';
 
-  currentClient: any;
+  successTransactions = 0;
 
-  simulatedClients = [
+  failedTransactions = 0;
 
-    {
-      name: 'Carlos',
-      mood: 'Calm',
-      budget: 50000
-    },
+  tips = [
 
-    {
-      name: 'Laura',
-      mood: 'Angry',
-      budget: 15000
-    },
+    'Escanea correctamente los productos.',
+    'Valida el dinero recibido.',
+    'Aplica descuentos cuando sea necesario.',
+    'Entrega el cambio exacto.',
+    'Mantén una buena atención al cliente.'
 
-    {
-      name: 'Andres',
-      mood: 'Fast',
-      budget: 30000
-    },
-
-    {
-      name: 'Valentina',
-      mood: 'Distracted',
-      budget: 25000
-    }
   ];
 
   ngOnInit(): void {
+
     this.nextClient();
+
+    this.randomTip();
+
+  }
+
+  startPractice(){
+
+    this.tutorialVisible = false;
+
+  }
+
+  randomTip(){
+
+    const randomIndex =
+      Math.floor(Math.random() * this.tips.length);
+
+    this.currentTip = this.tips[randomIndex];
+
   }
 
   nextClient(){
 
-    const random =
-      Math.floor(
-        Math.random() *
-        this.simulatedClients.length
-      );
+    const randomIndex =
+      Math.floor(Math.random() * this.clients.length);
 
-    this.currentClient =
-      this.simulatedClients[random];
+    this.currentClient = this.clients[randomIndex];
+
+    this.generateCopilotMessage();
 
     this.cart = [];
 
@@ -100,21 +134,49 @@ export class SimulatorComponent implements OnInit {
     this.change = 0;
 
     this.statusMessage = '';
+
   }
 
-  addProduct(product: any){
+  generateCopilotMessage(){
+
+    if(this.currentClient.mood === 'Molesto'){
+
+      this.copilotMessage =
+        'Copilot IA: El cliente está molesto, atiéndelo rápido y con precisión.';
+
+    }
+
+    else if(this.currentClient.mood === 'Apurado'){
+
+      this.copilotMessage =
+        'Copilot IA: El cliente tiene poco tiempo, evita errores en caja.';
+
+    }
+
+    else{
+
+      this.copilotMessage =
+        'Copilot IA: Cliente tranquilo, aprovecha para brindar buena atención.';
+
+    }
+
+  }
+
+  addProduct(product:any){
 
     this.cart.push(product);
 
     this.calculateTotal();
+
   }
 
   calculateTotal(){
 
     this.total = this.cart.reduce(
-      (acc, item) => acc + item.price,
+      (acc,item) => acc + item.price,
       0
     );
+
   }
 
   applyDiscount(){
@@ -123,9 +185,10 @@ export class SimulatorComponent implements OnInit {
       this.total - (this.total * 0.10);
 
     this.statusMessage =
-      '10% discount applied';
+      'Descuento aplicado correctamente';
 
     this.statusType = 'success';
+
   }
 
   processPayment(){
@@ -133,20 +196,26 @@ export class SimulatorComponent implements OnInit {
     if(this.received < this.total){
 
       this.statusMessage =
-        'Insufficient payment';
+        'Fondos insuficientes';
 
       this.statusType = 'error';
 
+      this.failedTransactions++;
+
       return;
+
     }
 
     this.change =
       this.received - this.total;
 
     this.statusMessage =
-      'Successful payment';
+      'Pago realizado correctamente';
 
     this.statusType = 'success';
+
+    this.successTransactions++;
+
   }
 
   cancelSale(){
@@ -160,8 +229,10 @@ export class SimulatorComponent implements OnInit {
     this.change = 0;
 
     this.statusMessage =
-      'Sale cancelled';
+      'Venta cancelada';
 
     this.statusType = 'error';
+
   }
+
 }

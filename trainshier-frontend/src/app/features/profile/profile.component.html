@@ -1,0 +1,172 @@
+<!-- src/app/features/profile/profile.component.html -->
+
+<div class="profile-page">
+
+  <div class="profile-card">
+
+    <div class="image-section">
+
+      <img
+        [src]="profileImage"
+        class="profile-image"
+      >
+
+      <button
+        class="menu-button"
+        (click)="toggleMenu()"
+      >
+        ⚙
+      </button>
+
+      <div
+        class="dropdown"
+        *ngIf="showMenu"
+      >
+
+        <label class="upload-btn">
+
+          Cambiar foto
+
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onImageChange($event)"
+          >
+
+        </label>
+
+        <button>
+          Tema oscuro
+        </button>
+
+        <button>
+          Tema claro
+        </button>
+
+      </div>
+
+    </div>
+
+    <h2>
+      Perfil de Usuario
+    </h2>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="saveChanges()"
+    >
+
+      <div class="input-group">
+
+        <label>
+          Nombre completo
+        </label>
+
+        <input
+          type="text"
+          formControlName="fullName"
+        >
+
+      </div>
+
+      <div class="input-group">
+
+        <label>
+          Username
+        </label>
+
+        <input
+          type="text"
+          formControlName="username"
+        >
+
+      </div>
+
+      <div class="input-group">
+
+        <label>
+          Teléfono
+        </label>
+
+        <input
+          type="text"
+          formControlName="phone"
+        >
+
+      </div>
+
+      <div class="input-group">
+
+        <label>
+          Ciudad
+        </label>
+
+        <input
+          type="text"
+          formControlName="city"
+        >
+
+      </div>
+
+      <div class="input-group">
+
+        <label>
+          Descripción
+        </label>
+
+        <textarea
+          rows="4"
+          formControlName="description"
+        ></textarea>
+
+      </div>
+
+      <div class="input-group">
+
+        <label>
+          Correo
+        </label>
+
+        <input
+          type="email"
+          formControlName="email"
+        >
+
+      </div>
+
+      <div class="input-group">
+
+        <label>
+          Rol
+        </label>
+
+        <input
+          type="text"
+          formControlName="role"
+        >
+
+      </div>
+
+      <div class="input-group">
+
+        <label>
+          ID
+        </label>
+
+        <input
+          type="text"
+          formControlName="id"
+        >
+
+      </div>
+
+      <button type="submit">
+        Guardar Cambios
+      </button>
+
+    </form>
+
+  </div>
+
+</div>

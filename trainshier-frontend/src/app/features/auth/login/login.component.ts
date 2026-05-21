@@ -56,9 +56,9 @@ export class LoginComponent {
 
         this.token.save(res.token);
 
-        const role = res.role || 'APPRENTICE';
+        const role = res.role || 'Aprendiz';
 
-        alert(`Welcome to TrainShier (${role})`);
+        alert(`Bienvenidos a TrainShier (${role})`);
 
         this.router.navigate(['/home']);
 
@@ -68,7 +68,7 @@ export class LoginComponent {
       error: () => {
 
         this.errorMessage =
-          'Invalid credentials or server error';
+          'Credenciales invalidas o error en el servidor';
 
         this.loading = false;
       }

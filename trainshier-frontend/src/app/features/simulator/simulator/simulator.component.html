@@ -1,11 +1,61 @@
-<div class="simulator-container">
+<div
+  class="tutorial-screen"
+  *ngIf="tutorialVisible"
+>
+
+  <div class="tutorial-card">
+
+    <h1>
+      Simulador Inteligente TrainShier
+    </h1>
+
+    <p>
+      Practica cobros, descuentos, atención al cliente
+      y simulaciones con inteligencia artificial.
+    </p>
+
+    <div class="tip-box">
+
+      <h3>
+        Big Brain Asistente
+      </h3>
+
+      <p>
+        {{currentTip}}
+      </p>
+
+    </div>
+
+    <a
+      href="assets/docs/tutorial-trainshier.pdf"
+      target="_blank"
+      class="tutorial-btn"
+    >
+      Ver Tutorial PDF
+    </a>
+
+    <button
+      class="practice-btn"
+      (click)="startPractice()"
+    >
+      Iniciar práctica
+    </button>
+
+  </div>
+
+</div>
+
+<div
+  class="simulator-container"
+  *ngIf="!tutorialVisible"
+>
 
   <div class="left-panel">
 
     <div class="client-card">
 
       <h2>
-        Simulated Client
+        Cliente IA Copilot
       </h2>
 
       <h3>
@@ -18,15 +68,21 @@
       </p>
 
       <p>
-        Budget:
+        Presupuesto:
         $ {{currentClient.budget}}
       </p>
+
+      <div class="copilot-message">
+
+        {{copilotMessage}}
+
+      </div>
 
       <button
         class="next-btn"
         (click)="nextClient()"
       >
-        Next Client
+        Siguiente Cliente
       </button>
 
     </div>
@@ -34,7 +90,7 @@
     <div class="products">
 
       <h2>
-        Products
+        Productos
       </h2>
 
       <div
@@ -57,7 +113,7 @@
         <button
           (click)="addProduct(product)"
         >
-          Add
+          Agregar
         </button>
 
       </div>
@@ -71,7 +127,7 @@
     <div class="cashier-box">
 
       <h2>
-        POS Simulator
+        POS Inteligente
       </h2>
 
       <div class="cart">
@@ -102,8 +158,8 @@
 
         <input
           type="number"
-          placeholder="Money received"
           [(ngModel)]="received"
+          placeholder="Dinero recibido"
         >
 
         <div class="buttons">
@@ -112,21 +168,21 @@
             class="discount"
             (click)="applyDiscount()"
           >
-            Apply Discount
+            Aplicar descuento
           </button>
 
           <button
             class="pay"
             (click)="processPayment()"
           >
-            Process Payment
+            Procesar pago
           </button>
 
           <button
             class="cancel"
             (click)="cancelSale()"
           >
-            Cancel Sale
+            Cancelar venta
           </button>
 
         </div>
@@ -142,9 +198,29 @@
           </p>
 
           <p *ngIf="change > 0">
-            Change:
+
+            Cambio:
             $ {{change}}
+
           </p>
+
+        </div>
+
+      </div>
+
+      <div class="performance">
+
+        <div class="success-box">
+
+          Exitosas:
+          {{successTransactions}}
+
+        </div>
+
+        <div class="error-box">
+
+          Fallidas:
+          {{failedTransactions}}
 
         </div>
 
