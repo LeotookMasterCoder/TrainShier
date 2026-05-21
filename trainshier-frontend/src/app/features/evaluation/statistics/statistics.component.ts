@@ -8,7 +8,7 @@ import { ReportService } from '../../../core/services/report.service';
 })
 export class StatisticsComponent implements OnInit {
 
-  data: any;
+  data: any = null;
 
   constructor(private service: ReportService){}
 
@@ -18,8 +18,29 @@ export class StatisticsComponent implements OnInit {
 
   loadStatistics(){
 
-    this.service.getStatistics().subscribe((res: any) => {
-      this.data = res;
+    this.service.getStatistics().subscribe({
+
+      next: (res: any) => {
+
+        this.data = {
+
+          totalSimulations:
+            res.totalSimulations || 0,
+
+          averageScore:
+            res.averageScore || 0,
+
+          successPayments:
+            res.successPayments || 0,
+
+          rejectedSales:
+            res.rejectedSales || 0
+        };
+
+      },
+
     });
+
   }
+
 }

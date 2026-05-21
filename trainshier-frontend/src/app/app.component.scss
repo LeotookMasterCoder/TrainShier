@@ -1,30 +1,143 @@
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #0f172a;
-  color: white;
-  padding: 15px;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-  .links {
-    display: flex;
-    gap: 15px;
+body{
+  font-family:Arial, Helvetica, sans-serif;
+  background:#f3f4f6;
+  overflow-x:hidden;
+}
 
-    a {
-      color: white;
-      text-decoration: none;
-    }
+.dark-mode{
+  background:#0f172a;
+  color:white;
+}
 
-    button {
-      background: #ef4444;
-      border: none;
-      padding: 5px 10px;
-      color: white;
-      cursor: pointer;
-    }
+.navbar{
+  height:80px;
+  background:white;
+  border-bottom:2px solid #d89a00;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 30px;
+  position:sticky;
+  top:0;
+  z-index:999;
+  animation:slideDown .5s ease;
+}
+
+.dark-mode .navbar{
+  background:#111827;
+}
+
+@keyframes slideDown{
+
+  from{
+    opacity:0;
+    transform:translateY(-20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
   }
 }
 
-.container {
-  padding: 20px;
+.brand-banner{
+  width:190px;
+  height:60px;
+
+  background-image:
+  url('/assets/img/BannerTrainShier2.jpeg');
+
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-position:center;
+
+  cursor:pointer;
+
+  transition:.3s;
+}
+
+.brand-banner:hover{
+  transform:scale(1.05);
+}
+
+.links{
+  display:flex;
+  gap:28px;
+}
+
+.links a{
+  text-decoration:none;
+  color:#374151;
+  font-weight:600;
+  transition:.3s;
+  position:relative;
+}
+
+.dark-mode .links a{
+  color:white;
+}
+
+.links a:hover{
+  color:#d89a00;
+}
+
+.links a::after{
+  content:'';
+  position:absolute;
+  width:0%;
+  height:2px;
+  background:#d89a00;
+  left:0;
+  bottom:-6px;
+  transition:.3s;
+}
+
+.links a:hover::after{
+  width:100%;
+}
+
+.right-actions{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.theme-btn{
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  background:#111827;
+  color:white;
+  cursor:pointer;
+}
+
+.profile{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  background-image:url('/assets/img/default-profile.png');
+  background-size:cover;
+  background-position:center;
+  border:3px solid #d89a00;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.profile:hover{
+  transform:scale(1.08);
+}
+
+.logout-btn{
+  border:none;
+  background:#dc2626;
+  color:white;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
 }

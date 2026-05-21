@@ -1,14 +1,139 @@
-<div class="auth-box">
+<div class="auth-container">
 
-  <h2>Login</h2>
+  <div class="auth-left">
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="logo"></div>
 
-    <input type="text" formControlName="email" placeholder="Email">
-    <input type="password" formControlName="password" placeholder="Password">
+    <h1>TrainShier</h1>
 
-    <button type="submit">Login</button>
+    <p>
+      Entrenamiento de caja registradora para Instructores y aprendices <br>
+      con articulación con el Sena.
+    </p>
 
-  </form>
+  </div>
+
+  <div class="auth-right">
+
+    <div class="form-card">
+
+      <h2>Iniciar Sesión</h2>
+
+      <form
+        [formGroup]="form"
+        (ngSubmit)="submit()"
+      >
+
+        <div class="input-group">
+
+          <input
+            type="email"
+            placeholder="Email"
+            formControlName="email"
+            [class.invalid]="
+              form.get('email')?.invalid &&
+              form.get('email')?.touched
+            "
+          >
+
+          <small
+            *ngIf="
+              form.get('email')?.hasError('required') &&
+              form.get('email')?.touched
+            "
+          >
+            Se requiere email
+          </small>
+
+          <small
+            *ngIf="
+              form.get('email')?.hasError('email') &&
+              form.get('email')?.touched
+            "
+          >
+            Formato de email incorrecto
+          </small>
+
+        </div>
+
+        <div class="input-group">
+
+          <input
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+            [class.invalid]="
+              form.get('password')?.invalid &&
+              form.get('password')?.touched
+            "
+          >
+
+          <small
+            *ngIf="
+              form.get('password')?.hasError('required') &&
+              form.get('password')?.touched
+            "
+          >
+            Se requiere contraseña
+          </small>
+
+          <small
+            *ngIf="
+              form.get('password')?.hasError('minlength') &&
+              form.get('password')?.touched
+            "
+          >
+            Minimo 8 caracteres
+          </small>
+
+          <small
+            *ngIf="
+              form.get('password')?.hasError('pattern') &&
+              form.get('password')?.touched
+            "
+          >
+            Must contain uppercase and special character
+          </small>
+
+        </div>
+
+        <div
+          class="server-error"
+          *ngIf="errorMessage"
+        >
+          {{errorMessage}}
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="loading || form.invalid"
+        >
+
+          <span *ngIf="!loading">
+            Inicio Sesión
+          </span>
+
+          <span *ngIf="loading">
+            Cargando...
+          </span>
+
+        </button>
+
+      </form>
+
+      <a routerLink="/recover-password">
+        ¿Olvidaste la contraseña?
+      </a>
+
+      <p>
+        No tienes cuenta? Creala
+        <a routerLink="/register">
+          Registrarse
+        </a>
+      </p>
+
+    </div>
+
+  </div>
 
 </div>

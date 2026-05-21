@@ -1,42 +1,67 @@
-<nav class="navbar">
+<div [class.dark-mode]="darkMode">
 
-  <h2>TrainShier</h2>
+  <nav
+    class="navbar"
+    *ngIf="showNavbar()"
+  >
 
-  <div class="links">
+    <div
+      class="brand-banner"
+      routerLink="/home"
+    ></div>
 
-    <a routerLink="/transactions" *ngIf="isLogged()">
-      POS
-    </a>
+    <div class="links">
 
-    <a routerLink="/reports" *ngIf="isLogged()">
-      Reports
-    </a>
+      <a routerLink="/home">
+        Inicio
+      </a>
 
-    <a routerLink="/statistics" *ngIf="isLogged()">
-      Statistics
-    </a>
+      <a routerLink="/simulator">
+        Simulador IA
+      </a>
 
-    <a routerLink="/comments" *ngIf="isLogged()">
-      Instructor Comments
-    </a>
+      <a routerLink="/transactions">
+        Transacciones
+      </a>
 
-    <a routerLink="/login" *ngIf="!isLogged()">
-      Login
-    </a>
+      <a routerLink="/reports">
+        Reportes
+      </a>
 
-    <a routerLink="/register" *ngIf="!isLogged()">
-      Register
-    </a>
+      <a routerLink="/statistics">
+        Estadísticas
+      </a>
 
-    <button *ngIf="isLogged()" (click)="logout()">
-      Logout
-    </button>
+      <a routerLink="/comments">
+        Instructor
+      </a>
 
-  </div>
+    </div>
 
-</nav>
+    <div class="right-actions">
 
-<div class="container">
+      <button
+        class="theme-btn"
+        (click)="toggleTheme()"
+      >
+        {{darkMode ? '☀ Claro' : '🌙 Oscuro'}}
+      </button>
+
+      <div
+        class="profile"
+        routerLink="/profile"
+      ></div>
+
+      <button
+        class="logout-btn"
+        (click)="logout()"
+      >
+        Salir
+      </button>
+
+    </div>
+
+  </nav>
 
   <router-outlet></router-outlet>
 

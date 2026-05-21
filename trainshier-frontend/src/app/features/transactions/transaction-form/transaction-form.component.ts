@@ -1,17 +1,20 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { TransactionService } from '../../../core/services/transaction.service';
 
 @Component({
   selector: 'app-transaction-form',
-  templateUrl: './transaction-form.component.html'
-  styleUrl: './transaction-form.component.scss'
+  templateUrl: './transaction-form.component.html',
+  styleUrls: ['./transaction-form.component.scss']
 })
 export class TransactionFormComponent {
 
   @Output() created = new EventEmitter();
 
-  constructor(private fb: FormBuilder, private service: TransactionService){}
+  constructor(
+    private fb: FormBuilder,
+    private service: TransactionService
+  ) {}
 
   form = this.fb.group({
     total: [0, Validators.required],
@@ -19,9 +22,15 @@ export class TransactionFormComponent {
     status: ['SUCCESS']
   });
 
-  submit(){
-    this.service.create(this.form.value).subscribe(()=>{
-      this.created.emit();
-    });
+  submit() {
+
+    if (this.form.valid) {
+
+      this.service.create(this.form.value).subscribe(() => {
+
+        this.created.emit();
+
+      });
+    }
   }
 }

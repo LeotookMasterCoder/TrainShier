@@ -1,0 +1,148 @@
+/* src/app/features/profile/profile.component.scss */
+
+.profile-page{
+  min-height:100vh;
+  background:#f3f4f6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:40px;
+}
+
+.profile-card{
+  width:100%;
+  max-width:650px;
+  background:white;
+  border-radius:25px;
+  padding:40px;
+  box-shadow:0 10px 30px rgba(0,0,0,.1);
+  animation:fade .4s ease;
+}
+
+@keyframes fade{
+
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+
+.image-section{
+  position:relative;
+  width:160px;
+  margin:auto;
+  margin-bottom:30px;
+}
+
+.profile-image{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  object-fit:cover;
+  border:5px solid #d89a00;
+}
+
+.menu-button{
+  position:absolute;
+  right:0;
+  bottom:10px;
+  width:42px;
+  height:42px;
+  border:none;
+  border-radius:50%;
+  background:#111827;
+  color:white;
+  cursor:pointer;
+}
+
+.dropdown{
+  position:absolute;
+  top:180px;
+  right:-20px;
+  background:white;
+  border-radius:15px;
+  padding:15px;
+  width:180px;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:10;
+}
+
+.dropdown button,
+.upload-btn{
+  border:none;
+  background:#f3f4f6;
+  padding:12px;
+  border-radius:10px;
+  cursor:pointer;
+  text-align:center;
+  transition:.3s;
+}
+
+.dropdown button:hover,
+.upload-btn:hover{
+  background:#d89a00;
+  color:white;
+}
+
+h2{
+  text-align:center;
+  margin-bottom:30px;
+  color:#111827;
+}
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.input-group{
+  display:flex;
+  flex-direction:column;
+}
+
+label{
+  margin-bottom:8px;
+  font-weight:600;
+  color:#374151;
+}
+
+input,
+textarea{
+  padding:14px;
+  border-radius:12px;
+  border:2px solid #d1d5db;
+  font-size:15px;
+  transition:.3s;
+}
+
+input:focus,
+textarea:focus{
+  outline:none;
+  border-color:#d89a00;
+}
+
+button[type="submit"]{
+  margin-top:10px;
+  padding:15px;
+  border:none;
+  border-radius:12px;
+  background:#d89a00;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+button[type="submit"]:hover{
+  transform:scale(1.02);
+}

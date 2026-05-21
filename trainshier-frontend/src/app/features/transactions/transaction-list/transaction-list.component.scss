@@ -1,9 +1,57 @@
-ul {
-  list-style: none;
-  padding: 0;
+.transaction-table {
 
-  li {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-  }
+  background: #f7f2f2;
+
+  padding: 40px;
+}
+
+h2 {
+
+  text-align: center;
+
+  margin-bottom: 30px;
+}
+
+table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  background: #eadede;
+}
+
+th,
+td {
+
+  border: 2px solid #2b2b2b;
+
+  padding: 18px;
+
+  text-align: center;
+}
+
+th {
+
+  background: #d5d5d5;
+}
+
+.status {
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: 50%;
+
+  display: inline-block;
+}
+
+.success {
+
+  background: #17c100;
+}
+
+.error {
+
+  background: #d91e18;
 }
