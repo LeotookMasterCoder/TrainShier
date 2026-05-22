@@ -1,7 +1,6 @@
 {
-  "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/trainshier-frontend",
+  "outputDirectory": "dist/trainshier-frontend/browser",
   "rewrites": [
     {
       "source": "/(.*)",
