@@ -1,34 +1,59 @@
-.comments-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.comments-container{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+form{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
 }
 
 input,
-textarea {
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+textarea{
+  padding:10px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
 }
 
-button {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
+button{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.3s;
 }
 
-.comment-card {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
+button:hover{
+  transform:scale(1.03);
+}
+
+.comment-card{
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  border:1px solid #d1d5db;
+}
+
+@media (min-width:481px) and (max-width:768px){
+
+  .comments-container{
+    padding:10px;
+  }
+
+}
+
+@media (max-width:480px){
+
+  .comments-container{
+    padding:5px;
+  }
+
+  .comment-card{
+    padding:12px;
+  }
+
 }

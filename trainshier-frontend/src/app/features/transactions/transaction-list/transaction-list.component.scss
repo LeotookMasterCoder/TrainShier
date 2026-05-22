@@ -55,3 +55,34 @@ th {
 
   background: #d91e18;
 }
+@media (min-width:481px) and (max-width:768px){
+
+  .transaction-table{
+    overflow-x:auto;
+    padding:20px;
+  }
+
+  table{
+    min-width:650px;
+  }
+
+}
+
+@media (max-width:480px){
+
+  .transaction-table{
+    overflow-x:auto;
+    padding:10px;
+  }
+
+  table{
+    min-width:650px;
+  }
+
+  th,
+  td{
+    padding:12px;
+    font-size:13px;
+  }
+
+}
