@@ -23,7 +23,7 @@ public class Report {
      * @param user evaluated user
      */
     @ManyToOne
-    private User user;
+    private Usuario user;
 
     /**
      * @param score performance score

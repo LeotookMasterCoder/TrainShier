@@ -1,58 +1,119 @@
 package com.trainshier.service;
 
-import io.jsonwebtoken.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.function.Function;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 /**
- * @param jwt management
+ * Servicio encargado de la gestión de JSON Web Tokens (JWT).
+ * Proporciona métodos para crear, validar y leer la información de los tokens
+ * de acceso.
  */
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    // Inyectamos la clave secreta desde el archivo de configuración
+    // (application.properties/yml)
+    @Value("${security.jwt.secret-key}")
+    private String secretKey;
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    // Inyectamos el tiempo de vida del token (en milisegundos)
+    @Value("${security.jwt.token-expiration}")
+    private Long tokenExpiration;
 
     /**
-     * @param email user email
-     * @return token
+     * Genera un nuevo token JWT para un usuario específico.
+     * 
+     * @param usuarioId   el id de el usuario.
+     * @param nombreusu Nombre de usuario (sujeto del token).
+     * @param rolId   es el id de el rol.
+     * @return retorna el token jwt ya firmado.
      */
-    public String generateToken(String email){
+    public String generateToken(Long usuarioId, String nombreusu, Long rolId) {
         return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+                .claims(Map.of("usuarioId", usuarioId)) // Agregamos datos personalizados (payload)
+                .claims(Map.of("rolId", rolId))
+                .subject(nombreusu) // Identificamos al dueño del token
+                .issuedAt(new Date()) // Fecha de creación
+                .expiration(new Date(System.currentTimeMillis() + tokenExpiration)) // Fecha de vencimiento
+                .signWith(getSigningKey()) // Firma digital para evitar alteraciones
+                .compact(); // Construye el String final
     }
 
     /**
-     * @param token jwt
-     * @return valid
+     * Transforma la clave secreta de String (Base64) a un objeto SecretKey
      */
-    public boolean validateToken(String token){
-        try{
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    /**
+     * Verifica que el token sea valido
+     * 
+     * @param token El token a validar.
+     * @return true si la firma es válida, false en caso contrario.
+     */
+    public Boolean isTokenValid(String token) {
+        try {
+            // El parser intenta descifrar la firma con nuestra llave secreta
+            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);
             return true;
-        }catch(Exception e){
+        } catch (JwtException e) {
+            // Si el token expiró, la firma es incorrecta o está corrupto, entra aquí
+            e.printStackTrace();
             return false;
         }
     }
 
-    /**
-     * @param token jwt
-     * @return email
-     */
-    public String extractEmail(String token){
-        return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    public <T> T exctractClaims(String token, Function<Claims, T> resolver) {
+        final Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return resolver.apply(claims);
+    }
+
+    public String extractNombreusu(String token) {
+        return exctractClaims(token, Claims::getSubject);
+    }
+
+    public Long extractUsuarioId(String token) {
+        return exctractClaims(token, claims -> claims.get("usuarioId", Long.class));
+    }
+
+    public Long extractRolId(String token) {
+        return exctractClaims(token, claims -> claims.get("rolId", Long.class));
+    }
+
+    public String refreshToken(String token) {
+        Claims claims;
+
+        try {
+            // Intento de lectura normal si aún es válido
+            claims = Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            throw new RuntimeException("Token is expired " + e.getMessage());
+        } catch (JwtException e) {
+            throw new RuntimeException("Token is invalid: " + e.getMessage());
+        }
+
+        // se genera un nuevo token con los datos
+        return generateToken(claims.get("usuarioId", Long.class), claims.getSubject(), claims.get("rolId", Long.class));
     }
 }

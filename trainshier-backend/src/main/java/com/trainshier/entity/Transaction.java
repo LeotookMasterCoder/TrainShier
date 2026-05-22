@@ -23,7 +23,7 @@ public class Transaction {
      * @param user associated user
      */
     @ManyToOne
-    private User user;
+    private Usuario user;
 
     /**
      * @param total amount

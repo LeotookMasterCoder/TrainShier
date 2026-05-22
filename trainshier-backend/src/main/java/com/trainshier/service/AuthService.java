@@ -1,50 +1,80 @@
 package com.trainshier.service;
 
-import com.trainshier.dto.LoginRequest;
-import com.trainshier.dto.RegisterRequest;
-import com.trainshier.entity.User;
-import com.trainshier.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import java.util.Optional;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-/**
- * @param authentication logic
- */
+import com.trainshier.dto.LoginRequestDTO;
+import com.trainshier.dto.LoginResponseDTO;
+import com.trainshier.dto.MessageResponseDTO;
+import com.trainshier.dto.RefreshTokenResponseDTO;
+import com.trainshier.dto.UsuarioRequestDTO;
+import com.trainshier.entity.Usuario;
+import com.trainshier.repository.UsuarioRepository;
+
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    private final UsuarioRepository usuarioRepository;
+
     private final JwtService jwtService;
+    //esta es la funcion de registrar
+    public MessageResponseDTO register(UsuarioRequestDTO request) {
+        MessageResponseDTO response = new MessageResponseDTO();
+        response.setMensaje("Registro exitoso");
 
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (usuarioRepository.findByEmail(request.getCorreo()).isPresent()) {
+            throw new RuntimeException("Este correo ya esta en uso");
+        }
 
-    /**
-     * @param request register data
-     * @return user
-     */
-    public User register(RegisterRequest request){
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(encoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
-        return userRepository.save(user);
+        Usuario usuario = new Usuario();
+        usuario.setNombre(request.getNombre());
+        usuario.setContraseña(passwordEncoder.encode(request.getContraseña()));
+        usuario.setRolId(request.getRolid());
+
+        usuarioRepository.save(usuario);
+
+        return response;
+    }
+    //esta es la funcion de logearse
+    public LoginResponseDTO login(LoginRequestDTO request) {
+        LoginResponseDTO response = new LoginResponseDTO();
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(request.getCorreo());
+
+        if (usuario.isEmpty() && request.getCorreo() != null) {
+            response.setMensaje("Este usuario no se ha registrado aun");
+            return response;
+        }
+
+        Usuario userFound = usuario.get();
+
+        if (!passwordEncoder.matches(request.getContraseña(), userFound.getContraseña())) {
+            throw new RuntimeException("Contraseña incorrecta");
+        }
+        
+        String jwt = jwtService.generateToken(userFound.getId_usuario(), userFound.getNombre(), userFound.getRolId());
+
+        response.setMensaje("Inicio de sesión exitoso");
+        response.setJwt(jwt);
+        return response;
     }
 
     /**
-     * @param request login data
-     * @return token
+     * Esto es el refresco de el token
+     * @param token jwt viejo
+     * @return nuevo token
      */
-    public String login(LoginRequest request){
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
-
-        if(!encoder.matches(request.getPassword(), user.getPassword())){
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        return jwtService.generateToken(user.getEmail());
+    public RefreshTokenResponseDTO refreshToken(String token) {
+        String jwt = jwtService.refreshToken(token);
+        RefreshTokenResponseDTO response = new RefreshTokenResponseDTO();
+        response.setMensaje("ok");
+        response.setJwt(jwt);
+        return response;
     }
 }
