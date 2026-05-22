@@ -141,3 +141,46 @@ body{
   border-radius:10px;
   cursor:pointer;
 }
+@media (min-width:481px) and (max-width:768px){
+
+  .navbar{
+    flex-direction:column;
+    height:auto;
+    gap:15px;
+    padding:20px;
+  }
+
+  .links{
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:15px;
+  }
+
+}
+
+@media (max-width:480px){
+
+  .navbar{
+    flex-direction:column;
+    height:auto;
+    gap:15px;
+    padding:15px;
+  }
+
+  .brand-banner{
+    width:150px;
+    height:50px;
+  }
+
+  .links{
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+  }
+
+  .right-actions{
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+}

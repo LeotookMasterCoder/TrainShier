@@ -25,3 +25,20 @@ select{
   border:2px solid #d1d5db;
   margin-bottom:20px;
 }
+
+@media (min-width:481px) and (max-width:768px){
+
+  select{
+    font-size:15px;
+  }
+
+}
+
+@media (max-width:480px){
+
+  select{
+    padding:12px;
+    font-size:14px;
+  }
+
+}

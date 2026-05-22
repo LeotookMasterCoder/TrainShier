@@ -1,18 +1,40 @@
 <div class="report-container">
 
-  <h2>Simulación de reportes</h2>
+  <div
+    class="report-card"
+    *ngFor="let report of reports"
+  >
 
-  <div class="card" *ngFor="let report of reports">
+    <h2>{{report.apprentice}}</h2>
 
-    <h3>{{report.apprentice}}</h3>
+    <p>
+      Transacciones:
+      {{report.transactions}}
+    </p>
 
-    <p>Total Transacciones: {{report.transactions}}</p>
+    <p>
+      Tiempo promedio:
+      {{report.averageTime}}
+    </p>
 
-    <p>Tiempo Fijo: {{report.averageTime}}</p>
+    <p>
+      Errores:
+      {{report.errors}}
+    </p>
 
-    <p>Errores: {{report.errors}}</p>
+    <p>
+      Puntuación:
+      {{report.score}}%
+    </p>
 
-    <p>Puntuación: {{report.score}}</p>
+    <div class="progress">
+
+      <div
+        class="bar"
+        [style.width.%]="report.score"
+      ></div>
+
+    </div>
 
   </div>
 
