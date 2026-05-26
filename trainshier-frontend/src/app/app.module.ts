@@ -1,5 +1,3 @@
-// src/app/app.module.ts
-
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -30,7 +28,7 @@ import { ProfileComponent } from './features/profile/profile.component';
 
 @NgModule({
 
-  declarations: [
+  declarations:[
     AppComponent,
     DashboardComponent,
     HomeComponent,
@@ -45,29 +43,27 @@ import { ProfileComponent } from './features/profile/profile.component';
     ProfileComponent
   ],
 
-  imports: [
-
+  imports:[
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
     SimulatorModule
-
   ],
 
-  providers: [
+  providers:[
 
     {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
+      provide:HTTP_INTERCEPTORS,
+      useClass:AuthInterceptor,
+      multi:true
     }
 
   ],
 
-  bootstrap: [AppComponent]
+  bootstrap:[AppComponent]
 
 })
 
-export class AppModule {}
+export class AppModule{}

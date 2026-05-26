@@ -18,7 +18,7 @@
   color:white;
   padding:25px;
   border-radius:18px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
 }
 
 .client-card h2{
@@ -77,7 +77,41 @@
   background:white;
   padding:30px;
   border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+.scanner-box,
+.rfid-box{
+  margin-top:20px;
+  margin-bottom:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.scanner-box input,
+.rfid-box input{
+  padding:14px;
+  border-radius:10px;
+  border:2px solid #d1d5db;
+}
+
+.scanner-box button{
+  background:#2563eb;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
+}
+
+.rfid-box button{
+  background:#7c3aed;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
 }
 
 .cart{
@@ -153,19 +187,19 @@
   color:#991b1b;
   border:1px solid #fca5a5;
 }
+
 @media (min-width:769px) and (max-width:1024px){
 
   .simulator-container{
     grid-template-columns:1fr;
   }
-
 }
 
 @media (min-width:481px) and (max-width:768px){
 
   .simulator-container{
     grid-template-columns:1fr;
-    padding:15px;
+    padding:20px;
   }
 
   .cashier-box,
@@ -173,27 +207,33 @@
   .client-card{
     padding:20px;
   }
-
 }
 
 @media (max-width:480px){
 
   .simulator-container{
     grid-template-columns:1fr;
-    gap:15px;
-    padding:10px;
+    padding:15px;
+    gap:20px;
   }
 
   .cashier-box,
   .products,
   .client-card{
-    padding:15px;
+    padding:18px;
   }
 
   .product-card{
     flex-direction:column;
-    gap:10px;
+    gap:15px;
     align-items:flex-start;
   }
 
+  .product-card button{
+    width:100%;
+  }
+
+  .buttons button{
+    width:100%;
+  }
 }

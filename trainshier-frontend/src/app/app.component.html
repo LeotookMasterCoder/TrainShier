@@ -1,68 +1,83 @@
-<div [class.dark-mode]="darkMode">
+<nav class="navbar" *ngIf="showNavbar()">
 
-  <nav
-    class="navbar"
-    *ngIf="showNavbar()"
-  >
+  <div
+    class="brand-banner"
+    routerLink="/">
+  </div>
+
+  <div class="links">
+
+    <a
+      routerLink="/"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact:true }">
+      Inicio
+    </a>
+
+    <a
+      routerLink="/simulator"
+      routerLinkActive="active-link">
+      Simulador
+    </a>
+
+    <a
+      routerLink="/transactions"
+      routerLinkActive="active-link">
+      Transacciones
+    </a>
+
+    <a
+      routerLink="/reports"
+      routerLinkActive="active-link">
+      Reportes
+    </a>
+
+    <a
+      routerLink="/comments"
+      routerLinkActive="active-link">
+      Instructor
+    </a>
+
+    <a
+      routerLink="/statistics"
+      routerLinkActive="active-link">
+      Estadísticas
+    </a>
+
+    <a
+      routerLink="/profile"
+      routerLinkActive="active-link">
+      Perfil
+    </a>
+
+  </div>
+
+  <div class="right-actions">
+
+    <button
+      class="theme-btn"
+      (click)="toggleTheme()">
+
+      {{ darkMode ? '☀️' : '🌙' }}
+
+    </button>
 
     <div
-      class="brand-banner"
-      routerLink="/home"
-    ></div>
-
-    <div class="links">
-
-      <a routerLink="/home">
-        Inicio
-      </a>
-
-      <a routerLink="/simulator">
-        Simulador IA
-      </a>
-
-      <a routerLink="/transactions">
-        Transacciones
-      </a>
-
-      <a routerLink="/reports">
-        Reportes
-      </a>
-
-      <a routerLink="/statistics">
-        Estadísticas
-      </a>
-
-      <a routerLink="/comments">
-        Instructor
-      </a>
-
+      class="profile"
+      routerLink="/profile">
     </div>
 
-    <div class="right-actions">
+    <button
+      type="button"
+      class="logout-btn"
+      (click)="logout()">
 
-      <button
-        class="theme-btn"
-        (click)="toggleTheme()"
-      >
-        {{darkMode ? '☀ Claro' : '🌙 Oscuro'}}
-      </button>
+      Cerrar sesión
 
-      <div
-        class="profile"
-        routerLink="/profile"
-      ></div>
+    </button>
 
-      <button
-        class="logout-btn"
-        (click)="logout()"
-      >
-        Salir
-      </button>
+  </div>
 
-    </div>
+</nav>
 
-  </nav>
-
-  <router-outlet></router-outlet>
-
-</div>
+<router-outlet></router-outlet>

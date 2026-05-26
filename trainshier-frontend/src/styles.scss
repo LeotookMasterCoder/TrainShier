@@ -1,54 +1,52 @@
-body{
+*{
   margin:0;
-  font-family:Arial, Helvetica, sans-serif;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,
+body{
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
   background:#f4f4f4;
-  transition:0.4s;
+  color:#111827;
+  transition:.3s;
+  overflow-x:hidden;
 }
 
-.dark-theme{
-  background:#111827;
+body.dark-mode{
+  background:#0f172a;
+  color:#f9fafb;
+}
+
+body.dark-mode .navbar,
+body.dark-mode .form-card,
+body.dark-mode .profile-card,
+body.dark-mode .cashier-box,
+body.dark-mode .client-card,
+body.dark-mode .stat-card,
+body.dark-mode .feature-card,
+body.dark-mode .comment-card,
+body.dark-mode .products,
+body.dark-mode .transaction-table table{
+  background:#1e293b !important;
+  color:white !important;
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select{
+  background:#334155;
   color:white;
+  border-color:#475569;
 }
 
-.dark-theme .card,
-.dark-theme .form-card,
-.dark-theme .cashier-box,
-.dark-theme .client-card,
-.dark-theme .profile-card,
-.dark-theme .statistics-card{
-  background:#1f2937 !important;
-    color:white !important;
-  }
-
-  .theme-button{
-    position:fixed;
-    top:15px;
-    right:15px;
-    background:#111827;
-    color:white;
-    padding:12px 18px;
-    border-radius:12px;
-    cursor:pointer;
-    z-index:9999;
-    transition:0.3s;
-  }
-
-  .theme-button:hover{
-    transform:scale(1.05);
-  }
-
-@media (min-width:1280px){
-
-}
-@media (max-width:1279px){
-
-}
-@media (min-width:769px) and (max-width:1024px){
-
-}
-@media (min-width:481px) and (max-width:768px){
-
-}
-@media (max-width:480px){
-
+body.dark-mode p,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode label,
+body.dark-mode span,
+body.dark-mode td,
+body.dark-mode th{
+  color:white !important;
 }

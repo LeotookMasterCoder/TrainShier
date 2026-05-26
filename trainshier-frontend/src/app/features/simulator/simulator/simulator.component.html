@@ -1,118 +1,40 @@
-<div
-  class="tutorial-screen"
-  *ngIf="tutorialVisible"
->
-
-  <div class="tutorial-card">
-
-    <h1>
-      Simulador Inteligente TrainShier
-    </h1>
-
-    <p>
-      Practica cobros, descuentos, atención al cliente
-      y simulaciones con inteligencia artificial.
-    </p>
-
-    <div class="tip-box">
-
-      <h3>
-        Big Brain Asistente
-      </h3>
-
-      <p>
-        {{currentTip}}
-      </p>
-
-    </div>
-
-    <a
-      href="assets/docs/tutorial-trainshier.pdf"
-      target="_blank"
-      class="tutorial-btn"
-    >
-      Ver Tutorial PDF
-    </a>
-
-    <button
-      class="practice-btn"
-      (click)="startPractice()"
-    >
-      Iniciar práctica
-    </button>
-
-  </div>
-
-</div>
-
-<div
-  class="simulator-container"
-  *ngIf="!tutorialVisible"
->
+<div class="simulator-container">
 
   <div class="left-panel">
 
     <div class="client-card">
 
-      <h2>
-        Cliente IA Copilot
-      </h2>
+      <h2>Cliente actual</h2>
 
-      <h3>
-        {{currentClient.name}}
-      </h3>
+      <h3>{{currentClient.name}}</h3>
 
-      <p>
-        Mood:
-        {{currentClient.mood}}
-      </p>
-
-      <p>
-        Presupuesto:
-        $ {{currentClient.budget}}
-      </p>
-
-      <div class="copilot-message">
-
-        {{copilotMessage}}
-
-      </div>
+      <p>Dinero disponible: ${{currentClient.money}}</p>
 
       <button
         class="next-btn"
-        (click)="nextClient()"
-      >
-        Siguiente Cliente
+        (click)="nextClient()">
+        Siguiente cliente
       </button>
 
     </div>
 
     <div class="products">
 
-      <h2>
-        Productos
-      </h2>
+      <h2>Productos</h2>
 
       <div
         class="product-card"
-        *ngFor="let product of products"
-      >
+        *ngFor="let product of products">
 
         <div>
 
-          <h4>
-            {{product.name}}
-          </h4>
+          <h3>{{product.name}}</h3>
 
-          <p>
-            $ {{product.price}}
-          </p>
+          <p>${{product.price}}</p>
 
         </div>
 
-        <button
-          (click)="addProduct(product)"
-        >
+        <button (click)="addProduct(product)">
           Agregar
         </button>
 
@@ -126,24 +48,47 @@
 
     <div class="cashier-box">
 
-      <h2>
-        POS Inteligente
-      </h2>
+      <h2>Caja registradora</h2>
+
+      <div class="scanner-box">
+
+        <h3>Escáner</h3>
+
+        <input
+          type="text"
+          [(ngModel)]="barcode"
+          placeholder="Código de barras">
+
+        <button (click)="scanProduct()">
+          Escanear
+        </button>
+
+      </div>
+
+      <div class="rfid-box">
+
+        <h3>Escaneo RFID</h3>
+
+        <input
+          type="text"
+          [(ngModel)]="rfidCard"
+          placeholder="Escanea tarjeta RFID">
+
+        <button (click)="processRFID()">
+          Escanear tarjeta
+        </button>
+
+      </div>
 
       <div class="cart">
 
         <div
           class="cart-item"
-          *ngFor="let item of cart"
-        >
+          *ngFor="let item of cart">
 
-          <span>
-            {{item.name}}
-          </span>
+          <span>{{item.name}}</span>
 
-          <span>
-            $ {{item.price}}
-          </span>
+          <span>${{item.price}}</span>
 
         </div>
 
@@ -151,78 +96,43 @@
 
       <div class="summary">
 
-        <h3>
-          Total:
-          $ {{total}}
-        </h3>
+        <h3>Total: ${{total}}</h3>
 
         <input
           type="number"
-          [(ngModel)]="received"
-          placeholder="Dinero recibido"
-        >
-
-        <div class="buttons">
-
-          <button
-            class="discount"
-            (click)="applyDiscount()"
-          >
-            Aplicar descuento
-          </button>
-
-          <button
-            class="pay"
-            (click)="processPayment()"
-          >
-            Procesar pago
-          </button>
-
-          <button
-            class="cancel"
-            (click)="cancelSale()"
-          >
-            Cancelar venta
-          </button>
-
-        </div>
-
-        <div
-          class="result"
-          [ngClass]="statusType"
-          *ngIf="statusMessage"
-        >
-
-          <p>
-            {{statusMessage}}
-          </p>
-
-          <p *ngIf="change > 0">
-
-            Cambio:
-            $ {{change}}
-
-          </p>
-
-        </div>
+          [(ngModel)]="payment"
+          placeholder="Dinero recibido">
 
       </div>
 
-      <div class="performance">
+      <div class="buttons">
 
-        <div class="success-box">
+        <button
+          class="discount"
+          (click)="applyDiscount()">
+          Aplicar descuento
+        </button>
 
-          Exitosas:
-          {{successTransactions}}
+        <button
+          class="pay"
+          (click)="processPayment()">
+          Cobrar
+        </button>
 
-        </div>
+        <button
+          class="cancel"
+          (click)="cancelPurchase()">
+          Cancelar
+        </button>
 
-        <div class="error-box">
+      </div>
 
-          Fallidas:
-          {{failedTransactions}}
+      <div
+        class="result"
+        [ngClass]="success ? 'success':'error'"
+        *ngIf="resultMessage">
 
-        </div>
+        {{resultMessage}}
 
       </div>
 

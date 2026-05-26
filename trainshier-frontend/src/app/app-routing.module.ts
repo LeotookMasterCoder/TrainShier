@@ -21,64 +21,70 @@ import { ProfileComponent } from './features/profile/profile.component';
 const routes: Routes = [
 
   {
-    path: '',
-    component: DashboardComponent
+    path:'',
+    component:DashboardComponent
   },
 
   {
-    path: 'home',
-    component: HomeComponent
+    path:'home',
+    component:HomeComponent
   },
 
   {
-    path: 'login',
-    component: LoginComponent
+    path:'login',
+    component:LoginComponent
   },
 
   {
-    path: 'register',
-    component: RegisterComponent
+    path:'register',
+    component:RegisterComponent
   },
 
   {
-    path: 'recover-password',
-    component: RecoverPasswordComponent
+    path:'recover-password',
+    component:RecoverPasswordComponent
   },
 
   {
-    path: 'simulator',
-    component: SimulatorComponent
+    path:'simulator',
+    component:SimulatorComponent
   },
 
   {
-    path: 'transactions',
-    component: TransactionListComponent
+    path:'transactions',
+    component:TransactionListComponent
   },
 
   {
-    path: 'reports',
-    component: ReportListComponent
+    path:'reports',
+    component:ReportListComponent
   },
 
   {
-    path: 'comments',
-    component: InstructorCommentsComponent
+    path:'comments',
+    component:InstructorCommentsComponent
   },
 
   {
-    path: 'statistics',
-    component: StatisticsComponent
+    path:'statistics',
+    component:StatisticsComponent
   },
 
   {
-    path: 'profile',
-    component: ProfileComponent
+    path:'profile',
+    component:ProfileComponent
+  },
+
+  {
+    path:'**',
+    redirectTo:''
   }
 
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports:[RouterModule.forRoot(routes)],
+  exports:[RouterModule]
 })
-export class AppRoutingModule {}
+
+export class AppRoutingModule{}
