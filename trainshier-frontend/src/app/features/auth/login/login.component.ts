@@ -1,77 +1,114 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { TokenService } from '../../../core/services/token.service';
-
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  selector:'app-login',
+  templateUrl:'./login.component.html',
+  styleUrls:['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent{
 
-  errorMessage = '';
-  loading = false;
+  showConfirm:boolean=false;
 
-  constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private token: TokenService,
-    private router: Router
-  ){}
+  previewUser:any={};
 
-  form = this.fb.group({
-    email: [
+  form=this.fb.group({
+
+    email:[
       '',
       [
         Validators.required,
         Validators.email
       ]
     ],
-    password: [
+
+    password:[
       '',
       [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(/^(?=.*[A-Z])(?=.*[\W_]).+$/)
+        Validators.pattern(
+          /^(?=.*[!@#$%^&*(),.?":{}|<>]).+$/
+        )
       ]
     ]
+
   });
 
-  submit(){
+  constructor(
+    private fb:FormBuilder,
+    private router:Router
+  ){}
+
+  validateLogin():void{
 
     if(this.form.invalid){
+
       this.form.markAllAsTouched();
       return;
+
     }
 
-    this.loading = true;
-    this.errorMessage = '';
+    const email=this.form.value.email;
 
-    this.auth.login(this.form.value).subscribe({
+    if(email==='admin@trainshier.com'){
 
-      next: (res: any) => {
+      this.previewUser={
+        name:'Administrador Principal',
+        email,
+        role:'ADMIN'
+      };
 
-        this.token.save(res.token);
+    }else if(email==='instructor@trainshier.com'){
 
-        const role = res.role || 'Aprendiz';
+      this.previewUser={
+        name:'Instructor Demo',
+        email,
+        role:'INSTRUCTOR'
+      };
 
-        alert(`Bienvenidos a TrainShier (${role})`);
+    }else{
 
-        this.router.navigate(['/home']);
+      this.previewUser={
+        name:'Aprendiz Demo',
+        email,
+        role:'APRENDIZ'
+      };
 
-        this.loading = false;
-      },
+    }
 
-      error: () => {
+    this.showConfirm=true;
 
-        this.errorMessage =
-          'Credenciales invalidas o error en el servidor';
-
-        this.loading = false;
-      }
-    });
   }
+
+  login():void{
+
+    localStorage.setItem(
+      'token',
+      'trainshier-token'
+    );
+
+    localStorage.setItem(
+      'role',
+      this.previewUser.role
+    );
+
+    localStorage.setItem(
+      'name',
+      this.previewUser.name
+    );
+
+    localStorage.setItem(
+      'email',
+      this.previewUser.email
+    );
+
+    this.router.navigate(['/home']);
+
+  }
+
 }

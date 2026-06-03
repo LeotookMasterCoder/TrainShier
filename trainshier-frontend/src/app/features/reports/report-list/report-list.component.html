@@ -1,0 +1,97 @@
+<div class="reports-container">
+
+  <div class="header">
+
+    <h1>
+      Reportes TrainShier
+    </h1>
+
+    <p>
+      Estadísticas generales del sistema.
+    </p>
+
+  </div>
+
+  <div class="kpi-grid">
+
+    <div class="kpi-card">
+
+      <h2>{{totalUsers}}</h2>
+
+      <span>
+        Usuarios registrados
+      </span>
+
+    </div>
+
+    <div class="kpi-card">
+
+      <h2>{{totalTransactions}}</h2>
+
+      <span>
+        Transacciones
+      </span>
+
+    </div>
+
+    <div class="kpi-card">
+
+      <h2>{{totalSimulations}}</h2>
+
+      <span>
+        Simulaciones
+      </span>
+
+    </div>
+
+    <div class="kpi-card">
+
+      <h2>{{averageScore}}%</h2>
+
+      <span>
+        Promedio general
+      </span>
+
+    </div>
+
+  </div>
+
+  <div class="table-section">
+
+    <h2>
+      Actividad reciente
+    </h2>
+
+    <table>
+
+      <thead>
+
+      <tr>
+
+        <th>Usuario</th>
+        <th>Rol</th>
+        <th>Simulaciones</th>
+        <th>Efectividad</th>
+
+      </tr>
+
+      </thead>
+
+      <tbody>
+
+      <tr *ngFor="let user of users">
+
+        <td>{{user.name}}</td>
+        <td>{{user.role}}</td>
+        <td>{{user.simulations}}</td>
+        <td>{{user.effectiveness}}%</td>
+
+      </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

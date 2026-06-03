@@ -8,83 +8,88 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { RecoverPasswordComponent } from './features/auth/recover-password/recover-password.component';
 
-import { TransactionListComponent } from './features/transactions/transaction-list/transaction-list.component';
-
-import { ReportListComponent } from './features/evaluation/report-list/report-list.component';
-import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
-import { StatisticsComponent } from './features/evaluation/statistics/statistics.component';
-
 import { SimulatorComponent } from './features/simulator/simulator/simulator.component';
 
 import { ProfileComponent } from './features/profile/profile.component';
 
+import { TransactionFormComponent } from './features/transactions/transaction-form/transaction-form.component';
+
+import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
+
+import { ReportsComponent } from './features/reports/report-list/report-list.component';
+
+import { StatisticsComponent } from './features/statistics/statistics/statistics.component';
+
 const routes: Routes = [
 
   {
-    path:'',
-    component:DashboardComponent
+    path: '',
+    component: DashboardComponent
   },
 
   {
-    path:'home',
-    component:HomeComponent
+    path: 'home',
+    component: HomeComponent
   },
 
   {
-    path:'login',
-    component:LoginComponent
+    path: 'login',
+    component: LoginComponent
   },
 
   {
-    path:'register',
-    component:RegisterComponent
+    path: 'register',
+    component: RegisterComponent
   },
 
   {
-    path:'recover-password',
-    component:RecoverPasswordComponent
+    path: 'recover-password',
+    component: RecoverPasswordComponent
   },
 
   {
-    path:'simulator',
-    component:SimulatorComponent
+    path: 'simulator',
+    component: SimulatorComponent
   },
 
   {
-    path:'transactions',
-    component:TransactionListComponent
+    path: 'profile',
+    component: ProfileComponent
   },
 
   {
-    path:'reports',
-    component:ReportListComponent
+    path: 'transactions',
+    component: TransactionFormComponent
   },
 
   {
-    path:'comments',
-    component:InstructorCommentsComponent
+    path: 'evaluation',
+    component: InstructorCommentsComponent
   },
 
   {
-    path:'statistics',
-    component:StatisticsComponent
+    path: 'reports',
+    component: ReportsComponent
   },
 
   {
-    path:'profile',
-    component:ProfileComponent
+    path: 'statistics',
+    component: StatisticsComponent
   },
 
   {
-    path:'**',
-    redirectTo:''
+    path: '**',
+    redirectTo: ''
   }
 
 ];
 
 @NgModule({
-  imports:[RouterModule.forRoot(routes)],
-  exports:[RouterModule]
+  imports: [
+    RouterModule.forRoot(routes)
+  ],
+  exports: [
+    RouterModule
+  ]
 })
-
-export class AppRoutingModule{}
+export class AppRoutingModule {}

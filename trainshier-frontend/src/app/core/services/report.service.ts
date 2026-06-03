@@ -1,28 +1,23 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { Observable,of } from 'rxjs';
+
 @Injectable({
-  providedIn: 'root'
+  providedIn:'root'
 })
+
 export class ReportService {
 
-  private url = 'http://localhost:8080/api/reports';
+  getStatistics():Observable<any>{
 
-  constructor(private http: HttpClient) {}
+    return of({
 
-  getAll(){
-    return this.http.get(this.url);
+      totalSales:120,
+      approved:90,
+      failed:30
+
+    });
+
   }
 
-  getStatistics(){
-    return this.http.get(`${this.url}/statistics`);
-  }
-
-  createComment(data: any){
-    return this.http.post(`${this.url}/comments`, data);
-  }
-
-  getComments(){
-    return this.http.get(`${this.url}/comments`);
-  }
 }

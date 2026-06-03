@@ -1,0 +1,92 @@
+.reports-container{
+  padding:40px;
+  min-height:100vh;
+  background:#f4f7fb;
+}
+
+.dark-mode .reports-container{
+  background:#050b16;
+}
+
+.header{
+  margin-bottom:40px;
+}
+
+.header h1{
+  font-size:42px;
+}
+
+.header p{
+  color:#6b7280;
+}
+
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+
+.kpi-card{
+  background:white;
+  border-radius:18px;
+  padding:30px;
+  text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.kpi-card h2{
+  color:#d89a00;
+  font-size:42px;
+}
+
+.table-section{
+  margin-top:50px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+}
+
+th,
+td{
+  padding:16px;
+  border:1px solid #e5e7eb;
+  text-align:center;
+}
+
+th{
+  background:#d89a00;
+  color:black;
+}
+
+.dark-mode .kpi-card,
+.dark-mode table{
+  background:#111827;
+  color:white;
+}
+
+@media(max-width:900px){
+
+  .kpi-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:600px){
+
+  .kpi-grid{
+    grid-template-columns:1fr;
+  }
+
+  .table-section{
+    overflow-x:auto;
+  }
+
+  table{
+    min-width:700px;
+  }
+
+}

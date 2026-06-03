@@ -1,95 +1,145 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  selector:'app-profile',
+  templateUrl:'./profile.component.html',
+  styleUrls:['./profile.component.scss']
 })
+export class ProfileComponent{
 
-export class ProfileComponent {
+  showSuccess:boolean=false;
 
-  profileImage = 'assets/img/default-profile.png';
+  profileImage:string='assets/img/default-profile.png';
 
-  showMenu = false;
+  role:string='APRENDIZ';
 
-  constructor(private fb: FormBuilder){}
+  name:string='Usuario TrainShier';
 
-  form = this.fb.group({
+  userId:string='TRN-0000';
 
-    fullName: [
-      'Darwing Andres',
-      Validators.required
-    ],
+  form=this.fb.group({
 
-    username: [
-      'darwing#5462',
-      Validators.required
-    ],
-
-    phone: [
+    email:[
       '',
-      Validators.required
+      [
+        Validators.required,
+        Validators.email
+      ]
     ],
 
-    city: [
+    username:[
       '',
-      Validators.required
+      [
+        Validators.required,
+        Validators.pattern(
+          /^[a-zA-Z0-9]+#[0-9]{4}$/
+        )
+      ]
     ],
 
-    description: [''],
+    birthDate:['']
 
-    email: [
-      {
-        value: 'darwing@gmail.com',
-        disabled: true
-      }
-    ],
-
-    role: [
-      {
-        value: 'APPRENTICE',
-        disabled: true
-      }
-    ],
-
-    id: [
-      {
-        value: 'TRN-82913',
-        disabled: true
-      }
-    ]
   });
 
-  toggleMenu(){
+  constructor(
+    private fb:FormBuilder
+  ){
 
-    this.showMenu = !this.showMenu;
+    this.role=
+      localStorage.getItem('role')
+      || 'APRENDIZ';
+
+    this.name=
+      localStorage.getItem('name')
+      || 'Usuario TrainShier';
+
+    this.userId=
+      localStorage.getItem('userId')
+      || 'TRN-5642';
+
+    this.profileImage=
+      localStorage.getItem('profileImage')
+      || 'assets/img/default-profile.png';
+
+    this.form.patchValue({
+
+      email:
+        localStorage.getItem('email')
+        || '',
+
+      username:
+        localStorage.getItem('username')
+        || '',
+
+      birthDate:
+        localStorage.getItem('birthDate')
+        || ''
+
+    });
 
   }
 
-  onImageChange(event: any){
+  changePhoto(event:any):void{
 
-    const file = event.target.files[0];
+    const file=event.target.files[0];
 
-    if(file){
+    if(!file){
+      return;
+    }
 
-      const reader = new FileReader();
+    const reader=new FileReader();
 
-      reader.onload = () => {
+    reader.onload=()=>{
 
-        this.profileImage = reader.result as string;
+      this.profileImage=
+        reader.result as string;
 
-      };
+      localStorage.setItem(
+        'profileImage',
+        this.profileImage
+      );
 
-      reader.readAsDataURL(file);
+    };
+
+    reader.readAsDataURL(file);
+
+  }
+
+  saveChanges():void{
+
+    if(this.form.invalid){
+
+      this.form.markAllAsTouched();
+      return;
 
     }
 
-  }
+    localStorage.setItem(
+      'email',
+      this.form.value.email || ''
+    );
 
-  saveChanges(){
+    localStorage.setItem(
+      'username',
+      this.form.value.username || ''
+    );
 
-    alert('Perfil actualizado correctamente');
+    localStorage.setItem(
+      'birthDate',
+      this.form.value.birthDate || ''
+    );
+
+    this.showSuccess=true;
+
+    setTimeout(()=>{
+
+      this.showSuccess=false;
+
+    },3000);
 
   }
 

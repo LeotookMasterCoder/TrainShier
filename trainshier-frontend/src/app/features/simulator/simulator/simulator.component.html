@@ -1,138 +1,172 @@
-<div class="simulator-container">
+<div class="simulator-page">
 
-  <div class="left-panel">
+  <div class="simulator-header">
 
-    <div class="client-card">
+    <h1>
+      Simulador Profesional POS
+    </h1>
 
-      <h2>Cliente actual</h2>
-
-      <h3>{{currentClient.name}}</h3>
-
-      <p>Dinero disponible: ${{currentClient.money}}</p>
-
-      <button
-        class="next-btn"
-        (click)="nextClient()">
-        Siguiente cliente
-      </button>
-
-    </div>
-
-    <div class="products">
-
-      <h2>Productos</h2>
-
-      <div
-        class="product-card"
-        *ngFor="let product of products">
-
-        <div>
-
-          <h3>{{product.name}}</h3>
-
-          <p>${{product.price}}</p>
-
-        </div>
-
-        <button (click)="addProduct(product)">
-          Agregar
-        </button>
-
-      </div>
-
-    </div>
+    <p>
+      Entrena habilidades de atención al cliente, velocidad y precisión.
+    </p>
 
   </div>
 
-  <div class="right-panel">
+  <div class="role-banner" *ngIf="role==='admin'">
+    <h2>Panel de Administración</h2>
+    <p>
+      Control total del sistema TrainShier y supervisión avanzada.
+    </p>
+  </div>
 
-    <div class="cashier-box">
+  <div class="role-banner" *ngIf="role==='instructor'">
+    <h2>Modo Instructor</h2>
+    <p>
+      Evalúa aprendices y monitorea estadísticas en tiempo real.
+    </p>
+  </div>
 
-      <h2>Caja registradora</h2>
+  <div class="role-banner" *ngIf="role==='aprendiz'">
+    <h2>Modo Aprendiz</h2>
+    <p>
+      Completa simulaciones y mejora tus habilidades de atención.
+    </p>
+  </div>
 
-      <div class="scanner-box">
+  <div class="simulator-grid">
 
-        <h3>Escáner</h3>
+    <div class="simulator-card">
 
-        <input
-          type="text"
-          [(ngModel)]="barcode"
-          placeholder="Código de barras">
+      <div class="customer-card">
 
-        <button (click)="scanProduct()">
-          Escanear
-        </button>
+        <h3>
+          Cliente Actual
+        </h3>
 
-      </div>
+        <div class="customer-info">
 
-      <div class="rfid-box">
+          <div>
+            <span>Nombre</span>
+            {{currentCustomer.name}}
+          </div>
 
-        <h3>Escaneo RFID</h3>
+          <div>
+            <span>Estado</span>
+            {{currentCustomer.mood}}
+          </div>
 
-        <input
-          type="text"
-          [(ngModel)]="rfidCard"
-          placeholder="Escanea tarjeta RFID">
+          <div>
+            <span>Busca</span>
+            {{currentCustomer.product}}
+          </div>
 
-        <button (click)="processRFID()">
-          Escanear tarjeta
-        </button>
-
-      </div>
-
-      <div class="cart">
-
-        <div
-          class="cart-item"
-          *ngFor="let item of cart">
-
-          <span>{{item.name}}</span>
-
-          <span>${{item.price}}</span>
+          <div>
+            <span>Tiempo</span>
+            {{timeLeft}} segundos
+          </div>
 
         </div>
 
       </div>
 
-      <div class="summary">
+      <h2>
+        Productos disponibles
+      </h2>
 
-        <h3>Total: ${{total}}</h3>
+      <div class="products-grid">
 
-        <input
-          type="number"
-          [(ngModel)]="payment"
-          placeholder="Dinero recibido">
+        <div
+          class="product-card"
+          *ngFor="let product of products"
+          (click)="selectProduct(product)"
+        >
+
+          <img [src]="product.image">
+
+          <h4>
+            {{product.name}}
+          </h4>
+
+          <p>
+            {{product.description}}
+          </p>
+
+          <span class="product-price">
+            $ {{product.price}}
+          </span>
+
+        </div>
 
       </div>
 
-      <div class="buttons">
+      <div class="actions">
 
         <button
-          class="discount"
-          (click)="applyDiscount()">
-          Aplicar descuento
+          class="primary-btn"
+          (click)="startSimulation()"
+        >
+          Iniciar simulación
         </button>
 
         <button
-          class="pay"
-          (click)="processPayment()">
-          Cobrar
-        </button>
-
-        <button
-          class="cancel"
-          (click)="cancelPurchase()">
-          Cancelar
+          class="secondary-btn"
+          (click)="finishSimulation()"
+        >
+          Finalizar simulación
         </button>
 
       </div>
 
       <div
-        class="result"
-        [ngClass]="success ? 'success':'error'"
-        *ngIf="resultMessage">
+        class="alert-success"
+        *ngIf="successMessage"
+      >
+        {{successMessage}}
+      </div>
 
-        {{resultMessage}}
+      <div
+        class="alert-error"
+        *ngIf="errorMessage"
+      >
+        {{errorMessage}}
+      </div>
+
+    </div>
+
+    <div class="simulator-card stats-card">
+
+      <h3>
+        Estadísticas
+      </h3>
+
+      <div class="stat-item">
+        Simulaciones exitosas
+        <span>
+          {{successCount}}
+        </span>
+      </div>
+
+      <div class="stat-item">
+        Simulaciones fallidas
+        <span>
+          {{failCount}}
+        </span>
+      </div>
+
+      <div class="stat-item">
+        Productos atendidos
+        <span>
+          {{servedProducts}}
+        </span>
+      </div>
+
+      <div class="timer-box">
+
+        Tiempo restante
+
+        <h2>
+          {{timeLeft}}
+        </h2>
 
       </div>
 

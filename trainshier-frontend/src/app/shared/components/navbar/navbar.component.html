@@ -1,0 +1,85 @@
+<nav class="navbar">
+
+  <div class="left">
+
+    <img
+      src="assets/img/BannerTrainShier2.jpeg"
+      class="logo"
+      routerLink="/home"
+    >
+
+  </div>
+
+  <div class="center">
+
+    <a routerLink="/home">Inicio</a>
+
+    <a
+      *ngIf="role==='APRENDIZ'"
+      routerLink="/simulator"
+    >
+      Simulador
+    </a>
+
+    <a
+      *ngIf="role==='APRENDIZ'"
+      routerLink="/transactions"
+    >
+      Transacciones
+    </a>
+
+    <a
+      *ngIf="role==='INSTRUCTOR'"
+      routerLink="/evaluation"
+    >
+      Evaluaciones
+    </a>
+
+    <a
+      *ngIf="role==='INSTRUCTOR'"
+      routerLink="/reports"
+    >
+      Reportes
+    </a>
+
+    <a
+      *ngIf="role==='ADMIN'"
+      routerLink="/statistics"
+    >
+      Estadísticas
+    </a>
+
+  </div>
+
+  <div class="right">
+
+    <button
+      class="theme-btn"
+      (click)="toggleTheme()"
+    >
+      {{darkMode ? '☀️' : '🌙'}}
+    </button>
+
+    <div
+      class="profile"
+      routerLink="/profile"
+    >
+
+      <img
+        [src]="profileImage"
+        alt="Perfil"
+      >
+
+    </div>
+
+    <button
+      *ngIf="isLoggedIn"
+      class="logout-btn"
+      (click)="logout()"
+    >
+      Salir
+    </button>
+
+  </div>
+
+</nav>

@@ -1,46 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { ReportService } from '../../../core/services/report.service';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-statistics',
-  templateUrl: './statistics.component.html',
-  styleUrls: ['./statistics.component.scss']
+  selector:'app-statistics',
+  templateUrl:'./statistics.component.html',
+  styleUrls:['./statistics.component.scss']
 })
-export class StatisticsComponent implements OnInit {
+export class StatisticsComponent{
 
-  data: any = null;
-
-  constructor(private service: ReportService){}
-
-  ngOnInit(): void {
-    this.loadStatistics();
-  }
-
-  loadStatistics(){
-
-    this.service.getStatistics().subscribe({
-
-      next: (res: any) => {
-
-        this.data = {
-
-          totalSimulations:
-            res.totalSimulations || 0,
-
-          averageScore:
-            res.averageScore || 0,
-
-          successPayments:
-            res.successPayments || 0,
-
-          rejectedSales:
-            res.rejectedSales || 0
-        };
-
-      },
-
-    });
-
-  }
+  stats = [
+    {
+      title:'Simulaciones exitosas',
+      value:'92%'
+    },
+    {
+      title:'Tiempo promedio',
+      value:'38s'
+    },
+    {
+      title:'Aprendices activos',
+      value:'245'
+    }
+  ];
 
 }

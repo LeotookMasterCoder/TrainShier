@@ -1,210 +1,218 @@
-.auth-container{
+.auth-page{
+  width:100%;
   min-height:100vh;
+  background:#f4f7fb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+  transition:0.3s ease;
+}
+
+.dark-mode .auth-page{
+  background:#050b16;
+}
+
+.auth-card{
+  width:100%;
+  max-width:1350px;
   display:grid;
   grid-template-columns:1fr 1fr;
-  background:#f3f4f6;
+  overflow:hidden;
+  border-radius:35px;
+  background:white;
+  box-shadow:0 15px 50px rgba(0,0,0,0.15);
+}
+
+.dark-mode .auth-card{
+  background:#111827;
 }
 
 .auth-left{
-  background:#111827;
-  color:white;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
+  background:linear-gradient(
+    135deg,
+    #d89a00,
+    #f7b500
+  );
   padding:60px;
-  text-align:center;
+  color:white;
 }
 
 .logo{
-  width:180px;
-  height:180px;
-  border-radius:20px;
-  background-image:url('/assets/img/Logo_TrainShier2.jpeg');
-  background-size:cover;
-  background-position:center;
-  margin-bottom:25px;
-  border:3px solid #22c55e;
+  width:140px;
+  margin-bottom:30px;
 }
 
 .auth-left h1{
-  font-size:42px;
-  margin-bottom:15px;
+  font-size:50px;
+  margin-bottom:25px;
 }
 
 .auth-left p{
-  max-width:400px;
-  line-height:1.7;
-  color:#d1d5db;
+  font-size:18px;
+  line-height:1.8;
+}
+
+.demo-box{
+  margin-top:50px;
+}
+
+.demo-item{
+  background:rgba(255,255,255,0.2);
+  border-radius:18px;
+  padding:18px;
+  margin-top:15px;
+}
+
+.demo-item span{
+  font-weight:800;
+  display:block;
+  margin-bottom:8px;
 }
 
 .auth-right{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:40px;
+  padding:60px;
 }
 
-.form-card{
-  width:100%;
-  max-width:420px;
-  background:white;
-  padding:40px;
-  border-radius:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.1);
-  animation:fade .4s ease;
-}
-
-@keyframes fade{
-
-  from{
-    opacity:0;
-    transform:translateY(20px);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-.form-card h2{
+.top-actions{
   margin-bottom:30px;
-  font-size:32px;
+}
+
+.back-btn{
+  border:none;
+  background:#111827;
+  color:white;
+  padding:12px 22px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.auth-right h2{
+  font-size:42px;
+  margin-bottom:40px;
   color:#111827;
+}
+
+.dark-mode .auth-right h2{
+  color:white;
 }
 
 .input-group{
   display:flex;
   flex-direction:column;
-  margin-bottom:20px;
+  margin-bottom:25px;
 }
 
-input{
-  padding:14px;
-  border-radius:10px;
-  border:2px solid #d1d5db;
-  font-size:15px;
-  transition:0.3s;
+.input-group label{
+  font-weight:700;
+  margin-bottom:10px;
 }
 
-input:focus{
-  outline:none;
-  border-color:#22c55e;
-}
-
-input.ng-valid.ng-touched{
-  border-color:#22c55e;
-}
-
-.invalid{
-  border-color:#ef4444 !important;
-  background:#fef2f2;
-}
-
-small{
-  color:#ef4444;
-  margin-top:6px;
-  font-size:13px;
-}
-
-.server-error{
-  background:#fef2f2;
-  color:#dc2626;
-  padding:12px;
-  border-radius:10px;
-  margin-bottom:20px;
-  border:1px solid #fecaca;
-}
-
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:10px;
-  background:#d89a00;
+.dark-mode .input-group label{
   color:white;
+}
+
+.input-group input{
+  height:60px;
+  border-radius:15px;
+  border:2px solid #d1d5db;
+  padding:0 18px;
   font-size:16px;
+  outline:none;
+}
+
+.dark-mode .input-group input{
+  background:#1f2937;
+  color:white;
+  border:2px solid #374151;
+}
+
+.input-group small{
+  color:#ef4444;
+  margin-top:8px;
+  font-weight:700;
+}
+
+.main-btn{
+  width:100%;
+  height:60px;
+  border:none;
+  border-radius:16px;
+  background:#d89a00;
+  color:black;
+  font-size:18px;
+  font-weight:800;
   cursor:pointer;
-  transition:0.3s;
+  margin-top:15px;
 }
 
-button:hover{
-  background:#16a34a;
+.confirm-box{
+  margin-top:30px;
+  background:#f3f4f6;
+  border-radius:20px;
+  padding:30px;
 }
 
-button:disabled{
-  opacity:0.6;
-  cursor:not-allowed;
+.dark-mode .confirm-box{
+  background:#1f2937;
+  color:white;
 }
 
-a{
-  color:#2563eb;
+.confirm-actions{
+  margin-top:25px;
+  display:flex;
+  gap:15px;
+}
+
+.confirm-btn,
+.cancel-btn{
+  flex:1;
+  height:52px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:800;
+}
+
+.confirm-btn{
+  background:#d89a00;
+}
+
+.cancel-btn{
+  background:#ef4444;
+  color:white;
+}
+
+.bottom-links{
+  margin-top:30px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.bottom-links a{
+  color:#d89a00;
   text-decoration:none;
+  font-weight:700;
 }
 
-p{
-  margin-top:20px;
-}
+@media(max-width:1000px){
 
-@media (min-width:769px) and (max-width:1024px){
-
-  .auth-container{
+  .auth-card{
     grid-template-columns:1fr;
   }
 
-  .auth-left{
-    min-height:320px;
-  }
-
 }
 
-@media (min-width:481px) and (max-width:768px){
+@media(max-width:700px){
 
-  .auth-container{
-    grid-template-columns:1fr;
-  }
-
-  .auth-left{
-    padding:40px 20px;
+  .auth-left,
+  .auth-right{
+    padding:35px 25px;
   }
 
   .auth-left h1{
-    font-size:34px;
-  }
-
-  .form-card{
-    padding:30px;
-  }
-
-}
-
-@media (max-width:480px){
-
-  .auth-container{
-    grid-template-columns:1fr;
-  }
-
-  .auth-left{
-    padding:30px 15px;
-  }
-
-  .auth-left h1{
-    font-size:28px;
-  }
-
-  .auth-left p{
-    font-size:14px;
-  }
-
-  .logo{
-    width:150px;
-    height:150px;
-  }
-
-  .form-card{
-    padding:22px;
-    border-radius:15px;
+    font-size:35px;
   }
 
 }

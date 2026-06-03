@@ -1,43 +1,23 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
-  showMenu = false;
+  role:string='OBSERVADOR';
+  userName:string='Invitado';
 
-  profileImage =
-    localStorage.getItem('profileImage') ||
-    '/assets/img/default-profile.png';
+  ngOnInit(): void {
 
-  constructor(private router: Router){}
+    this.role = localStorage.getItem('role') || 'OBSERVADOR';
 
-  toggleMenu(){
-    this.showMenu = !this.showMenu;
-  }
+    this.userName =
+      localStorage.getItem('name') ||
+      'Invitado';
 
-  changeTheme(mode: string){
-
-    if(mode === 'dark'){
-      document.body.style.background = '#111827';
-      document.body.style.color = 'white';
-    }
-
-    else{
-      document.body.style.background = '#f3f4f6';
-      document.body.style.color = '#111827';
-    }
-  }
-
-  logout(){
-
-    localStorage.clear();
-
-    this.router.navigate(['/']);
   }
 
 }
