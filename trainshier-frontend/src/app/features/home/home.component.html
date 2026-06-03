@@ -1,70 +1,369 @@
-<div class="hero">
+<div class="home-container">
 
-  <div class="overlay"></div>
+  <section class="hero">
 
-  <div class="hero-content">
+    <div class="hero-content">
 
-    <h1>
-      Bienvenido a TrainShier
-    </h1>
+      <span class="role-badge">
+        {{ role }}
+      </span>
 
-    <p>
-      Plataforma inteligente de simulación de caja registradora
-      para aprendices, instructores y observadores.
-    </p>
+      <h1>
+        Bienvenido {{ userName }}
+      </h1>
 
-    <div class="hero-buttons">
+      <p>
+        TrainShier es una plataforma de simulación POS diseñada para
+        fortalecer habilidades en atención al cliente, manejo de caja,
+        facturación y procesos comerciales reales.
+      </p>
 
-      <button routerLink="/simulator">
-        Ir al simulador IA
-      </button>
+      <div class="hero-actions">
 
-      <button
-        class="secondary"
-        routerLink="/statistics"
-      >
-        Ver estadísticas
-      </button>
+        <button
+          *ngIf="role==='APRENDIZ'"
+          routerLink="/simulator"
+          class="primary-btn"
+        >
+          Iniciar Simulación
+        </button>
+
+        <button
+          *ngIf="role==='INSTRUCTOR'"
+          routerLink="/evaluation"
+          class="primary-btn"
+        >
+          Evaluar Aprendices
+        </button>
+
+        <button
+          *ngIf="role==='ADMIN'"
+          routerLink="/reports"
+          class="primary-btn"
+        >
+          Ver Reportes
+        </button>
+
+        <button
+          *ngIf="role==='OBSERVADOR'"
+          routerLink="/register"
+          class="primary-btn"
+        >
+          Crear Cuenta
+        </button>
+
+      </div>
 
     </div>
 
-  </div>
+  </section>
+
+  <!-- APRENDIZ -->
+
+  <section
+    class="role-section"
+    *ngIf="role==='APRENDIZ'"
+  >
+
+    <h2>Tus herramientas</h2>
+
+    <div class="cards-grid">
+
+      <div class="info-card">
+
+        <h3>Simulador POS</h3>
+
+        <p>
+          Practica ventas, pagos, descuentos,
+          devoluciones y atención al cliente.
+        </p>
+
+        <button routerLink="/simulator">
+          Practicar
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Mis Transacciones</h3>
+
+        <p>
+          Consulta el historial de operaciones
+          realizadas durante las simulaciones.
+        </p>
+
+        <button routerLink="/transactions">
+          Ver Historial
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Mi Perfil</h3>
+
+        <p>
+          Actualiza tus datos y personaliza
+          tu experiencia dentro de la plataforma.
+        </p>
+
+        <button routerLink="/profile">
+          Gestionar
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- INSTRUCTOR -->
+
+  <section
+    class="role-section"
+    *ngIf="role==='INSTRUCTOR'"
+  >
+
+    <h2>Panel del Instructor</h2>
+
+    <div class="cards-grid">
+
+      <div class="info-card">
+
+        <h3>Evaluaciones</h3>
+
+        <p>
+          Analiza el desempeño de los aprendices
+          y registra observaciones.
+        </p>
+
+        <button routerLink="/evaluation">
+          Evaluar
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Comentarios</h3>
+
+        <p>
+          Genera retroalimentación basada en errores,
+          tiempos y resultados obtenidos.
+        </p>
+
+        <button routerLink="/evaluation">
+          Comentar
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Estadísticas</h3>
+
+        <p>
+          Consulta indicadores de rendimiento
+          por aprendiz o grupo.
+        </p>
+
+        <button routerLink="/statistics">
+          Ver Estadísticas
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ADMIN -->
+
+  <section
+    class="role-section"
+    *ngIf="role==='ADMIN'"
+  >
+
+    <h2>Administración</h2>
+
+    <div class="cards-grid">
+
+      <div class="info-card">
+
+        <h3>Reportes</h3>
+
+        <p>
+          Accede a información consolidada
+          de toda la plataforma.
+        </p>
+
+        <button routerLink="/reports">
+          Abrir
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Usuarios</h3>
+
+        <p>
+          Supervisa instructores,
+          aprendices y observadores.
+        </p>
+
+        <button routerLink="/profile">
+          Gestionar
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Indicadores</h3>
+
+        <p>
+          Monitorea resultados generales
+          y estadísticas globales.
+        </p>
+
+        <button routerLink="/statistics">
+          Ver Datos
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- OBSERVADOR -->
+
+  <section
+    class="role-section"
+    *ngIf="role==='OBSERVADOR'"
+  >
+
+    <h2>¿Qué es TrainShier?</h2>
+
+    <div class="cards-grid">
+
+      <div class="info-card">
+
+        <h3>Simulación Realista</h3>
+
+        <p>
+          Recrea escenarios de atención al cliente
+          y operación de cajas registradoras.
+        </p>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Seguimiento</h3>
+
+        <p>
+          Los instructores pueden evaluar
+          el desempeño de cada aprendiz.
+        </p>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Aprendizaje Práctico</h3>
+
+        <p>
+          Entrenamiento enfocado en habilidades
+          laborales reales.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FUNCIONALIDADES -->
+
+  <section class="features">
+
+    <h2>Explora las funcionalidades</h2>
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+
+        <div class="icon">🛒</div>
+
+        <h3>Simulador POS</h3>
+
+        <p>
+          Realiza ventas, pagos y procesos
+          de caja en escenarios reales.
+        </p>
+
+        <button routerLink="/simulator">
+          Explorar
+        </button>
+
+      </div>
+
+      <div class="feature-card">
+
+        <div class="icon">📊</div>
+
+        <h3>Estadísticas</h3>
+
+        <p>
+          Consulta indicadores y resultados
+          de aprendizaje.
+        </p>
+
+        <button routerLink="/statistics">
+          Ver Más
+        </button>
+
+      </div>
+
+      <div class="feature-card">
+
+        <div class="icon">📝</div>
+
+        <h3>Retroalimentación</h3>
+
+        <p>
+          Los instructores generan comentarios
+          según el desempeño del aprendiz.
+        </p>
+
+        <button routerLink="/evaluation">
+          Descubrir
+        </button>
+
+      </div>
+
+      <div class="feature-card">
+
+        <div class="icon">📁</div>
+
+        <h3>Reportes</h3>
+
+        <p>
+          Visualiza información consolidada
+          del entrenamiento.
+        </p>
+
+        <button routerLink="/reports">
+          Consultar
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
 
 </div>
-
-<section class="features">
-
-  <div class="feature-card">
-
-    <h2>Cliente IA Copilot</h2>
-
-    <p>
-      Simulación de clientes inteligentes con emociones,
-      presupuestos y comportamientos reales.
-    </p>
-
-  </div>
-
-  <div class="feature-card">
-
-    <h2>Big Brain Assistant</h2>
-
-    <p>
-      Asistente virtual integrado que guía al aprendiz
-      durante las operaciones.
-    </p>
-
-  </div>
-
-  <div class="feature-card">
-
-    <h2>Analíticas</h2>
-
-    <p>
-      Visualización de desempeño, errores,
-      pagos exitosos y puntuaciones.
-    </p>
-
-  </div>
-
-</section>

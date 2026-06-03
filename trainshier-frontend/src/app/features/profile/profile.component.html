@@ -1,171 +1,146 @@
-<!-- src/app/features/profile/profile.component.html -->
-
 <div class="profile-page">
 
-  <div class="profile-card">
+  <div class="profile-container">
 
-    <div class="image-section">
-
-      <img
-        [src]="profileImage"
-        class="profile-image"
-      >
+    <div class="profile-sidebar">
 
       <button
-        class="menu-button"
-        (click)="toggleMenu()"
+        routerLink="/home"
+        class="back-btn"
       >
-        ⚙
+        ← Volver
       </button>
 
-      <div
-        class="dropdown"
-        *ngIf="showMenu"
-      >
+      <div class="profile-image-box">
 
-        <label class="upload-btn">
-
-          Cambiar foto
+        <label>
 
           <input
             type="file"
-            accept="image/*"
             hidden
-            (change)="onImageChange($event)"
+            accept="image/*"
+            (change)="changePhoto($event)"
+          >
+
+          <img
+            [src]="profileImage"
+            class="profile-image"
+            alt="Perfil"
           >
 
         </label>
 
-        <button>
-          Tema oscuro
-        </button>
+      </div>
 
-        <button>
-          Tema claro
-        </button>
+      <h2>{{name}}</h2>
 
+      <span class="role-badge">
+        {{role}}
+      </span>
+
+      <div class="user-id">
+        {{userId}}
       </div>
 
     </div>
 
-    <h2>
-      Perfil de Usuario
-    </h2>
+    <div class="profile-content">
 
-    <form
-      [formGroup]="form"
-      (ngSubmit)="saveChanges()"
-    >
+      <div class="content-header">
 
-      <div class="input-group">
+        <h1>Configuración del perfil</h1>
 
-        <label>
-          Nombre completo
-        </label>
-
-        <input
-          type="text"
-          formControlName="fullName"
-        >
+        <p>
+          Personaliza tu cuenta y tu información visible.
+        </p>
 
       </div>
 
-      <div class="input-group">
+      <form
+        [formGroup]="form"
+        (ngSubmit)="saveChanges()"
+      >
 
-        <label>
-          Username
-        </label>
+        <div class="edit-box">
 
-        <input
-          type="text"
-          formControlName="username"
-        >
+          <label>Correo electrónico</label>
 
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="correo@ejemplo.com"
+          >
+
+        </div>
+
+        <div class="edit-box">
+
+          <label>Username</label>
+
+          <input
+            type="text"
+            formControlName="username"
+            placeholder="usuario#1234"
+          >
+
+        </div>
+
+        <div class="edit-box readonly">
+
+          <label>ID Único</label>
+
+          <input
+            type="text"
+            [value]="userId"
+            readonly
+          >
+
+        </div>
+
+        <div class="edit-box readonly">
+
+          <label>Nombre completo</label>
+
+          <input
+            type="text"
+            [value]="name"
+            readonly
+          >
+
+        </div>
+
+        <div class="edit-box">
+
+          <label>Fecha de nacimiento</label>
+
+          <input
+            type="date"
+            formControlName="birthDate"
+          >
+
+        </div>
+
+        <div class="save-section">
+
+          <button
+            type="submit"
+            class="save-btn"
+          >
+            Guardar cambios
+          </button>
+
+        </div>
+
+      </form>
+
+      <div
+        class="success-alert"
+        *ngIf="showSuccess"
+      >
+        Información actualizada correctamente.
       </div>
 
-      <div class="input-group">
-
-        <label>
-          Teléfono
-        </label>
-
-        <input
-          type="text"
-          formControlName="phone"
-        >
-
-      </div>
-
-      <div class="input-group">
-
-        <label>
-          Ciudad
-        </label>
-
-        <input
-          type="text"
-          formControlName="city"
-        >
-
-      </div>
-
-      <div class="input-group">
-
-        <label>
-          Descripción
-        </label>
-
-        <textarea
-          rows="4"
-          formControlName="description"
-        ></textarea>
-
-      </div>
-
-      <div class="input-group">
-
-        <label>
-          Correo
-        </label>
-
-        <input
-          type="email"
-          formControlName="email"
-        >
-
-      </div>
-
-      <div class="input-group">
-
-        <label>
-          Rol
-        </label>
-
-        <input
-          type="text"
-          formControlName="role"
-        >
-
-      </div>
-
-      <div class="input-group">
-
-        <label>
-          ID
-        </label>
-
-        <input
-          type="text"
-          formControlName="id"
-        >
-
-      </div>
-
-      <button type="submit">
-        Guardar Cambios
-      </button>
-
-    </form>
+    </div>
 
   </div>
 

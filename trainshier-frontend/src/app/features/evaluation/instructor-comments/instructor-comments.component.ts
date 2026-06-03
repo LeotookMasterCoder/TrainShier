@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ReportService } from '../../../core/services/report.service';
+import { Component, HostListener, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-instructor-comments',
@@ -9,38 +7,72 @@ import { ReportService } from '../../../core/services/report.service';
 })
 export class InstructorCommentsComponent implements OnInit {
 
-  comments: any[] = [];
+  nombreAprendiz = 'Carlos Ramírez';
+  puntaje = 82;
+  tiempo = 14;
+  errores = 3;
 
-  constructor(
-    private fb: FormBuilder,
-    private service: ReportService
-  ){}
+  notification = '';
 
-  form = this.fb.group({
-    apprentice: ['', Validators.required],
-    comment: ['', Validators.required]
-  });
+  comment:any = {
+    studentName:'',
+    module:'',
+    score:'',
+    state:'',
+    feedback:'',
+    errors:''
+  };
+
+  comments:any[] = [];
 
   ngOnInit(): void {
-    this.loadComments();
+
+    const saved = localStorage.getItem('comments');
+
+    if(saved){
+
+      this.comments = JSON.parse(saved);
+    }
+
+    setTimeout(() => {
+
+      this.notification =
+      'El aprendiz terminó el modo examen correctamente.';
+
+    },1500);
   }
 
-  loadComments(){
-    this.service.getComments().subscribe((res: any) => {
-      this.comments = res;
-    });
+  saveComment(){
+
+    this.comments.unshift({...this.comment});
+
+    localStorage.setItem(
+      'comments',
+      JSON.stringify(this.comments)
+    );
+
+    this.notification =
+    'Comentario guardado correctamente';
+
+    this.comment = {
+      studentName:'',
+      module:'',
+      score:'',
+      state:'',
+      feedback:'',
+      errors:''
+    };
   }
 
-  submit(){
+  @HostListener('document:keydown.enter')
+  handleEnter(){
 
-    if(this.form.valid){
+    const buttons =
+    document.querySelectorAll('button');
 
-      this.service.createComment(this.form.value).subscribe(() => {
+    if(buttons.length > 0){
 
-        this.form.reset();
-
-        this.loadComments();
-      });
+      (buttons[0] as HTMLButtonElement).focus();
     }
   }
 }

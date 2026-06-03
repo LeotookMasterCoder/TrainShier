@@ -1,20 +1,39 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { Observable,of } from 'rxjs';
+
 @Injectable({
-  providedIn: 'root'
+  providedIn:'root'
 })
+
 export class TransactionService {
 
-  private url = 'http://localhost:8080/api/transactions';
+  private transactions=[
 
-  constructor(private http: HttpClient) {}
+    {
+      product:'Coca Cola',
+      quantity:5,
+      total:15000
+    },
 
-  getAll(){
-    return this.http.get(this.url);
+    {
+      product:'Arroz',
+      quantity:3,
+      total:9000
+    }
+
+  ];
+
+  getAll():Observable<any>{
+
+    return of(this.transactions);
   }
 
-  create(data: any){
-    return this.http.post(this.url, data);
+  create(data:any):Observable<any>{
+
+    this.transactions.push(data);
+
+    return of(data);
   }
+
 }

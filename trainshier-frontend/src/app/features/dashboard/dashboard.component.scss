@@ -1,210 +1,66 @@
-.dashboard-container {
-  min-height: 100vh;
-
-  display: flex;
-
-  background: #ececec;
-
-  position: relative;
-
-  overflow: hidden;
+.dashboard-container{
+  min-height:100vh;
+  background:#0f0f0f;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:40px;
 }
 
-.dashboard-container::before,
-.dashboard-container::after {
-  content: '';
-
-  position: absolute;
-
-  width: 4px;
-  height: 100%;
-
-  background: #d89a00;
+.dashboard-card{
+  width:100%;
+  max-width:800px;
+  background:#181818;
+  border-radius:30px;
+  padding:50px;
+  text-align:center;
+  border:1px solid rgba(216,154,0,.25);
 }
 
-.dashboard-container::before {
-  left: 30px;
+.banner{
+  width:280px;
+  margin-bottom:25px;
 }
 
-.dashboard-container::after {
-  right: 30px;
+.dashboard-card h1{
+  color:white;
+  font-size:50px;
 }
 
-.left-panel {
-  flex: 1;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border-right: 2px solid #111;
+.dashboard-card p{
+  color:#c2c2c2;
+  margin:25px 0;
+  line-height:1.8;
 }
 
-.logo {
-  width: 340px;
-  height: 340px;
-
-  background-image:
-    url('/assets/img/Logo_TrainShier2.jpeg');
-
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+.buttons{
+  display:flex;
+  gap:15px;
+  justify-content:center;
 }
 
-.right-panel {
-  flex: 1;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.login-btn,
+.register-btn{
+  height:55px;
+  padding:0 30px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:700;
 }
 
-.content {
-  width: 100%;
-  max-width: 360px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  text-align: center;
+.login-btn{
+  background:#d89a00;
 }
 
-h1 {
-  font-size: 42px;
-
-  color: #111827;
-
-  margin-bottom: 12px;
-
-  letter-spacing: 2px;
+.register-btn{
+  background:white;
 }
 
-p {
-  color: #525252;
-
-  margin-bottom: 35px;
-
-  line-height: 1.5;
-}
-
-button {
-  width: 230px;
-
-  padding: 13px;
-
-  border: none;
-  border-radius: 8px;
-
-  margin-bottom: 18px;
-
-  background: #d89a00;
-
-  color: white;
-
-  font-size: 15px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition: 0.3s;
-}
-
-button:hover {
-  transform: scale(1.03);
-}
-
-
-.observer {
-  margin-top: 25px;
-
-  cursor: pointer;
-
-  color: #111827;
-
-  font-weight: 600;
-
-  transition: 0.3s;
-}
-
-.observer:hover {
-  transform: scale(1.05);
-}
-
-@media (min-width:769px) and (max-width:1024px){
-
-  .dashboard-container{
-    flex-direction:column;
-  }
-
-  .left-panel{
-    border-right:none;
-    border-bottom:2px solid #111;
-    padding:30px 0;
-  }
-
-  .logo{
-    width:240px;
-    height:240px;
-  }
-
-}
-
-@media (min-width:481px) and (max-width:768px){
-
-  .dashboard-container{
-    flex-direction:column;
-  }
-
-  .left-panel{
-    border-right:none;
-    border-bottom:2px solid #111;
-    padding:30px 0;
-  }
-
-  .logo{
-    width:200px;
-    height:200px;
-  }
-
-  .content{
-    padding:20px;
-  }
-
-  h1{
-    font-size:34px;
-  }
-
-}
-
-@media (max-width:480px){
-
-  .dashboard-container{
-    flex-direction:column;
-  }
-
-  .left-panel{
-    border-right:none;
-    border-bottom:2px solid #111;
-    padding:20px 0;
-  }
-
-  .logo{
-    width:150px;
-    height:150px;
-  }
-
-  .content{
-    padding:20px;
-  }
-
-  h1{
-    font-size:28px;
-  }
-
-  button{
-    width:100%;
-  }
-
+.observer-btn{
+  margin-top:20px;
+  background:none;
+  border:none;
+  color:#d89a00;
+  cursor:pointer;
 }

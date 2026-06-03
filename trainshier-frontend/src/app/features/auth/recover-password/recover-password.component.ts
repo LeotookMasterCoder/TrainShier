@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recover-password',
@@ -8,33 +9,61 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 export class RecoverPasswordComponent {
 
-  message = '';
-
-  constructor(private fb: FormBuilder){}
+  successMessage = '';
+  errorMessage = '';
 
   form = this.fb.group({
-    email: ['', [Validators.required, Validators.email]]
+
+    email:['',[
+      Validators.required,
+      Validators.email
+    ]],
+
+    newPassword:['',[
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/)
+    ]],
+
+    confirmPassword:['',[
+      Validators.required
+    ]]
   });
 
-  submit(){
+  constructor(
+    private fb:FormBuilder,
+    private router:Router
+  ){}
+
+  submit():void{
+
+    this.errorMessage = '';
+    this.successMessage = '';
 
     if(this.form.invalid){
-
-      alert('Entra un email válido con cuenta');
-
+      this.form.markAllAsTouched();
+      this.errorMessage = 'Completa correctamente todos los campos.';
       return;
     }
 
-    const code =
-      Math.floor(100000 + Math.random() * 900000);
+    const password = this.form.value.newPassword;
+    const confirm = this.form.value.confirmPassword;
 
-    this.message =
-      `Código de verificación enviado correctamente: ${code}`;
+    if(password !== confirm){
+      this.errorMessage = 'Las contraseñas no coinciden.';
+      return;
+    }
 
-    alert(
-      `Código de recuperación enviado a:  ${this.form.value.email}`
-    );
+    this.successMessage =
+      'Contraseña actualizada correctamente.';
 
+    setTimeout(()=>{
+      this.router.navigate(['/login']);
+    },1500);
+  }
+
+  back():void{
+    this.router.navigate(['/login']);
   }
 
 }

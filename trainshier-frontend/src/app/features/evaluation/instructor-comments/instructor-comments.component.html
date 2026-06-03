@@ -1,32 +1,163 @@
-<div class="comments-container">
+<div class="instructor-page">
 
-  <h2>Correciones del instructor</h2>
+  <div class="header-card">
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h1>Evaluación del Instructor</h1>
 
-    <input
-      type="text"
-      placeholder="Aprendiz"
-      formControlName="apprentice"
-    >
+    <p>
+      Visualiza el rendimiento del aprendiz, analiza errores y agrega observaciones.
+    </p>
 
-    <textarea
-      rows="5"
-      placeholder="Comentario_Instructor"
-      formControlName="comment"
-    ></textarea>
+  </div>
 
-    <button type="submit">
-      Guardar comentario
-    </button>
+  <div class="results-panel">
 
-  </form>
+    <div class="student-card">
 
-  <div class="comment-card" *ngFor="let item of comments">
+      <div class="student-info">
 
-    <h4>{{item.apprentice}}</h4>
+        <h2>{{ nombreAprendiz }}</h2>
 
-    <p>{{item.comment}}</p>
+        <span
+          [class.approved]="puntaje >= 70"
+          [class.rejected]="puntaje < 70">
+
+          {{ puntaje >= 70 ? 'Aprobado' : 'No aprobado' }}
+
+        </span>
+
+      </div>
+
+      <div class="metrics">
+
+        <div class="metric">
+          <h3>Puntaje</h3>
+          <p>{{ puntaje }}%</p>
+        </div>
+
+        <div class="metric">
+          <h3>Tiempo</h3>
+          <p>{{ tiempo }} min</p>
+        </div>
+
+        <div class="metric">
+          <h3>Errores</h3>
+          <p>{{ errores }}</p>
+        </div>
+
+      </div>
+
+      <div class="chart-box">
+
+        <div class="chart-circle">
+
+          <div class="inner-circle">
+            {{ puntaje }}%
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="comments-container">
+
+    <form (ngSubmit)="saveComment()">
+
+      <input
+        type="text"
+        placeholder="Nombre del aprendiz"
+        [(ngModel)]="comment.studentName"
+        name="studentName">
+
+      <input
+        type="text"
+        placeholder="Módulo evaluado"
+        [(ngModel)]="comment.module"
+        name="module">
+
+      <input
+        type="number"
+        placeholder="Calificación final"
+        [(ngModel)]="comment.score"
+        name="score">
+
+      <select
+        [(ngModel)]="comment.state"
+        name="state">
+
+        <option value="">
+          Estado del aprendiz
+        </option>
+
+        <option value="Aprobado">
+          Aprobado
+        </option>
+
+        <option value="No aprobado">
+          No aprobado
+        </option>
+
+      </select>
+
+      <textarea
+        rows="5"
+        placeholder="Retroalimentación del instructor"
+        [(ngModel)]="comment.feedback"
+        name="feedback">
+      </textarea>
+
+      <textarea
+        rows="4"
+        placeholder="Errores detectados durante la simulación"
+        [(ngModel)]="comment.errors"
+        name="errors">
+      </textarea>
+
+      <button type="submit">
+        Guardar comentario
+      </button>
+
+    </form>
+
+    <div
+      class="notification"
+      *ngIf="notification">
+
+      {{ notification }}
+
+    </div>
+
+    <div class="comments-list">
+
+      <div
+        class="comment-card"
+        *ngFor="let item of comments">
+
+        <div class="card-top">
+
+          <h2>{{ item.studentName }}</h2>
+
+          <span>
+            {{ item.state }}
+          </span>
+
+        </div>
+
+        <p><strong>Módulo:</strong> {{ item.module }}</p>
+
+        <p><strong>Calificación:</strong> {{ item.score }}</p>
+
+        <p><strong>Retroalimentación:</strong> {{ item.feedback }}</p>
+
+        <p><strong>Errores:</strong> {{ item.errors }}</p>
+
+      </div>
+
+    </div>
 
   </div>
 

@@ -1,44 +1,108 @@
-@import '../login/login.component.scss';
-
-.success-message{
-  background:#ecfdf5;
-  color:#065f46;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #6ee7b7;
-  margin-bottom:20px;
+.register-container{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0f0f0f;
+  padding:40px 20px;
 }
 
-.error-message{
-  background:#fef2f2;
-  color:#dc2626;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #fecaca;
-  margin-bottom:20px;
-}
-
-select{
+.register-card{
   width:100%;
-  padding:14px;
-  border-radius:10px;
-  border:2px solid #d1d5db;
+  max-width:600px;
+  background:#181818;
+  border-radius:24px;
+  border:1px solid rgba(216,154,0,.25);
+  padding:40px;
+}
+
+.back-btn{
+  background:none;
+  border:none;
+  color:#d89a00;
+  cursor:pointer;
   margin-bottom:20px;
 }
 
-@media (min-width:481px) and (max-width:768px){
-
-  select{
-    font-size:15px;
-  }
-
+.header{
+  text-align:center;
+  margin-bottom:30px;
 }
 
-@media (max-width:480px){
+.header img{
+  width:220px;
+}
 
-  select{
-    padding:12px;
-    font-size:14px;
-  }
+.header h1{
+  color:white;
+  margin-top:15px;
+}
 
+.header p{
+  color:#bdbdbd;
+}
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.input-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.input-group label{
+  color:white;
+  margin-bottom:10px;
+}
+
+.input-group input,
+.input-group select{
+  height:55px;
+  background:#222;
+  border:1px solid #333;
+  border-radius:14px;
+  color:white;
+  padding:0 16px;
+}
+
+.input-group small{
+  color:#999;
+  margin-top:8px;
+}
+
+.generated-id{
+  background:#242424;
+  border-left:4px solid #d89a00;
+  color:white;
+  padding:15px;
+  border-radius:12px;
+}
+
+.register-btn{
+  height:55px;
+  border:none;
+  border-radius:14px;
+  background:#d89a00;
+  color:black;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.error-banner{
+  background:#3b1515;
+  color:#ff9898;
+  border:1px solid red;
+  padding:14px;
+  border-radius:12px;
+}
+
+.success-banner{
+  background:#12351d;
+  color:#7dffab;
+  border:1px solid #39d16f;
+  padding:14px;
+  border-radius:12px;
 }

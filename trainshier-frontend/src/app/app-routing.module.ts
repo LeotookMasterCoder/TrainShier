@@ -8,15 +8,17 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { RecoverPasswordComponent } from './features/auth/recover-password/recover-password.component';
 
-import { TransactionListComponent } from './features/transactions/transaction-list/transaction-list.component';
-
-import { ReportListComponent } from './features/evaluation/report-list/report-list.component';
-import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
-import { StatisticsComponent } from './features/evaluation/statistics/statistics.component';
-
 import { SimulatorComponent } from './features/simulator/simulator/simulator.component';
 
 import { ProfileComponent } from './features/profile/profile.component';
+
+import { TransactionFormComponent } from './features/transactions/transaction-form/transaction-form.component';
+
+import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
+
+import { ReportsComponent } from './features/reports/report-list/report-list.component';
+
+import { StatisticsComponent } from './features/statistics/statistics/statistics.component';
 
 const routes: Routes = [
 
@@ -51,18 +53,23 @@ const routes: Routes = [
   },
 
   {
+    path: 'profile',
+    component: ProfileComponent
+  },
+
+  {
     path: 'transactions',
-    component: TransactionListComponent
+    component: TransactionFormComponent
+  },
+
+  {
+    path: 'evaluation',
+    component: InstructorCommentsComponent
   },
 
   {
     path: 'reports',
-    component: ReportListComponent
-  },
-
-  {
-    path: 'comments',
-    component: InstructorCommentsComponent
+    component: ReportsComponent
   },
 
   {
@@ -71,14 +78,18 @@ const routes: Routes = [
   },
 
   {
-    path: 'profile',
-    component: ProfileComponent
+    path: '**',
+    redirectTo: ''
   }
 
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes)
+  ],
+  exports: [
+    RouterModule
+  ]
 })
 export class AppRoutingModule {}

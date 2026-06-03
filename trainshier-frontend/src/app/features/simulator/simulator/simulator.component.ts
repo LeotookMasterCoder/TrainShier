@@ -1,237 +1,283 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-simulator',
-  templateUrl: './simulator.component.html',
-  styleUrls: ['./simulator.component.scss']
+  selector:'app-simulator',
+  templateUrl:'./simulator.component.html',
+  styleUrls:['./simulator.component.scss']
 })
+export class SimulatorComponent implements OnInit{
 
-export class SimulatorComponent implements OnInit {
+  role:string='observador';
 
-  tutorialVisible = true;
+  simulationStarted:boolean=false;
 
-  currentTip = '';
+  successMessage:string='';
+  errorMessage:string='';
 
-  copilotMessage = '';
+  successCount:number=0;
+  failCount:number=0;
+  servedProducts:number=0;
 
-  currentClient: any;
+  totalClients:number=0;
 
-  products = [
+  timeLeft:number=60;
 
-    {
-      name:'Leche',
-      price:4000
-    },
+  timer:any;
 
-    {
-      name:'Pan',
-      price:3000
-    },
+  simulationFinished:boolean=false;
 
-    {
-      name:'Huevos',
-      price:14000
-    },
+  currentCustomer:any={
+    name:'Cliente pendiente',
+    mood:'Neutral',
+    product:'Ninguno',
+    time:60
+  };
 
-    {
-      name:'Pollo',
-      price:28000
-    },
+  customers:any[]=[
 
     {
-      name:'Arroz',
-      price:6000
-    }
-
-  ];
-
-  clients = [
-
-    {
-      name:'Carlos',
-      mood:'Molesto',
-      budget:20000
-    },
-
-    {
-      name:'Laura',
+      name:'Laura Gómez',
       mood:'Feliz',
-      budget:50000
+      product:'Leche 3 L',
+      time:60
     },
 
     {
-      name:'Andres',
+      name:'Carlos Ruiz',
       mood:'Apurado',
-      budget:15000
+      product:'Pan Integral',
+      time:45
+    },
+
+    {
+      name:'Martha Díaz',
+      mood:'Molesta',
+      product:'Chocolate',
+      time:35
+    },
+
+    {
+      name:'Julián Pérez',
+      mood:'Tranquilo',
+      product:'Arroz Premium',
+      time:55
+    },
+
+    {
+      name:'Valentina Castro',
+      mood:'Impaciente',
+      product:'Queso Mozzarella',
+      time:40
+    },
+
+    {
+      name:'Andrés Moreno',
+      mood:'Serio',
+      product:'Gaseosa Cola',
+      time:50
     }
 
   ];
 
-  cart:any[] = [];
+  products:any[]=[
 
-  total = 0;
+    {
+      name:'Leche 3 L',
+      description:'Leche deslactosada premium',
+      price:12000,
+      image:'https://images.unsplash.com/photo-1563636619-e9143da7973b?q=80&w=1200&auto=format&fit=crop'
+    },
 
-  received = 0;
+    {
+      name:'Pan Integral',
+      description:'Pan fresco integral',
+      price:8500,
+      image:'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1200&auto=format&fit=crop'
+    },
 
-  change = 0;
+    {
+      name:'Chocolate',
+      description:'Chocolate tradicional',
+      price:4000,
+      image:'https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=1200&auto=format&fit=crop'
+    },
 
-  statusMessage = '';
+    {
+      name:'Arroz Premium',
+      description:'Arroz de alta calidad',
+      price:7000,
+      image:'https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=1200&auto=format&fit=crop'
+    },
 
-  statusType = '';
+    {
+      name:'Queso Mozzarella',
+      description:'Queso fresco premium',
+      price:15000,
+      image:'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?q=80&w=1200&auto=format&fit=crop'
+    },
 
-  successTransactions = 0;
-
-  failedTransactions = 0;
-
-  tips = [
-
-    'Escanea correctamente los productos.',
-    'Valida el dinero recibido.',
-    'Aplica descuentos cuando sea necesario.',
-    'Entrega el cambio exacto.',
-    'Mantén una buena atención al cliente.'
+    {
+      name:'Gaseosa Cola',
+      description:'Bebida gaseosa fría',
+      price:6000,
+      image:'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1200&auto=format&fit=crop'
+    }
 
   ];
 
-  ngOnInit(): void {
+  ngOnInit():void{
 
-    this.nextClient();
+    const savedRole=localStorage.getItem('role');
 
-    this.randomTip();
-
-  }
-
-  startPractice(){
-
-    this.tutorialVisible = false;
-
-  }
-
-  randomTip(){
-
-    const randomIndex =
-      Math.floor(Math.random() * this.tips.length);
-
-    this.currentTip = this.tips[randomIndex];
-
-  }
-
-  nextClient(){
-
-    const randomIndex =
-      Math.floor(Math.random() * this.clients.length);
-
-    this.currentClient = this.clients[randomIndex];
-
-    this.generateCopilotMessage();
-
-    this.cart = [];
-
-    this.total = 0;
-
-    this.received = 0;
-
-    this.change = 0;
-
-    this.statusMessage = '';
-
-  }
-
-  generateCopilotMessage(){
-
-    if(this.currentClient.mood === 'Molesto'){
-
-      this.copilotMessage =
-        'Copilot IA: El cliente está molesto, atiéndelo rápido y con precisión.';
-
+    if(savedRole){
+      this.role=savedRole;
     }
 
-    else if(this.currentClient.mood === 'Apurado'){
-
-      this.copilotMessage =
-        'Copilot IA: El cliente tiene poco tiempo, evita errores en caja.';
-
-    }
-
-    else{
-
-      this.copilotMessage =
-        'Copilot IA: Cliente tranquilo, aprovecha para brindar buena atención.';
-
-    }
+    this.generateCustomer();
 
   }
 
-  addProduct(product:any){
+  generateCustomer():void{
 
-    this.cart.push(product);
+    const random=
+    this.customers[
+      Math.floor(Math.random()*this.customers.length)
+    ];
 
-    this.calculateTotal();
+    this.currentCustomer=random;
 
-  }
+    this.timeLeft=random.time;
 
-  calculateTotal(){
-
-    this.total = this.cart.reduce(
-      (acc,item) => acc + item.price,
-      0
-    );
+    this.totalClients++;
 
   }
 
-  applyDiscount(){
+  startSimulation():void{
 
-    this.total =
-      this.total - (this.total * 0.10);
+    if(this.role==='observador'){
 
-    this.statusMessage =
-      'Descuento aplicado correctamente';
-
-    this.statusType = 'success';
-
-  }
-
-  processPayment(){
-
-    if(this.received < this.total){
-
-      this.statusMessage =
-        'Fondos insuficientes';
-
-      this.statusType = 'error';
-
-      this.failedTransactions++;
+      this.errorMessage=
+      'Los observadores no pueden acceder al simulador';
 
       return;
 
     }
 
-    this.change =
-      this.received - this.total;
+    this.simulationStarted=true;
 
-    this.statusMessage =
-      'Pago realizado correctamente';
+    this.simulationFinished=false;
 
-    this.statusType = 'success';
+    this.successMessage=
+    'Simulación iniciada correctamente';
 
-    this.successTransactions++;
+    this.errorMessage='';
+
+    clearInterval(this.timer);
+
+    this.timer=setInterval(()=>{
+
+      this.timeLeft--;
+
+      if(this.timeLeft<=0){
+
+        this.failCount++;
+
+        this.errorMessage=
+        'Tiempo agotado. El cliente se fue molesto.';
+
+        this.successMessage='';
+
+        this.generateCustomer();
+
+      }
+
+    },1000);
 
   }
 
-  cancelSale(){
+  finishSimulation():void{
 
-    this.cart = [];
+    clearInterval(this.timer);
 
-    this.total = 0;
+    this.simulationStarted=false;
 
-    this.received = 0;
+    this.simulationFinished=true;
 
-    this.change = 0;
+    this.errorMessage='';
 
-    this.statusMessage =
-      'Venta cancelada';
+    this.successMessage=
+    'La simulación finalizó correctamente';
 
-    this.statusType = 'error';
+  }
+
+  selectProduct(product:any):void{
+
+    if(!this.simulationStarted){
+
+      this.errorMessage=
+      'Debes iniciar la simulación primero';
+
+      this.successMessage='';
+
+      return;
+
+    }
+
+    if(product.name===this.currentCustomer.product){
+
+      this.successMessage=
+      'Cliente atendido correctamente';
+
+      this.errorMessage='';
+
+      this.successCount++;
+
+      this.servedProducts++;
+
+      clearInterval(this.timer);
+
+      setTimeout(()=>{
+
+        this.generateCustomer();
+
+        this.startSimulation();
+
+      },1500);
+
+    }else{
+
+      this.errorMessage=
+      'Producto incorrecto para el cliente';
+
+      this.successMessage='';
+
+      this.failCount++;
+
+    }
+
+  }
+
+  resetSimulation():void{
+
+    clearInterval(this.timer);
+
+    this.successCount=0;
+
+    this.failCount=0;
+
+    this.servedProducts=0;
+
+    this.totalClients=0;
+
+    this.simulationStarted=false;
+
+    this.simulationFinished=false;
+
+    this.successMessage='';
+
+    this.errorMessage='';
+
+    this.generateCustomer();
 
   }
 

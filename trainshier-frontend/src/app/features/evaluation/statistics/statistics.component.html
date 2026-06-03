@@ -1,52 +1,19 @@
 <div class="statistics-page">
 
-  <h2 class="title">
-    Estadisticas de simulación
-  </h2>
-
-  <div class="statistics-container" *ngIf="data">
-
-    <div class="stat-card success">
-
-      <h3>Total de Simulaciones</h3>
-
-      <p>{{data.totalSimulations || 0}}</p>
-
-    </div>
-
-    <div class="stat-card">
-
-      <h3>Tiempo Fijo</h3>
-
-      <p>{{data.averageScore || 0}}</p>
-
-    </div>
-
-    <div class="stat-card success">
-
-      <h3>Pagos completados</h3>
-
-      <p>{{data.successPayments || 0}}</p>
-
-    </div>
-
-    <div class="stat-card danger">
-
-      <h3>Ventas rechazadas</h3>
-
-      <p>{{data.rejectedSales || 0}}</p>
-
-    </div>
-
+  <div class="hero">
+    <h1>Estadísticas TrainShier</h1>
+    <p>Datos en tiempo real para mejorar el aprendizaje.</p>
   </div>
 
-  <div class="empty-state" *ngIf="!data">
+  <div class="stats-grid">
 
-    <h3>No hay estadisticas para visualziar</h3>
+    <div class="stat-card" *ngFor="let stat of stats">
 
-    <p>
-      No se puede cargar los datos de estadistica
-    </p>
+      <h2>{{stat.value}}</h2>
+
+      <p>{{stat.title}}</p>
+
+    </div>
 
   </div>
 

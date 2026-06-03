@@ -1,38 +1,19 @@
-<div class="report-container">
+<div class="report-page">
 
-  <div
-    class="report-card"
-    *ngFor="let report of reports"
-  >
+  <div class="hero">
+    <h1>Reportes TrainShier</h1>
+    <p>Control y seguimiento inteligente.</p>
+  </div>
 
-    <h2>{{report.apprentice}}</h2>
+  <div class="report-grid">
 
-    <p>
-      Transacciones:
-      {{report.transactions}}
-    </p>
+    <div class="card" *ngFor="let report of reports">
 
-    <p>
-      Tiempo promedio:
-      {{report.averageTime}}
-    </p>
+      <h2>{{report.title}}</h2>
 
-    <p>
-      Errores:
-      {{report.errors}}
-    </p>
+      <p>{{report.description}}</p>
 
-    <p>
-      Puntuación:
-      {{report.score}}%
-    </p>
-
-    <div class="progress">
-
-      <div
-        class="bar"
-        [style.width.%]="report.score"
-      ></div>
+      <span>{{report.status}}</span>
 
     </div>
 

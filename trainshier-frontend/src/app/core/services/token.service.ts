@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn:'root'
 })
+
 export class TokenService {
 
-  private key = 'token';
+  save(token:string){
 
-  save(token: string){
-    localStorage.setItem(this.key, token);
+    localStorage.setItem('token',token);
   }
 
   get(){
-    return localStorage.getItem(this.key);
+
+    return localStorage.getItem('token');
   }
 
   clear(){
-    localStorage.removeItem(this.key);
+
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
   }
+
 }
