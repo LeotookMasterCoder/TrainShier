@@ -1,269 +1,455 @@
-.simulator-page{
-  min-height:100vh;
-  padding:140px 40px 60px;
-  background:
-  linear-gradient(
-    rgba(5, 10, 25, 0.92),
-    rgba(5, 10, 25, 0.92)
+.simulator-page {
+  min-height: 100vh;
+  background: #0f172a;
+  color: #fff;
+  padding: 30px;
+}
+
+/* ==========================
+   HEADER
+========================== */
+
+.simulator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.simulator-header h1 {
+  font-size: 2.4rem;
+  margin-bottom: 8px;
+}
+
+.simulator-header p {
+  color: #94a3b8;
+}
+
+.header-badges {
+  display: flex;
+  gap: 12px;
+}
+
+.badge {
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.role {
+  background: #d89a00;
+  color: #000;
+}
+
+.difficulty {
+  background: #334155;
+}
+
+/* ==========================
+   GRID
+========================== */
+
+.simulator-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 25px;
+}
+
+.main-panel,
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ==========================
+   CARD
+========================== */
+
+.card {
+  background: #111827;
+  border-radius: 20px;
+  padding: 22px;
+  border: 1px solid rgba(255,255,255,.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+.card h2 {
+  margin-bottom: 20px;
+  color: #d89a00;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+/* ==========================
+   CLIENTE
+========================== */
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mood {
+  background: #1e293b;
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+
+.customer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.customer-grid div {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.customer-grid strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #d89a00;
+}
+
+.customer-message {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
+.emotion-bar {
+  margin-top: 20px;
+  height: 14px;
+  background: #1e293b;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.emotion-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #22c55e,
+    #84cc16
   );
-  color:white;
+  transition: .3s;
 }
 
-.simulator-header{
-  margin-bottom:40px;
+/* ==========================
+   FORMULARIOS
+========================== */
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 14px;
+  border-radius: 12px;
+  background: #1e293b;
+  color: white;
+  margin-top: 8px;
 }
 
-.simulator-header h1{
-  font-size:3rem;
-  font-weight:800;
-  margin-bottom:10px;
+textarea {
+  resize: vertical;
 }
 
-.simulator-header p{
-  color:#cfcfcf;
-  font-size:1.1rem;
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+  gap: 15px;
 }
 
-.role-banner{
-  background:linear-gradient(135deg,#d89a00,#ffbf2f);
-  color:black;
-  padding:22px;
-  border-radius:18px;
-  margin-bottom:30px;
-  box-shadow:0 10px 30px rgba(216,154,0,.3);
+/* ==========================
+   PROMOCIONES
+========================== */
+
+.promotion-card {
+  margin-top: 20px;
+  background: linear-gradient(
+    135deg,
+    #d89a00,
+    #f5b61d
+  );
+  color: black;
+  padding: 20px;
+  border-radius: 15px;
 }
 
-.role-banner h2{
-  margin:0 0 10px;
-  font-size:2rem;
+.promotion-card h3 {
+  margin-bottom: 8px;
 }
 
-.role-banner p{
-  margin:0;
-  font-weight:600;
+/* ==========================
+   TABLAS
+========================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.simulator-grid{
-  display:grid;
-  grid-template-columns:1fr 380px;
-  gap:30px;
+thead {
+  background: #1e293b;
 }
 
-.simulator-card{
-  background:#111827;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:22px;
-  padding:28px;
-  box-shadow:0 10px 30px rgba(0,0,0,.4);
+th {
+  padding: 14px;
+  text-align: left;
+  color: #d89a00;
 }
 
-.customer-card{
-  margin-bottom:25px;
-  background:#0f172a;
-  border-left:6px solid #d89a00;
+td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
 }
 
-.customer-card h3{
-  font-size:1.8rem;
-  margin-bottom:12px;
+tbody tr:hover {
+  background: rgba(255,255,255,.02);
 }
 
-.customer-info{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:16px;
+/* ==========================
+   STOCK
+========================== */
+
+.out-stock {
+  color: #ef4444;
+  font-weight: 700;
 }
 
-.customer-info div{
-  background:#1e293b;
-  padding:16px;
-  border-radius:14px;
+/* ==========================
+   ESCANER
+========================== */
+
+.scan-section {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.customer-info span{
-  display:block;
-  color:#d89a00;
-  font-weight:700;
-  margin-bottom:5px;
+.scan-section input {
+  flex: 1;
 }
 
-.products-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-  margin-top:25px;
+.scan-section button {
+  white-space: nowrap;
 }
 
-.product-card{
-  background:#1e293b;
-  border-radius:18px;
-  padding:20px;
-  border:2px solid transparent;
-  transition:.3s;
-  cursor:pointer;
+/* ==========================
+   FACTURA
+========================== */
+
+.invoice-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
 }
 
-.product-card:hover{
-  transform:translateY(-6px);
-  border-color:#d89a00;
+.invoice-row.total {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #d89a00;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
 
-.product-card img{
-  width:100%;
-  height:170px;
-  object-fit:cover;
-  border-radius:14px;
-  margin-bottom:14px;
+/* ==========================
+   CAMBIO
+========================== */
+
+.change-box {
+  margin-top: 20px;
+  background: #1e293b;
+  padding: 18px;
+  border-radius: 12px;
+  font-size: 1.1rem;
 }
 
-.product-card h4{
-  margin-bottom:8px;
-  font-size:1.2rem;
+.change-box strong {
+  color: #22c55e;
+  margin-left: 8px;
 }
 
-.product-card p{
-  color:#cfcfcf;
-  font-size:.95rem;
+/* ==========================
+   BOTONES
+========================== */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-.product-price{
-  color:#ffbf2f;
-  font-weight:700;
-  margin-top:10px;
-  display:block;
+button {
+  border: none;
+  cursor: pointer;
+  transition: .25s;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-weight: 600;
 }
 
-.actions{
-  display:flex;
-  gap:15px;
-  flex-wrap:wrap;
-  margin-top:30px;
+button:hover {
+  transform: translateY(-2px);
 }
 
-.primary-btn{
-  background:#d89a00;
-  color:black;
-  border:none;
-  padding:14px 24px;
-  border-radius:14px;
-  font-weight:700;
-  cursor:pointer;
-  transition:.3s;
+.primary-btn {
+  background: #2563eb;
+  color: white;
 }
 
-.primary-btn:hover{
-  transform:translateY(-2px);
-  background:#f0b11b;
+.warning-btn {
+  background: #d89a00;
+  color: black;
 }
 
-.secondary-btn{
-  background:#1e293b;
-  color:white;
-  border:none;
-  padding:14px 24px;
-  border-radius:14px;
-  font-weight:700;
-  cursor:pointer;
+.success-btn {
+  background: #22c55e;
+  color: white;
 }
 
-.stats-card h3{
-  margin-bottom:20px;
+.danger-btn {
+  background: #ef4444;
+  color: white;
 }
 
-.stat-item{
-  background:#1e293b;
-  border-radius:14px;
-  padding:18px;
-  margin-bottom:16px;
+/* ==========================
+   COACH IA
+========================== */
+
+.coach-feedback {
+  margin-top: 15px;
+  background: #14532d;
+  border: 1px solid #22c55e;
+  padding: 15px;
+  border-radius: 12px;
 }
 
-.stat-item span{
-  color:#d89a00;
-  font-size:1.8rem;
-  font-weight:800;
-  display:block;
-  margin-top:8px;
+/* ==========================
+   ESTADISTICAS
+========================== */
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  background: #1e293b;
+  padding: 14px;
+  border-radius: 12px;
 }
 
-.timer-box{
-  text-align:center;
-  background:#d89a00;
-  color:black;
-  border-radius:18px;
-  padding:25px;
-  margin-top:25px;
+.stat strong {
+  color: #d89a00;
 }
 
-.timer-box h2{
-  font-size:3rem;
-  margin-top:10px;
+.timer {
+  font-size: 4rem;
+  text-align: center;
+  font-weight: bold;
+  color: #d89a00;
 }
 
-.alert-success{
-  background:#14532d;
-  border:1px solid #22c55e;
-  color:#dcfce7;
-  padding:16px;
-  border-radius:14px;
-  margin-top:20px;
+/* ==========================
+   HISTORIAL
+========================== */
+
+.history-item {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 10px;
 }
 
-.alert-error{
-  background:#450a0a;
-  border:1px solid #ef4444;
-  color:#fecaca;
-  padding:16px;
-  border-radius:14px;
-  margin-top:20px;
+.history-item strong {
+  display: block;
 }
 
-.light-mode .simulator-page{
-  background:#f4f7fb;
-  color:#111827;
+.history-item span {
+  color: #d89a00;
 }
 
-.light-mode .simulator-card{
-  background:white;
-  border:1px solid #e5e7eb;
+.history-item p {
+  margin-top: 6px;
 }
 
-.light-mode .customer-info div{
-  background:#f3f4f6;
+/* ==========================
+   MENSAJES
+========================== */
+
+.success-message {
+  background: #14532d;
+  padding: 15px;
+  border-radius: 12px;
 }
 
-.light-mode .product-card{
-  background:#f9fafb;
+.error-message {
+  background: #450a0a;
+  padding: 15px;
+  border-radius: 12px;
 }
 
-.light-mode .secondary-btn{
-  background:#e5e7eb;
-  color:#111827;
-}
+/* ==========================
+   RESPONSIVE
+========================== */
 
-@media(max-width:1100px){
+@media (max-width: 1200px) {
 
-  .simulator-grid{
-    grid-template-columns:1fr;
+  .simulator-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .side-panel {
+    order: -1;
   }
 
 }
 
-@media(max-width:768px){
+@media (max-width: 768px) {
 
-  .simulator-page{
-    padding:120px 20px 40px;
+  .simulator-page {
+    padding: 15px;
   }
 
-  .simulator-header h1{
-    font-size:2.2rem;
+  .simulator-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .role-banner h2{
-    font-size:1.5rem;
+  .simulator-header h1 {
+    font-size: 1.8rem;
   }
 
-  .products-grid{
-    grid-template-columns:1fr;
+  .customer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 
 }
