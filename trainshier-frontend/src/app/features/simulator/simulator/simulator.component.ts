@@ -31,15 +31,7 @@ interface Sale {
 })
 export class SimulatorComponent implements OnInit {
 
-  /* =========================================
-     ROLES
-  ========================================= */
-
   role: string = 'APRENDIZ';
-
-  /* =========================================
-     ESTADO GENERAL
-  ========================================= */
 
   simulationStarted = false;
   simulationFinished = false;
@@ -58,19 +50,11 @@ export class SimulatorComponent implements OnInit {
 
   difficulty = 'MEDIA';
 
-  /* =========================================
-     IA COACH
-  ========================================= */
-
   traineeResponse = '';
 
   coachFeedback = '';
 
   customerSatisfaction = 100;
-
-  /* =========================================
-     CALENDARIO
-  ========================================= */
 
   saleDate =
     new Date().toISOString().split('T')[0];
@@ -80,10 +64,6 @@ export class SimulatorComponent implements OnInit {
   specialDiscount = 0;
 
   discountValue = 0;
-
-  /* =========================================
-     CLIENTE IA
-  ========================================= */
 
   currentCustomer: any = {
     name: '',
@@ -142,10 +122,6 @@ export class SimulatorComponent implements OnInit {
 
   ];
 
-  /* =========================================
-     PRODUCTOS
-  ========================================= */
-
   products: Product[] = [];
 
   newProduct = {
@@ -155,10 +131,6 @@ export class SimulatorComponent implements OnInit {
     price: 0,
     stock: 0
   };
-
-  /* =========================================
-     CARRITO
-  ========================================= */
 
   cart: CartItem[] = [];
 
@@ -178,15 +150,7 @@ export class SimulatorComponent implements OnInit {
 
   change = 0;
 
-  /* =========================================
-     HISTORIAL
-  ========================================= */
-
   salesHistory: Sale[] = [];
-
-  /* =========================================
-     INIT
-  ========================================= */
 
   ngOnInit(): void {
 
@@ -207,9 +171,6 @@ export class SimulatorComponent implements OnInit {
 
   }
 
-  /* =========================================
-     LOCAL STORAGE
-  ========================================= */
 
   loadProducts(): void {
 
@@ -310,10 +271,6 @@ export class SimulatorComponent implements OnInit {
 
   }
 
-  /* =========================================
-     CLIENTE IA
-  ========================================= */
-
   generateCustomer(): void {
 
     const randomIndex =
@@ -329,10 +286,6 @@ export class SimulatorComponent implements OnInit {
     this.totalClients++;
 
   }
-
-  /* =========================================
-     CALENDARIO COMERCIAL
-  ========================================= */
 
   updateSpecialDay(): void {
 
@@ -399,10 +352,6 @@ export class SimulatorComponent implements OnInit {
     }
 
   }
-
-  /* =========================================
-     CRUD PRODUCTOS
-  ========================================= */
 
   addProduct(): void {
 
@@ -545,9 +494,6 @@ deleteProduct(product: Product): void {
 
     }
 
-    /* =========================================
-       REGISTRO POR CÓDIGO
-    ========================================= */
 
     registerByCode(): void {
 
@@ -587,10 +533,6 @@ deleteProduct(product: Product): void {
 
     }
 
-    /* =========================================
-       ESCÁNER SIMULADO
-    ========================================= */
-
     simulateBarcodeScan(): void {
 
       if (this.products.length === 0) {
@@ -612,10 +554,6 @@ deleteProduct(product: Product): void {
       this.registerByCode();
 
     }
-
-    /* =========================================
-       CARRITO
-    ========================================= */
 
     addToCart(product: Product): void {
 
@@ -712,10 +650,6 @@ deleteProduct(product: Product): void {
 
     }
 
-    /* =========================================
-       CÁLCULOS
-    ========================================= */
-
     calculateTotals(): void {
 
       this.subtotal = 0;
@@ -767,10 +701,6 @@ deleteProduct(product: Product): void {
         this.totalToPay;
 
     }
-
-    /* =========================================
-       REGISTRAR VENTA
-    ========================================= */
 
     registerSale(): void {
 
@@ -865,10 +795,6 @@ deleteProduct(product: Product): void {
 
     }
 
-    /* =========================================
-       AI COACH
-    ========================================= */
-
     evaluateResponse(): void {
 
       const response =
@@ -909,10 +835,6 @@ deleteProduct(product: Product): void {
 
     }
 
-    /* =========================================
-       FINALIZAR
-    ========================================= */
-
     finishSimulation(): void {
 
       clearInterval(this.timer);
@@ -925,10 +847,6 @@ deleteProduct(product: Product): void {
         'Simulación finalizada';
 
     }
-
-    /* =========================================
-       REINICIAR
-    ========================================= */
 
     resetSimulation(): void {
 
