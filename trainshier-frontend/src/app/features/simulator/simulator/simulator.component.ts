@@ -1,284 +1,967 @@
 import { Component, OnInit } from '@angular/core';
 
+interface Product {
+  id: number;
+  code: string;
+  barcode: string;
+  name: string;
+  price: number;
+  stock: number;
+}
+
+interface CartItem {
+  code: string;
+  name: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
+}
+
+interface Sale {
+  product: string;
+  quantity: number;
+  total: number;
+  date: string;
+}
+
 @Component({
-  selector:'app-simulator',
-  templateUrl:'./simulator.component.html',
-  styleUrls:['./simulator.component.scss']
+  selector: 'app-simulator',
+  templateUrl: './simulator.component.html',
+  styleUrls: ['./simulator.component.scss']
 })
-export class SimulatorComponent implements OnInit{
+export class SimulatorComponent implements OnInit {
 
-  role:string='observador';
+  /* =========================================
+     ROLES
+  ========================================= */
 
-  simulationStarted:boolean=false;
+  role: string = 'APRENDIZ';
 
-  successMessage:string='';
-  errorMessage:string='';
+  /* =========================================
+     ESTADO GENERAL
+  ========================================= */
 
-  successCount:number=0;
-  failCount:number=0;
-  servedProducts:number=0;
+  simulationStarted = false;
+  simulationFinished = false;
 
-  totalClients:number=0;
+  successMessage = '';
+  errorMessage = '';
 
-  timeLeft:number=60;
+  score = 0;
 
-  timer:any;
+  salesCount = 0;
+  servedProducts = 0;
+  totalClients = 0;
 
-  simulationFinished:boolean=false;
+  timeLeft = 60;
+  timer: any;
 
-  currentCustomer:any={
-    name:'Cliente pendiente',
-    mood:'Neutral',
-    product:'Ninguno',
-    time:60
+  difficulty = 'MEDIA';
+
+  /* =========================================
+     IA COACH
+  ========================================= */
+
+  traineeResponse = '';
+
+  coachFeedback = '';
+
+  customerSatisfaction = 100;
+
+  /* =========================================
+     CALENDARIO
+  ========================================= */
+
+  saleDate =
+    new Date().toISOString().split('T')[0];
+
+  specialEvent = 'Día Normal';
+
+  specialDiscount = 0;
+
+  discountValue = 0;
+
+  /* =========================================
+     CLIENTE IA
+  ========================================= */
+
+  currentCustomer: any = {
+    name: '',
+    mood: '',
+    patience: 5,
+    request: '',
+    message: ''
   };
 
-  customers:any[]=[
+  customers = [
 
     {
-      name:'Laura Gómez',
-      mood:'Feliz',
-      product:'Leche 3 L',
-      time:60
+      name: 'Laura Gómez',
+      mood: 'Feliz',
+      patience: 5,
+      request: '2 Leches y 1 Pan',
+      message:
+      'Buenos días, necesito dos leches y un pan por favor.'
     },
 
     {
-      name:'Carlos Ruiz',
-      mood:'Apurado',
-      product:'Pan Integral',
-      time:45
+      name: 'Carlos Ruiz',
+      mood: 'Apurado',
+      patience: 2,
+      request: '1 Chocolate',
+      message:
+      'Tengo poco tiempo, por favor atiéndeme rápido.'
     },
 
     {
-      name:'Martha Díaz',
-      mood:'Molesta',
-      product:'Chocolate',
-      time:35
+      name: 'Martha Díaz',
+      mood: 'Molesta',
+      patience: 1,
+      request: '1 Arroz Premium',
+      message:
+      'La vez pasada me cobraron mal.'
     },
 
     {
-      name:'Julián Pérez',
-      mood:'Tranquilo',
-      product:'Arroz Premium',
-      time:55
+      name: 'Valentina Castro',
+      mood: 'Impaciente',
+      patience: 2,
+      request: '3 Gaseosas',
+      message:
+      '¿Falta mucho para terminar?'
     },
 
     {
-      name:'Valentina Castro',
-      mood:'Impaciente',
-      product:'Queso Mozzarella',
-      time:40
-    },
-
-    {
-      name:'Andrés Moreno',
-      mood:'Serio',
-      product:'Gaseosa Cola',
-      time:50
+      name: 'Andrés Moreno',
+      mood: 'Tranquilo',
+      patience: 5,
+      request: '2 Chocolates',
+      message:
+      'Gracias por atenderme.'
     }
 
   ];
 
-  products:any[]=[
+  /* =========================================
+     PRODUCTOS
+  ========================================= */
 
-    {
-      name:'Leche 3 L',
-      description:'Leche deslactosada premium',
-      price:12000,
-      image:'https://images.unsplash.com/photo-1563636619-e9143da7973b?q=80&w=1200&auto=format&fit=crop'
-    },
+  products: Product[] = [];
 
-    {
-      name:'Pan Integral',
-      description:'Pan fresco integral',
-      price:8500,
-      image:'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1200&auto=format&fit=crop'
-    },
+  newProduct = {
+    name: '',
+    code: '',
+    barcode: '',
+    price: 0,
+    stock: 0
+  };
 
-    {
-      name:'Chocolate',
-      description:'Chocolate tradicional',
-      price:4000,
-      image:'https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=1200&auto=format&fit=crop'
-    },
+  /* =========================================
+     CARRITO
+  ========================================= */
 
-    {
-      name:'Arroz Premium',
-      description:'Arroz de alta calidad',
-      price:7000,
-      image:'https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=1200&auto=format&fit=crop'
-    },
+  cart: CartItem[] = [];
 
-    {
-      name:'Queso Mozzarella',
-      description:'Queso fresco premium',
-      price:15000,
-      image:'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?q=80&w=1200&auto=format&fit=crop'
-    },
+  productCode = '';
 
-    {
-      name:'Gaseosa Cola',
-      description:'Bebida gaseosa fría',
-      price:6000,
-      image:'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1200&auto=format&fit=crop'
+  subtotal = 0;
+
+  ivaPercentage = 19;
+
+  ivaValue = 0;
+
+  totalToPay = 0;
+
+  paymentMethod = 'Efectivo';
+
+  cashReceived = 0;
+
+  change = 0;
+
+  /* =========================================
+     HISTORIAL
+  ========================================= */
+
+  salesHistory: Sale[] = [];
+
+  /* =========================================
+     INIT
+  ========================================= */
+
+  ngOnInit(): void {
+
+    const savedRole =
+      localStorage.getItem('role');
+
+    if (savedRole) {
+      this.role = savedRole.toUpperCase();
     }
 
-  ];
+    this.loadProducts();
 
-  ngOnInit():void{
-
-    const savedRole=localStorage.getItem('role');
-
-    if(savedRole){
-      this.role=savedRole;
-    }
+    this.loadSalesHistory();
 
     this.generateCustomer();
 
+    this.updateSpecialDay();
+
   }
 
-  generateCustomer():void{
+  /* =========================================
+     LOCAL STORAGE
+  ========================================= */
 
-    const random=
-    this.customers[
-      Math.floor(Math.random()*this.customers.length)
+  loadProducts(): void {
+
+    const savedProducts =
+      localStorage.getItem('trainshier_products');
+
+    if (savedProducts) {
+
+      this.products =
+        JSON.parse(savedProducts);
+
+      return;
+
+    }
+
+    this.products = [
+
+      {
+        id: 1,
+        code: '1001',
+        barcode: '7701001001',
+        name: 'Leche 1L',
+        price: 4500,
+        stock: 50
+      },
+
+      {
+        id: 2,
+        code: '1002',
+        barcode: '7701001002',
+        name: 'Pan Integral',
+        price: 5500,
+        stock: 40
+      },
+
+      {
+        id: 3,
+        code: '1003',
+        barcode: '7701001003',
+        name: 'Chocolate',
+        price: 3000,
+        stock: 60
+      },
+
+      {
+        id: 4,
+        code: '1004',
+        barcode: '7701001004',
+        name: 'Arroz Premium',
+        price: 8000,
+        stock: 35
+      },
+
+      {
+        id: 5,
+        code: '1005',
+        barcode: '7701001005',
+        name: 'Gaseosa Cola',
+        price: 6000,
+        stock: 80
+      }
+
     ];
 
-    this.currentCustomer=random;
+    this.saveProducts();
 
-    this.timeLeft=random.time;
+  }
+
+  saveProducts(): void {
+
+    localStorage.setItem(
+      'trainshier_products',
+      JSON.stringify(this.products)
+    );
+
+  }
+
+  loadSalesHistory(): void {
+
+    const saved =
+      localStorage.getItem('trainshier_sales');
+
+    if (saved) {
+
+      this.salesHistory =
+        JSON.parse(saved);
+
+    }
+
+  }
+
+  saveSalesHistory(): void {
+
+    localStorage.setItem(
+      'trainshier_sales',
+      JSON.stringify(this.salesHistory)
+    );
+
+  }
+
+  /* =========================================
+     CLIENTE IA
+  ========================================= */
+
+  generateCustomer(): void {
+
+    const randomIndex =
+      Math.floor(
+        Math.random() * this.customers.length
+      );
+
+    this.currentCustomer =
+      this.customers[randomIndex];
+
+    this.customerSatisfaction = 100;
 
     this.totalClients++;
 
   }
 
-  startSimulation():void{
+  /* =========================================
+     CALENDARIO COMERCIAL
+  ========================================= */
 
-    if(this.role==='observador'){
+  updateSpecialDay(): void {
 
-      this.errorMessage=
-      'Los observadores no pueden acceder al simulador';
+    const date =
+      new Date(this.saleDate);
 
-      return;
+    const day =
+      date.getDate();
+
+    const month =
+      date.getMonth() + 1;
+
+    this.specialEvent =
+      'Día Normal';
+
+    this.specialDiscount = 0;
+
+    if (
+      month === 1 &&
+      day === 1
+    ) {
+
+      this.specialEvent =
+        'Año Nuevo';
+
+      this.specialDiscount = 25;
 
     }
 
-    this.simulationStarted=true;
+    else if (
+      month === 2 &&
+      day === 14
+    ) {
 
-    this.simulationFinished=false;
+      this.specialEvent =
+        'San Valentín';
 
-    this.successMessage=
-    'Simulación iniciada correctamente';
+      this.specialDiscount = 10;
 
-    this.errorMessage='';
+    }
 
-    clearInterval(this.timer);
+    else if (
+      month === 10 &&
+      day === 31
+    ) {
 
-    this.timer=setInterval(()=>{
+      this.specialEvent =
+        'Halloween';
 
-      this.timeLeft--;
+      this.specialDiscount = 15;
 
-      if(this.timeLeft<=0){
+    }
 
-        this.failCount++;
+    else if (
+      month === 12 &&
+      day === 24
+    ) {
 
-        this.errorMessage=
-        'Tiempo agotado. El cliente se fue molesto.';
+      this.specialEvent =
+        'Navidad';
 
-        this.successMessage='';
+      this.specialDiscount = 20;
 
-        this.generateCustomer();
+    }
+
+  }
+
+  /* =========================================
+     CRUD PRODUCTOS
+  ========================================= */
+
+  addProduct(): void {
+
+    if (
+      !this.newProduct.name ||
+      !this.newProduct.code
+    ) {
+      return;
+    }
+
+    const product: Product = {
+
+      id: Date.now(),
+
+      name: this.newProduct.name,
+
+      code: this.newProduct.code,
+
+      barcode: this.newProduct.barcode,
+
+      price: this.newProduct.price,
+
+      stock: this.newProduct.stock
+
+    };
+
+    this.products.push(product);
+
+    this.saveProducts();
+
+    this.newProduct = {
+      name: '',
+      code: '',
+      barcode: '',
+      price: 0,
+      stock: 0
+    };
+
+  }
+
+  editProduct(product: Product): void {
+
+    const newPrice =
+      prompt(
+        'Nuevo precio',
+        product.price.toString()
+      );
+
+    if (newPrice) {
+
+      product.price =
+        Number(newPrice);
+
+      this.saveProducts();
+
+    }
+
+  }
+
+deleteProduct(product: Product): void {
+
+  const confirmed =
+    confirm(
+      '¿Eliminar producto?'
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  this.products =
+    this.products.filter(
+      p => p.id !== product.id
+    );
+
+  this.saveProducts();
+
+}
+    startSimulation(): void {
+
+      if (this.role === 'OBSERVADOR') {
+
+        this.errorMessage =
+          'Los observadores no pueden iniciar simulaciones';
+
+        return;
 
       }
 
-    },1000);
+      this.simulationStarted = true;
 
-  }
+      this.successMessage =
+        'Simulación iniciada';
 
-  finishSimulation():void{
-
-    clearInterval(this.timer);
-
-    this.simulationStarted=false;
-
-    this.simulationFinished=true;
-
-    this.errorMessage='';
-
-    this.successMessage=
-    'La simulación finalizó correctamente';
-
-  }
-
-  selectProduct(product:any):void{
-
-    if(!this.simulationStarted){
-
-      this.errorMessage=
-      'Debes iniciar la simulación primero';
-
-      this.successMessage='';
-
-      return;
-
-    }
-
-    if(product.name===this.currentCustomer.product){
-
-      this.successMessage=
-      'Cliente atendido correctamente';
-
-      this.errorMessage='';
-
-      this.successCount++;
-
-      this.servedProducts++;
+      this.errorMessage = '';
 
       clearInterval(this.timer);
 
-      setTimeout(()=>{
+      this.setDifficultyTime();
 
-        this.generateCustomer();
+      this.timer = setInterval(() => {
 
-        this.startSimulation();
+        this.timeLeft--;
 
-      },1500);
+        if (this.timeLeft <= 0) {
 
-    }else{
+          clearInterval(this.timer);
 
-      this.errorMessage=
-      'Producto incorrecto para el cliente';
+          this.customerSatisfaction -= 30;
 
-      this.successMessage='';
+          this.errorMessage =
+            'El cliente perdió la paciencia';
 
-      this.failCount++;
+        }
+
+      }, 1000);
+
+    }
+
+    setDifficultyTime(): void {
+
+      switch (this.difficulty) {
+
+        case 'FACIL':
+          this.timeLeft = 120;
+          break;
+
+        case 'MEDIA':
+          this.timeLeft = 90;
+          break;
+
+        case 'DIFICIL':
+          this.timeLeft = 45;
+          break;
+
+        default:
+          this.timeLeft = 90;
+
+      }
+
+    }
+
+    /* =========================================
+       REGISTRO POR CÓDIGO
+    ========================================= */
+
+    registerByCode(): void {
+
+      if (!this.productCode) {
+        return;
+      }
+
+      const product = this.products.find(
+
+        p =>
+          p.code === this.productCode ||
+          p.barcode === this.productCode
+
+      );
+
+      if (!product) {
+
+        this.errorMessage =
+          'Producto no encontrado';
+
+        return;
+
+      }
+
+      if (product.stock <= 0) {
+
+        this.errorMessage =
+          'Producto sin stock';
+
+        return;
+
+      }
+
+      this.addToCart(product);
+
+      this.productCode = '';
+
+    }
+
+    /* =========================================
+       ESCÁNER SIMULADO
+    ========================================= */
+
+    simulateBarcodeScan(): void {
+
+      if (this.products.length === 0) {
+        return;
+      }
+
+      const randomProduct =
+
+        this.products[
+          Math.floor(
+            Math.random() *
+            this.products.length
+          )
+        ];
+
+      this.productCode =
+        randomProduct.barcode;
+
+      this.registerByCode();
+
+    }
+
+    /* =========================================
+       CARRITO
+    ========================================= */
+
+    addToCart(product: Product): void {
+
+      const existingItem =
+        this.cart.find(
+
+          item =>
+            item.code === product.code
+
+        );
+
+      if (existingItem) {
+
+        existingItem.quantity++;
+
+        existingItem.subtotal =
+          existingItem.quantity *
+          existingItem.price;
+
+      }
+
+      else {
+
+        this.cart.push({
+
+          code: product.code,
+
+          name: product.name,
+
+          price: product.price,
+
+          quantity: 1,
+
+          subtotal: product.price
+
+        });
+
+      }
+
+      this.calculateTotals();
+
+    }
+
+    increaseQuantity(item: CartItem): void {
+
+      item.quantity++;
+
+      item.subtotal =
+        item.quantity *
+        item.price;
+
+      this.calculateTotals();
+
+    }
+
+    decreaseQuantity(item: CartItem): void {
+
+      if (item.quantity <= 1) {
+
+        this.removeItem(item);
+
+        return;
+
+      }
+
+      item.quantity--;
+
+      item.subtotal =
+        item.quantity *
+        item.price;
+
+      this.calculateTotals();
+
+    }
+
+    removeItem(item: CartItem): void {
+
+      this.cart =
+        this.cart.filter(
+
+          p => p !== item
+
+        );
+
+      this.calculateTotals();
+
+    }
+
+    clearCart(): void {
+
+      this.cart = [];
+
+      this.calculateTotals();
+
+    }
+
+    /* =========================================
+       CÁLCULOS
+    ========================================= */
+
+    calculateTotals(): void {
+
+      this.subtotal = 0;
+
+      this.cart.forEach(item => {
+
+        this.subtotal +=
+          item.subtotal;
+
+      });
+
+      this.ivaValue =
+
+        this.subtotal *
+        (this.ivaPercentage / 100);
+
+      this.discountValue =
+
+        this.subtotal *
+        (this.specialDiscount / 100);
+
+      this.totalToPay =
+
+        this.subtotal +
+        this.ivaValue -
+        this.discountValue;
+
+      this.calculatePayment();
+
+    }
+
+    calculatePayment(): void {
+
+      if (
+
+        this.paymentMethod !== 'Efectivo'
+
+      ) {
+
+        this.change = 0;
+
+        return;
+
+      }
+
+      this.change =
+
+        this.cashReceived -
+        this.totalToPay;
+
+    }
+
+    /* =========================================
+       REGISTRAR VENTA
+    ========================================= */
+
+    registerSale(): void {
+
+      if (this.cart.length === 0) {
+
+        this.errorMessage =
+          'No hay productos registrados';
+
+        return;
+
+      }
+
+      if (
+
+        this.paymentMethod === 'Efectivo' &&
+        this.cashReceived < this.totalToPay
+
+      ) {
+
+        this.errorMessage =
+          'Dinero insuficiente';
+
+        return;
+
+      }
+
+      this.cart.forEach(item => {
+
+        const product =
+          this.products.find(
+
+            p =>
+              p.code === item.code
+
+          );
+
+        if (product) {
+
+          product.stock -=
+            item.quantity;
+
+        }
+
+        this.salesHistory.push({
+
+          product:
+            item.name,
+
+          quantity:
+            item.quantity,
+
+          total:
+            item.subtotal,
+
+          date:
+            new Date()
+              .toLocaleString()
+
+        });
+
+      });
+
+      this.saveProducts();
+
+      this.saveSalesHistory();
+
+      this.salesCount++;
+
+      this.servedProducts +=
+        this.cart.length;
+
+      this.score += 100;
+
+      this.successMessage =
+        'Venta registrada correctamente';
+
+      this.errorMessage = '';
+
+      this.customerSatisfaction =
+        Math.min(
+          100,
+          this.customerSatisfaction + 10
+        );
+
+      this.clearCart();
+
+      this.cashReceived = 0;
+
+      this.change = 0;
+
+      this.generateCustomer();
+
+    }
+
+    /* =========================================
+       AI COACH
+    ========================================= */
+
+    evaluateResponse(): void {
+
+      const response =
+
+        this.traineeResponse
+        .toLowerCase();
+
+      if (
+
+        response.includes('buenos') ||
+        response.includes('gracias') ||
+        response.includes('claro') ||
+        response.includes('ayudar')
+
+      ) {
+
+        this.coachFeedback =
+
+          'Excelente atención al cliente. Respuesta amable y profesional.';
+
+        this.score += 25;
+
+        this.customerSatisfaction += 5;
+
+      }
+
+      else {
+
+        this.coachFeedback =
+
+          'La respuesta puede mejorar. Usa lenguaje amable y cordial.';
+
+        this.score -= 5;
+
+        this.customerSatisfaction -= 5;
+
+      }
+
+    }
+
+    /* =========================================
+       FINALIZAR
+    ========================================= */
+
+    finishSimulation(): void {
+
+      clearInterval(this.timer);
+
+      this.simulationFinished = true;
+
+      this.simulationStarted = false;
+
+      this.successMessage =
+        'Simulación finalizada';
+
+    }
+
+    /* =========================================
+       REINICIAR
+    ========================================= */
+
+    resetSimulation(): void {
+
+      clearInterval(this.timer);
+
+      this.simulationStarted = false;
+      this.simulationFinished = false;
+
+      this.cart = [];
+
+      this.subtotal = 0;
+      this.ivaValue = 0;
+      this.discountValue = 0;
+      this.totalToPay = 0;
+
+      this.cashReceived = 0;
+      this.change = 0;
+
+      this.score = 0;
+
+      this.salesCount = 0;
+      this.servedProducts = 0;
+
+      this.customerSatisfaction = 100;
+
+      this.successMessage = '';
+      this.errorMessage = '';
+
+      this.coachFeedback = '';
+      this.traineeResponse = '';
+
+      this.generateCustomer();
 
     }
 
   }
-
-  resetSimulation():void{
-
-    clearInterval(this.timer);
-
-    this.successCount=0;
-
-    this.failCount=0;
-
-    this.servedProducts=0;
-
-    this.totalClients=0;
-
-    this.simulationStarted=false;
-
-    this.simulationFinished=false;
-
-    this.successMessage='';
-
-    this.errorMessage='';
-
-    this.generateCustomer();
-
-  }
-
-}

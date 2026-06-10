@@ -2,102 +2,450 @@
 
   <div class="simulator-header">
 
-    <h1>
-      Simulador Profesional POS
-    </h1>
+    <div>
+      <h1>TrainShier Simulator</h1>
 
-    <p>
-      Entrena habilidades de atención al cliente, velocidad y precisión.
-    </p>
+      <p>
+        Simulador inteligente de atención al cliente,
+        inventario, facturación y caja registradora.
+      </p>
+    </div>
 
-  </div>
+    <div class="header-badges">
 
-  <div class="role-banner" *ngIf="role==='admin'">
-    <h2>Panel de Administración</h2>
-    <p>
-      Control total del sistema TrainShier y supervisión avanzada.
-    </p>
-  </div>
+      <span class="badge role">
+        {{ role }}
+      </span>
 
-  <div class="role-banner" *ngIf="role==='instructor'">
-    <h2>Modo Instructor</h2>
-    <p>
-      Evalúa aprendices y monitorea estadísticas en tiempo real.
-    </p>
-  </div>
+      <span class="badge difficulty">
+        {{ difficulty }}
+      </span>
 
-  <div class="role-banner" *ngIf="role==='aprendiz'">
-    <h2>Modo Aprendiz</h2>
-    <p>
-      Completa simulaciones y mejora tus habilidades de atención.
-    </p>
+    </div>
+
   </div>
 
   <div class="simulator-grid">
 
-    <div class="simulator-card">
+    <!-- COLUMNA IZQUIERDA -->
 
-      <div class="customer-card">
+    <div class="main-panel">
 
-        <h3>
-          Cliente Actual
-        </h3>
+      <!-- CLIENTE SIMULADO -->
 
-        <div class="customer-info">
+      <div class="card">
+
+        <div class="card-header">
+
+          <h2>Cliente Simulado</h2>
+
+          <span class="mood">
+            {{ currentCustomer.mood }}
+          </span>
+
+        </div>
+
+        <div class="customer-grid">
 
           <div>
-            <span>Nombre</span>
-            {{currentCustomer.name}}
+            <strong>Cliente</strong>
+            <p>{{ currentCustomer.name }}</p>
           </div>
 
           <div>
-            <span>Estado</span>
-            {{currentCustomer.mood}}
+            <strong>Paciencia</strong>
+            <p>{{ currentCustomer.patience }}/5</p>
           </div>
 
           <div>
-            <span>Busca</span>
-            {{currentCustomer.product}}
+            <strong>Pedido</strong>
+            <p>{{ currentCustomer.request }}</p>
           </div>
 
-          <div>
-            <span>Tiempo</span>
-            {{timeLeft}} segundos
+        </div>
+
+        <div class="customer-message">
+
+          <h3>Mensaje</h3>
+
+          <p>
+            {{ currentCustomer.message }}
+          </p>
+
+        </div>
+
+        <div class="emotion-bar">
+
+          <div
+            class="emotion-fill"
+            [style.width.%]="customerSatisfaction"
+          >
           </div>
 
         </div>
 
       </div>
 
-      <h2>
-        Productos disponibles
-      </h2>
+      <!-- AI COACH -->
 
-      <div class="products-grid">
+      <div class="card">
+
+        <h2>AI Customer Coach</h2>
+
+        <textarea
+          rows="4"
+          [(ngModel)]="traineeResponse"
+          placeholder="Escribe tu respuesta al cliente..."
+        >
+        </textarea>
+
+        <button
+          class="primary-btn"
+          (click)="evaluateResponse()"
+        >
+          Evaluar Respuesta
+        </button>
 
         <div
-          class="product-card"
-          *ngFor="let product of products"
-          (click)="selectProduct(product)"
+          *ngIf="coachFeedback"
+          class="coach-feedback"
+        >
+          {{ coachFeedback }}
+        </div>
+
+      </div>
+
+      <!-- CALENDARIO -->
+
+      <div class="card">
+
+        <h2>Calendario Comercial</h2>
+
+        <input
+          type="date"
+          [(ngModel)]="saleDate"
+          (change)="updateSpecialDay()"
         >
 
-          <img [src]="product.image">
+        <div class="promotion-card">
 
-          <h4>
-            {{product.name}}
-          </h4>
+          <h3>{{ specialEvent }}</h3>
 
           <p>
-            {{product.description}}
+            Descuento disponible:
+            {{ specialDiscount }}%
           </p>
 
-          <span class="product-price">
-            $ {{product.price}}
+        </div>
+
+      </div>
+
+      <!-- ADMINISTRACIÓN -->
+
+      <div
+        class="card"
+        *ngIf="role === 'INSTRUCTOR'"
+      >
+
+        <h2>
+          Gestión de Productos
+        </h2>
+
+        <div class="form-grid">
+
+          <input
+            type="text"
+            placeholder="Nombre"
+            [(ngModel)]="newProduct.name"
+          >
+
+          <input
+            type="text"
+            placeholder="Código"
+            [(ngModel)]="newProduct.code"
+          >
+
+          <input
+            type="number"
+            placeholder="Precio"
+            [(ngModel)]="newProduct.price"
+          >
+
+          <input
+            type="number"
+            placeholder="Stock"
+            [(ngModel)]="newProduct.stock"
+          >
+
+          <input
+            type="text"
+            placeholder="Código de barras"
+            [(ngModel)]="newProduct.barcode"
+          >
+
+        </div>
+
+        <button
+          class="primary-btn"
+          (click)="addProduct()"
+        >
+          Agregar Producto
+        </button>
+
+      </div>
+
+      <!-- REGISTRO DE PRODUCTOS -->
+
+      <div class="card">
+
+        <h2>
+          Registro de Productos
+        </h2>
+
+        <div class="scan-section">
+
+          <input
+            type="text"
+            placeholder="Código del producto"
+            [(ngModel)]="productCode"
+          >
+
+          <button
+            (click)="registerByCode()"
+          >
+            Registrar Código
+          </button>
+
+          <button
+            (click)="simulateBarcodeScan()"
+          >
+            Escanear Código
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- INVENTARIO -->
+
+      <div class="card">
+
+        <h2>
+          Inventario
+        </h2>
+
+        <table>
+
+          <thead>
+
+          <tr>
+
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Stock</th>
+            <th>Precio</th>
+
+            <th *ngIf="role === 'INSTRUCTOR'">
+              Acciones
+            </th>
+
+          </tr>
+
+          </thead>
+
+          <tbody>
+
+          <tr
+            *ngFor="let product of products"
+          >
+
+            <td>
+              {{ product.code }}
+            </td>
+
+            <td>
+              {{ product.name }}
+            </td>
+
+            <td>
+
+                <span
+                  [class.out-stock]="product.stock <= 0"
+                >
+                  {{ product.stock }}
+                </span>
+
+            </td>
+
+            <td>
+              {{ product.price | currency:'COP' }}
+            </td>
+
+            <td *ngIf="role === 'INSTRUCTOR'">
+
+              <button
+                (click)="editProduct(product)"
+              >
+                Editar
+              </button>
+
+              <button
+                (click)="deleteProduct(product)"
+              >
+                Eliminar
+              </button>
+
+            </td>
+
+          </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- VENTA ACTUAL -->
+
+      <div class="card">
+
+        <h2>
+          Venta Actual
+        </h2>
+
+        <table>
+
+          <thead>
+
+          <tr>
+
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+
+          </tr>
+
+          </thead>
+
+          <tbody>
+
+          <tr
+            *ngFor="let item of cart"
+          >
+
+            <td>{{ item.code }}</td>
+
+            <td>{{ item.name }}</td>
+
+            <td>{{ item.quantity }}</td>
+
+            <td>
+              {{ item.price | currency:'COP' }}
+            </td>
+
+            <td>
+              {{ item.subtotal | currency:'COP' }}
+            </td>
+
+          </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- FACTURA -->
+
+      <div class="card">
+
+        <h2>
+          Liquidación
+        </h2>
+
+        <div class="invoice-row">
+
+          <span>Subtotal</span>
+
+          <span>
+            {{ subtotal | currency:'COP' }}
+          </span>
+
+        </div>
+
+        <div class="invoice-row">
+
+          <span>IVA</span>
+
+          <span>
+            {{ ivaValue | currency:'COP' }}
+          </span>
+
+        </div>
+
+        <div class="invoice-row">
+
+          <span>Descuento</span>
+
+          <span>
+            {{ discountValue | currency:'COP' }}
+          </span>
+
+        </div>
+
+        <div class="invoice-row total">
+
+          <span>Total</span>
+
+          <span>
+            {{ totalToPay | currency:'COP' }}
           </span>
 
         </div>
 
       </div>
+
+      <!-- PAGO -->
+
+      <div class="card">
+
+        <h2>
+          Pago
+        </h2>
+
+        <select
+          [(ngModel)]="paymentMethod"
+        >
+
+          <option>Efectivo</option>
+          <option>Débito</option>
+          <option>Crédito</option>
+          <option>Transferencia</option>
+          <option>QR</option>
+
+        </select>
+
+        <input
+          type="number"
+          [(ngModel)]="cashReceived"
+          placeholder="Dinero recibido"
+        >
+
+        <div class="change-box">
+
+          Cambio:
+
+          <strong>
+            {{ change | currency:'COP' }}
+          </strong>
+
+        </div>
+
+      </div>
+
+      <!-- BOTONES -->
 
       <div class="actions">
 
@@ -105,68 +453,124 @@
           class="primary-btn"
           (click)="startSimulation()"
         >
-          Iniciar simulación
+          Iniciar
         </button>
 
         <button
-          class="secondary-btn"
-          (click)="finishSimulation()"
+          class="warning-btn"
+          (click)="calculatePayment()"
         >
-          Finalizar simulación
+          Total a Pagar
         </button>
 
-      </div>
+        <button
+          class="success-btn"
+          (click)="registerSale()"
+        >
+          Registrar Venta
+        </button>
 
-      <div
-        class="alert-success"
-        *ngIf="successMessage"
-      >
-        {{successMessage}}
-      </div>
+        <button
+          class="danger-btn"
+          (click)="finishSimulation()"
+        >
+          Finalizar
+        </button>
 
-      <div
-        class="alert-error"
-        *ngIf="errorMessage"
-      >
-        {{errorMessage}}
       </div>
 
     </div>
 
-    <div class="simulator-card stats-card">
+    <!-- PANEL DERECHO -->
 
-      <h3>
-        Estadísticas
-      </h3>
+    <div class="side-panel">
 
-      <div class="stat-item">
-        Simulaciones exitosas
-        <span>
-          {{successCount}}
-        </span>
-      </div>
-
-      <div class="stat-item">
-        Simulaciones fallidas
-        <span>
-          {{failCount}}
-        </span>
-      </div>
-
-      <div class="stat-item">
-        Productos atendidos
-        <span>
-          {{servedProducts}}
-        </span>
-      </div>
-
-      <div class="timer-box">
-
-        Tiempo restante
+      <div class="card">
 
         <h2>
-          {{timeLeft}}
+          Estadísticas
         </h2>
+
+        <div class="stat">
+
+          <span>Ventas</span>
+
+          <strong>
+            {{ salesCount }}
+          </strong>
+
+        </div>
+
+        <div class="stat">
+
+          <span>Clientes</span>
+
+          <strong>
+            {{ totalClients }}
+          </strong>
+
+        </div>
+
+        <div class="stat">
+
+          <span>Productos</span>
+
+          <strong>
+            {{ servedProducts }}
+          </strong>
+
+        </div>
+
+        <div class="stat">
+
+          <span>Puntaje</span>
+
+          <strong>
+            {{ score }}
+          </strong>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h2>
+          Tiempo
+        </h2>
+
+        <div class="timer">
+
+          {{ timeLeft }}
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h2>
+          Historial
+        </h2>
+
+        <div
+          *ngFor="let sale of salesHistory"
+          class="history-item"
+        >
+
+          <strong>
+            {{ sale.product }}
+          </strong>
+
+          <span>
+            x{{ sale.quantity }}
+          </span>
+
+          <p>
+            {{ sale.total | currency:'COP' }}
+          </p>
+
+        </div>
 
       </div>
 
