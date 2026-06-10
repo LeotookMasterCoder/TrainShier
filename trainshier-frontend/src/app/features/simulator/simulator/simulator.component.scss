@@ -5,10 +5,6 @@
   padding: 30px;
 }
 
-/* ==========================
-   HEADER
-========================== */
-
 .simulator-header {
   display: flex;
   justify-content: space-between;
@@ -46,10 +42,6 @@
   background: #334155;
 }
 
-/* ==========================
-   GRID
-========================== */
-
 .simulator-grid {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -62,10 +54,6 @@
   flex-direction: column;
   gap: 20px;
 }
-
-/* ==========================
-   CARD
-========================== */
 
 .card {
   background: #111827;
@@ -83,10 +71,6 @@
 .card h3 {
   margin-bottom: 10px;
 }
-
-/* ==========================
-   CLIENTE
-========================== */
 
 .card-header {
   display: flex;
@@ -144,10 +128,6 @@
   transition: .3s;
 }
 
-/* ==========================
-   FORMULARIOS
-========================== */
-
 input,
 select,
 textarea {
@@ -171,10 +151,6 @@ textarea {
   gap: 15px;
 }
 
-/* ==========================
-   PROMOCIONES
-========================== */
-
 .promotion-card {
   margin-top: 20px;
   background: linear-gradient(
@@ -190,10 +166,6 @@ textarea {
 .promotion-card h3 {
   margin-bottom: 8px;
 }
-
-/* ==========================
-   TABLAS
-========================== */
 
 table {
   width: 100%;
@@ -219,18 +191,10 @@ tbody tr:hover {
   background: rgba(255,255,255,.02);
 }
 
-/* ==========================
-   STOCK
-========================== */
-
 .out-stock {
   color: #ef4444;
   font-weight: 700;
 }
-
-/* ==========================
-   ESCANER
-========================== */
 
 .scan-section {
   display: flex;
@@ -246,10 +210,6 @@ tbody tr:hover {
   white-space: nowrap;
 }
 
-/* ==========================
-   FACTURA
-========================== */
-
 .invoice-row {
   display: flex;
   justify-content: space-between;
@@ -264,10 +224,6 @@ tbody tr:hover {
   font-weight: bold;
 }
 
-/* ==========================
-   CAMBIO
-========================== */
-
 .change-box {
   margin-top: 20px;
   background: #1e293b;
@@ -280,10 +236,6 @@ tbody tr:hover {
   color: #22c55e;
   margin-left: 8px;
 }
-
-/* ==========================
-   BOTONES
-========================== */
 
 .actions {
   display: flex;
@@ -324,10 +276,6 @@ button:hover {
   color: white;
 }
 
-/* ==========================
-   COACH IA
-========================== */
-
 .coach-feedback {
   margin-top: 15px;
   background: #14532d;
@@ -335,10 +283,6 @@ button:hover {
   padding: 15px;
   border-radius: 12px;
 }
-
-/* ==========================
-   ESTADISTICAS
-========================== */
 
 .stat {
   display: flex;
@@ -360,10 +304,6 @@ button:hover {
   color: #d89a00;
 }
 
-/* ==========================
-   HISTORIAL
-========================== */
-
 .history-item {
   background: #1e293b;
   padding: 15px;
@@ -383,10 +323,6 @@ button:hover {
   margin-top: 6px;
 }
 
-/* ==========================
-   MENSAJES
-========================== */
-
 .success-message {
   background: #14532d;
   padding: 15px;
@@ -398,10 +334,6 @@ button:hover {
   padding: 15px;
   border-radius: 12px;
 }
-
-/* ==========================
-   RESPONSIVE
-========================== */
 
 @media (max-width: 1200px) {
 
