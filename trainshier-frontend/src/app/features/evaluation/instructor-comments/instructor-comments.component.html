@@ -1,59 +1,150 @@
 <div class="instructor-page">
-
   <div class="header-card">
 
-    <h1>Evaluación del Instructor</h1>
+    <div>
 
-    <p>
-      Visualiza el rendimiento del aprendiz, analiza errores y agrega observaciones.
-    </p>
+      <h1>
+        Centro de Evaluación
+      </h1>
+
+      <p>
+        Analiza el desempeño de los aprendices y genera retroalimentación profesional.
+      </p>
+
+    </div>
+
+    <button class="export-btn">
+      Exportar Evaluación
+    </button>
 
   </div>
 
-  <div class="results-panel">
+  <div class="kpi-grid">
 
-    <div class="student-card">
+    <div class="kpi-card">
+
+      <h2>{{ puntaje }}%</h2>
+
+      <span>
+        Rendimiento
+      </span>
+
+    </div>
+
+    <div class="kpi-card">
+
+      <h2>{{ tiempo }}</h2>
+
+      <span>
+        Minutos
+      </span>
+
+    </div>
+
+    <div class="kpi-card">
+
+      <h2>{{ errores }}</h2>
+
+      <span>
+        Errores
+      </span>
+
+    </div>
+
+    <div class="kpi-card">
+
+      <h2>{{ comments.length }}</h2>
+
+      <span>
+        Evaluaciones
+      </span>
+
+    </div>
+
+  </div>
+
+  <div class="student-card">
+
+    <div>
 
       <div class="student-info">
 
-        <h2>{{ nombreAprendiz }}</h2>
+        <h2>
+          {{ nombreAprendiz }}
+        </h2>
 
         <span
           [class.approved]="puntaje >= 70"
           [class.rejected]="puntaje < 70">
 
-          {{ puntaje >= 70 ? 'Aprobado' : 'No aprobado' }}
+          {{ puntaje >= 70 ? 'APROBADO' : 'NO APROBADO' }}
 
         </span>
+
+      </div>
+
+      <div class="progress-section">
+
+        <div class="progress-header">
+
+          <span>
+            Desempeño General
+          </span>
+
+          <strong>
+            {{ puntaje }}%
+          </strong>
+
+        </div>
+
+        <div class="progress-bar">
+
+          <div
+            class="progress-fill"
+            [style.width.%]="puntaje">
+          </div>
+
+        </div>
 
       </div>
 
       <div class="metrics">
 
         <div class="metric">
+
           <h3>Puntaje</h3>
+
           <p>{{ puntaje }}%</p>
+
         </div>
 
         <div class="metric">
+
           <h3>Tiempo</h3>
+
           <p>{{ tiempo }} min</p>
+
         </div>
 
         <div class="metric">
+
           <h3>Errores</h3>
+
           <p>{{ errores }}</p>
+
         </div>
 
       </div>
 
-      <div class="chart-box">
+    </div>
 
-        <div class="chart-circle">
+    <div class="chart-box">
 
-          <div class="inner-circle">
-            {{ puntaje }}%
-          </div>
+      <div class="chart-circle">
+
+        <div class="inner-circle">
+
+          {{ puntaje }}%
 
         </div>
 
@@ -63,7 +154,25 @@
 
   </div>
 
+  <div class="ai-card">
+
+    <h2>
+      Análisis Inteligente
+    </h2>
+
+    <p>
+
+      {{ aiAnalysis }}
+
+    </p>
+
+  </div>
+
   <div class="comments-container">
+
+    <h2>
+      Nueva Retroalimentación
+    </h2>
 
     <form (ngSubmit)="saveComment()">
 
@@ -90,7 +199,7 @@
         name="state">
 
         <option value="">
-          Estado del aprendiz
+          Estado
         </option>
 
         <option value="Aprobado">
@@ -104,21 +213,23 @@
       </select>
 
       <textarea
-        rows="5"
-        placeholder="Retroalimentación del instructor"
+        rows="4"
+        placeholder="Retroalimentación"
         [(ngModel)]="comment.feedback"
         name="feedback">
       </textarea>
 
       <textarea
         rows="4"
-        placeholder="Errores detectados durante la simulación"
+        placeholder="Errores detectados"
         [(ngModel)]="comment.errors"
         name="errors">
       </textarea>
 
       <button type="submit">
-        Guardar comentario
+
+        Guardar Evaluación
+
       </button>
 
     </form>
@@ -131,6 +242,23 @@
 
     </div>
 
+  </div>
+
+  <div class="history-card">
+
+    <div class="history-header">
+
+      <h2>
+        Historial de Evaluaciones
+      </h2>
+
+      <input
+        type="text"
+        placeholder="Buscar aprendiz..."
+      >
+
+    </div>
+
     <div class="comments-list">
 
       <div
@@ -139,7 +267,9 @@
 
         <div class="card-top">
 
-          <h2>{{ item.studentName }}</h2>
+          <h2>
+            {{ item.studentName }}
+          </h2>
 
           <span>
             {{ item.state }}
@@ -147,13 +277,25 @@
 
         </div>
 
-        <p><strong>Módulo:</strong> {{ item.module }}</p>
+        <p>
+          <strong>Módulo:</strong>
+          {{ item.module }}
+        </p>
 
-        <p><strong>Calificación:</strong> {{ item.score }}</p>
+        <p>
+          <strong>Calificación:</strong>
+          {{ item.score }}
+        </p>
 
-        <p><strong>Retroalimentación:</strong> {{ item.feedback }}</p>
+        <p>
+          <strong>Retroalimentación:</strong>
+          {{ item.feedback }}
+        </p>
 
-        <p><strong>Errores:</strong> {{ item.errors }}</p>
+        <p>
+          <strong>Errores:</strong>
+          {{ item.errors }}
+        </p>
 
       </div>
 
