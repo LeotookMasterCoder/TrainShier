@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { SimulatorModule } from './features/simulator/simulator.module';
 
 import {
   FormsModule,
@@ -58,7 +59,6 @@ import { StatisticsComponent }  from './features/statistics/statistics/statistic
     RegisterComponent,
     RecoverPasswordComponent,
 
-    SimulatorComponent,
 
     ProfileComponent,
 
@@ -73,6 +73,8 @@ import { StatisticsComponent }  from './features/statistics/statistics/statistic
   ],
 
   imports:[
+
+    SimulatorModule,
 
     BrowserModule,
 
