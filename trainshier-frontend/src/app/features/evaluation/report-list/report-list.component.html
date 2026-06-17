@@ -1,18 +1,109 @@
-<div class="report-container">
+<div class="report-page">
 
-  <h2>Simulation Reports</h2>
+  <div class="hero">
 
-  <div class="card" *ngFor="let report of reports">
+    <div>
+      <h1>Reportes TrainShier</h1>
+      <p>
+        Control y seguimiento inteligente de simulaciones,
+        aprendices e instructores.
+      </p>
+    </div>
 
-    <h3>{{report.apprentice}}</h3>
+    <button
+      class="export-btn"
+      (click)="exportReports()"
+    >
+      Exportar Reportes
+    </button>
 
-    <p>Total Transactions: {{report.transactions}}</p>
+  </div>
 
-    <p>Average Time: {{report.averageTime}}</p>
+  <div class="kpi-grid">
 
-    <p>Errors: {{report.errors}}</p>
+    <div class="kpi-card">
 
-    <p>Score: {{report.score}}</p>
+      <h2>{{ totalReports }}</h2>
+
+      <span>
+        Reportes Totales
+      </span>
+
+    </div>
+
+    <div class="kpi-card">
+
+      <h2>{{ completedReports }}</h2>
+
+      <span>
+        Completados
+      </span>
+
+    </div>
+
+    <div class="kpi-card">
+
+      <h2>{{ pendingReports }}</h2>
+
+      <span>
+        Pendientes
+      </span>
+
+    </div>
+
+  </div>
+
+  <div class="search-box">
+
+    <input
+      type="text"
+      placeholder="Buscar reporte..."
+      [(ngModel)]="searchTerm"
+      (input)="filterReports()"
+    >
+
+  </div>
+
+  <div class="report-grid">
+
+    <div
+      class="card"
+      *ngFor="let report of filteredReports"
+    >
+
+      <div class="card-header">
+
+        <h2>
+          {{ report.title }}
+        </h2>
+
+        <span
+          class="status"
+          [class.completed]="report.status === 'Completado'"
+          [class.pending]="report.status === 'Pendiente'"
+        >
+          {{ report.status }}
+        </span>
+
+      </div>
+
+      <p>
+        {{ report.description }}
+      </p>
+
+      <div class="meta">
+
+        <span>
+          {{ report.date }}
+        </span>
+
+        <span>
+          {{ report.author }}
+        </span>
+
+      </div>
+
+    </div>
 
   </div>
 

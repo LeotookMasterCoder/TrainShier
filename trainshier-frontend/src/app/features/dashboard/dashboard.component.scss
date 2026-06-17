@@ -1,0 +1,66 @@
+.dashboard-container{
+  min-height:100vh;
+  background:#0f0f0f;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:40px;
+}
+
+.dashboard-card{
+  width:100%;
+  max-width:800px;
+  background:#181818;
+  border-radius:30px;
+  padding:50px;
+  text-align:center;
+  border:1px solid rgba(216,154,0,.25);
+}
+
+.banner{
+  width:280px;
+  margin-bottom:25px;
+}
+
+.dashboard-card h1{
+  color:white;
+  font-size:50px;
+}
+
+.dashboard-card p{
+  color:#c2c2c2;
+  margin:25px 0;
+  line-height:1.8;
+}
+
+.buttons{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+}
+
+.login-btn,
+.register-btn{
+  height:55px;
+  padding:0 30px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.login-btn{
+  background:#d89a00;
+}
+
+.register-btn{
+  background:white;
+}
+
+.observer-btn{
+  margin-top:20px;
+  background:none;
+  border:none;
+  color:#d89a00;
+  cursor:pointer;
+}

@@ -1,27 +1,54 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { TransactionService } from '../../../core/services/transaction.service';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-transaction-form',
-  templateUrl: './transaction-form.component.html'
-  styleUrl: './transaction-form.component.scss'
+  selector:'app-transaction-form',
+  templateUrl:'./transaction-form.component.html',
+  styleUrls:['./transaction-form.component.scss']
 })
-export class TransactionFormComponent {
 
-  @Output() created = new EventEmitter();
+export class TransactionFormComponent{
 
-  constructor(private fb: FormBuilder, private service: TransactionService){}
+  form:FormGroup;
 
-  form = this.fb.group({
-    total: [0, Validators.required],
-    method: ['', Validators.required],
-    status: ['SUCCESS']
-  });
+  successMessage:string='';
 
-  submit(){
-    this.service.create(this.form.value).subscribe(()=>{
-      this.created.emit();
+  constructor(
+    private fb:FormBuilder
+  ){
+
+    this.form=this.fb.group({
+
+      product:['',Validators.required],
+
+      quantity:[
+        '',
+        [
+          Validators.required,
+          Validators.min(1)
+        ]
+      ],
+
+      payment:['',Validators.required]
+
     });
+
   }
+
+  submit():void{
+
+    if(this.form.invalid){
+
+      this.successMessage='Completa todos los campos';
+      return;
+
+    }
+
+    this.successMessage=
+    'Transacción registrada correctamente';
+
+    this.form.reset();
+
+  }
+
 }

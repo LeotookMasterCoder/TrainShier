@@ -1,14 +1,164 @@
-<div class="auth-box">
+<div class="auth-page">
 
-  <h2>Login</h2>
+  <div class="auth-card">
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="auth-left">
 
-    <input type="text" formControlName="email" placeholder="Email">
-    <input type="password" formControlName="password" placeholder="Password">
+      <img
+        src="assets/img/Logo_TrainShier2.jpeg"
+        alt="TrainShier"
+        class="logo"
+      >
 
-    <button type="submit">Login</button>
+      <h1>Bienvenido a TrainShier</h1>
 
-  </form>
+      <p>
+        Plataforma profesional para simulación
+        de cajas POS y entrenamiento laboral.
+      </p>
+
+      <div class="demo-box">
+
+        <h3>Cuentas Demo</h3>
+
+        <div class="demo-item">
+          <span>ADMIN</span>
+          <p>admin&#64;trainshier.com</p>
+          <small>Admin123*</small>
+        </div>
+
+        <div class="demo-item">
+          <span>INSTRUCTOR</span>
+          <p>instructor&#64;trainshier.com</p>
+          <small>Instructor123*</small>
+        </div>
+
+        <div class="demo-item">
+          <span>APRENDIZ</span>
+          <p>aprendiz&#64;trainshier.com</p>
+          <small>Aprendiz123*</small>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="auth-right">
+
+      <div class="top-actions">
+
+        <button
+          routerLink="/"
+          class="back-btn"
+        >
+          ← Volver
+        </button>
+
+      </div>
+
+      <h2>Iniciar sesión</h2>
+
+      <form
+        [formGroup]="form"
+        (ngSubmit)="validateLogin()"
+      >
+
+        <div class="input-group">
+
+          <label>Correo electrónico</label>
+
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="ejemplo@correo.com"
+          >
+
+          <small
+            *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+          >
+            Ingresa un correo válido.
+          </small>
+
+        </div>
+
+        <div class="input-group">
+
+          <label>Contraseña</label>
+
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="********"
+          >
+
+          <small
+            *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+          >
+            Mínimo 8 caracteres y 1 carácter especial.
+          </small>
+
+        </div>
+
+        <div class="confirm-box" *ngIf="showConfirm">
+
+          <h3>¿Seguro que deseas iniciar sesión?</h3>
+
+          <div class="confirm-info">
+
+            <p><strong>Nombre:</strong> {{previewUser.name}}</p>
+
+            <p><strong>Correo:</strong> {{previewUser.email}}</p>
+
+            <p><strong>Rol:</strong> {{previewUser.role}}</p>
+
+          </div>
+
+          <div class="confirm-actions">
+
+            <button
+              type="button"
+              class="cancel-btn"
+              (click)="showConfirm=false"
+            >
+              Cancelar
+            </button>
+
+            <button
+              type="button"
+              class="confirm-btn"
+              (click)="login()"
+            >
+              Confirmar ingreso
+            </button>
+
+          </div>
+
+        </div>
+
+        <button
+          *ngIf="!showConfirm"
+          class="main-btn"
+          type="submit"
+        >
+          Ingresar
+        </button>
+
+      </form>
+
+      <div class="bottom-links">
+
+        <a routerLink="/recover-password">
+          Recuperar contraseña
+        </a>
+
+        <a routerLink="/register">
+          Crear cuenta
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>

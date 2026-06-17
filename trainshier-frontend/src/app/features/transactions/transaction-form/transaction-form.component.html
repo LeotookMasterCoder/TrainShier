@@ -1,18 +1,72 @@
-<div class="form-box">
+<div class="transaction-container">
 
-  <h3>Create Transaction</h3>
+  <div class="card">
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h2>
+      Registrar Venta
+    </h2>
 
-    <input type="number" formControlName="total" placeholder="Total">
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+    >
 
-    <select formControlName="method">
-      <option value="CASH">Cash</option>
-      <option value="CARD">Card</option>
-    </select>
+      <div class="input-group">
 
-    <button type="submit">Save</button>
+        <label>
+          Producto
+        </label>
 
-  </form>
+        <input
+          type="text"
+          formControlName="product"
+          placeholder="Ejemplo: Leche"
+        >
+
+        <small
+          *ngIf="
+            form.get('product')?.invalid &&
+            form.get('product')?.touched
+          "
+        >
+          El producto es obligatorio
+        </small>
+
+      </div>
+
+      <div class="input-group">
+
+        <label>
+          Cantidad
+        </label>
+
+        <input
+          type="number"
+          formControlName="quantity"
+        >
+
+      </div>
+
+      <div class="input-group">
+
+        <label>
+          Precio
+        </label>
+
+        <input
+          type="number"
+          formControlName="price"
+          placeholder="0"
+        >
+
+      </div>
+
+      <button type="submit">
+        Guardar Venta
+      </button>
+
+    </form>
+
+  </div>
 
 </div>

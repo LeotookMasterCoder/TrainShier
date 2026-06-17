@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ReportService } from '../../../core/services/report.service';
 
 @Component({
   selector: 'app-statistics',
@@ -8,18 +7,55 @@ import { ReportService } from '../../../core/services/report.service';
 })
 export class StatisticsComponent implements OnInit {
 
-  data: any;
+  selectedPeriod = 'Mes';
 
-  constructor(private service: ReportService){}
+  totalSimulations = 1254;
+  averageScore = 92;
+  averageTime = 38;
+  activeStudents = 245;
 
-  ngOnInit(): void {
-    this.loadStatistics();
-  }
+  stats = [
+    {
+      title: 'Simulaciones exitosas',
+      value: '92%',
+      progress: 92
+    },
+    {
+      title: 'Tiempo promedio',
+      value: '38s',
+      progress: 76
+    },
+    {
+      title: 'Aprendices activos',
+      value: '245',
+      progress: 85
+    },
+    {
+      title: 'Satisfacción clientes IA',
+      value: '96%',
+      progress: 96
+    }
+  ];
 
-  loadStatistics(){
+  topStudents = [
+    {
+      name: 'Laura Gómez',
+      score: 98
+    },
+    {
+      name: 'Carlos Ruiz',
+      score: 95
+    },
+    {
+      name: 'Valentina Castro',
+      score: 93
+    },
+    {
+      name: 'Julián Pérez',
+      score: 91
+    }
+  ];
 
-    this.service.getStatistics().subscribe((res: any) => {
-      this.data = res;
-    });
-  }
+  ngOnInit(): void {}
+
 }

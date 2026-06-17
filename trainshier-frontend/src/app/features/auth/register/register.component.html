@@ -1,15 +1,120 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
+<div class="register-container">
 
-  <input formControlName="name" placeholder="Name">
-  <input formControlName="email" placeholder="Email">
-  <input type="password" formControlName="password" placeholder="Password">
+  <div class="register-card">
 
-  <select formControlName="role">
-    <option value="ADMIN">Admin</option>
-    <option value="INSTRUCTOR">Instructor</option>
-    <option value="APPRENTICE">Apprentice</option>
-  </select>
+    <button class="back-btn" (click)="back()">
+      ← Volver
+    </button>
 
-  <button type="submit">Register</button>
+    <div class="header">
 
-</form>
+      <img src="assets/img/BannerTrainShier2.jpeg">
+
+      <h1>Crear Cuenta</h1>
+
+      <p>
+        Regístrate como aprendiz o instructor
+      </p>
+
+    </div>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="register()"
+    >
+
+      <div class="input-group">
+        <label>Nombre completo</label>
+
+        <input
+          type="text"
+          formControlName="fullName"
+          placeholder="Darwing López"
+        >
+      </div>
+
+      <div class="input-group">
+        <label>Nombre de usuario</label>
+
+        <input
+          type="text"
+          formControlName="username"
+          placeholder="prueba#2435"
+        >
+
+        <small>
+          Formato obligatorio: nombre#1234
+        </small>
+      </div>
+
+      <div class="input-group">
+        <label>Rol</label>
+
+        <select formControlName="role">
+
+          <option value="aprendiz">
+            Aprendiz
+          </option>
+
+          <option value="instructor">
+            Instructor
+          </option>
+
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Correo</label>
+
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="correo@gmail.com"
+        >
+      </div>
+
+      <div class="input-group">
+        <label>Contraseña</label>
+
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="********"
+        >
+
+        <small>
+          Mínimo 8 caracteres y 1 carácter especial.
+        </small>
+      </div>
+
+      <div class="generated-id">
+        ID generado:
+        <strong>{{generatedId}}</strong>
+      </div>
+
+      <div
+        class="error-banner"
+        *ngIf="errorMessage"
+      >
+        {{errorMessage}}
+      </div>
+
+      <div
+        class="success-banner"
+        *ngIf="successMessage"
+      >
+        {{successMessage}}
+      </div>
+
+      <button
+        class="register-btn"
+        type="submit"
+      >
+        Registrarse
+      </button>
+
+    </form>
+
+  </div>
+
+</div>

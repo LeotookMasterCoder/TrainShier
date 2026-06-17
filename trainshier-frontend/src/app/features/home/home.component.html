@@ -1,0 +1,359 @@
+<div class="home-container">
+
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <span class="role-badge">
+        {{ role }}
+      </span>
+
+      <h1>
+        Bienvenido {{ userName }}
+      </h1>
+
+      <p>
+        TrainShier es una plataforma de simulación POS diseñada para
+        fortalecer habilidades en atención al cliente, manejo de caja,
+        facturación y procesos comerciales reales.
+      </p>
+
+      <div class="hero-actions">
+
+        <button
+          *ngIf="role==='APRENDIZ'"
+          routerLink="/simulator"
+          class="primary-btn"
+        >
+          Iniciar Simulación
+        </button>
+
+        <button
+          *ngIf="role==='INSTRUCTOR'"
+          routerLink="/evaluation"
+          class="primary-btn"
+        >
+          Evaluar Aprendices
+        </button>
+
+        <button
+          *ngIf="role==='ADMIN'"
+          routerLink="/reports"
+          class="primary-btn"
+        >
+          Ver Reportes
+        </button>
+
+        <button
+          *ngIf="role==='OBSERVADOR'"
+          routerLink="/register"
+          class="primary-btn"
+        >
+          Crear Cuenta
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section
+    class="role-section"
+    *ngIf="role==='APRENDIZ'"
+  >
+
+    <h2>Tus herramientas</h2>
+
+    <div class="cards-grid">
+
+      <div class="info-card">
+
+        <h3>Simulador POS</h3>
+
+        <p>
+          Practica ventas, pagos, descuentos,
+          devoluciones y atención al cliente.
+        </p>
+
+        <button routerLink="/simulator">
+          Practicar
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Mis Transacciones</h3>
+
+        <p>
+          Consulta el historial de operaciones
+          realizadas durante las simulaciones.
+        </p>
+
+        <button routerLink="/transactions">
+          Ver Historial
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Mi Perfil</h3>
+
+        <p>
+          Actualiza tus datos y personaliza
+          tu experiencia dentro de la plataforma.
+        </p>
+
+        <button routerLink="/profile">
+          Gestionar
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section
+    class="role-section"
+    *ngIf="role==='INSTRUCTOR'"
+  >
+
+    <h2>Panel del Instructor</h2>
+
+    <div class="cards-grid">
+
+      <div class="info-card">
+
+        <h3>Evaluaciones</h3>
+
+        <p>
+          Analiza el desempeño de los aprendices
+          y registra observaciones.
+        </p>
+
+        <button routerLink="/evaluation">
+          Evaluar
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Comentarios</h3>
+
+        <p>
+          Genera retroalimentación basada en errores,
+          tiempos y resultados obtenidos.
+        </p>
+
+        <button routerLink="/evaluation">
+          Comentar
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Estadísticas</h3>
+
+        <p>
+          Consulta indicadores de rendimiento
+          por aprendiz o grupo.
+        </p>
+
+        <button routerLink="/statistics">
+          Ver Estadísticas
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section
+    class="role-section"
+    *ngIf="role==='ADMIN'"
+  >
+
+    <h2>Administración</h2>
+
+    <div class="cards-grid">
+
+      <div class="info-card">
+
+        <h3>Reportes</h3>
+
+        <p>
+          Accede a información consolidada
+          de toda la plataforma.
+        </p>
+
+        <button routerLink="/reports">
+          Abrir
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Usuarios</h3>
+
+        <p>
+          Supervisa instructores,
+          aprendices y observadores.
+        </p>
+
+        <button routerLink="/profile">
+          Gestionar
+        </button>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Indicadores</h3>
+
+        <p>
+          Monitorea resultados generales
+          y estadísticas globales.
+        </p>
+
+        <button routerLink="/statistics">
+          Ver Datos
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section
+    class="role-section"
+    *ngIf="role==='OBSERVADOR'"
+  >
+
+    <h2>¿Qué es TrainShier?</h2>
+
+    <div class="cards-grid">
+
+      <div class="info-card">
+
+        <h3>Simulación Realista</h3>
+
+        <p>
+          Recrea escenarios de atención al cliente
+          y operación de cajas registradoras.
+        </p>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Seguimiento</h3>
+
+        <p>
+          Los instructores pueden evaluar
+          el desempeño de cada aprendiz.
+        </p>
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>Aprendizaje Práctico</h3>
+
+        <p>
+          Entrenamiento enfocado en habilidades
+          laborales reales.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="features">
+
+    <h2>Explora las funcionalidades</h2>
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+
+        <div class="icon">🛒</div>
+
+        <h3>Simulador POS</h3>
+
+        <p>
+          Realiza ventas, pagos y procesos
+          de caja en escenarios reales.
+        </p>
+
+        <button routerLink="/simulator">
+          Explorar
+        </button>
+
+      </div>
+
+      <div class="feature-card">
+
+        <div class="icon">📊</div>
+
+        <h3>Estadísticas</h3>
+
+        <p>
+          Consulta indicadores y resultados
+          de aprendizaje.
+        </p>
+
+        <button routerLink="/statistics">
+          Ver Más
+        </button>
+
+      </div>
+
+      <div class="feature-card">
+
+        <div class="icon">📝</div>
+
+        <h3>Retroalimentación</h3>
+
+        <p>
+          Los instructores generan comentarios
+          según el desempeño del aprendiz.
+        </p>
+
+        <button routerLink="/evaluation">
+          Descubrir
+        </button>
+
+      </div>
+
+      <div class="feature-card">
+
+        <div class="icon">📁</div>
+
+        <h3>Reportes</h3>
+
+        <p>
+          Visualiza información consolidada
+          del entrenamiento.
+        </p>
+
+        <button routerLink="/reports">
+          Consultar
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
