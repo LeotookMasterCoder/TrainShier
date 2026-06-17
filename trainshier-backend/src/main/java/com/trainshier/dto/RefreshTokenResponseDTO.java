@@ -2,14 +2,16 @@ package com.trainshier.dto;
 
 import lombok.Data;
 
+/**
+ * DTO returned when refreshing a JWT token.
+ *
+ * @param message operation result message
+ * @param token new jwt token
+ */
 @Data
 public class RefreshTokenResponseDTO {
-/**
-     * 
-     * @param mensaje es un mensaje generico
-     * @param jwt devuelve el token jwt firmado
-     */
-    private String mensaje;
 
-    private String jwt;
+    private String message;
+
+    private String token;
 }

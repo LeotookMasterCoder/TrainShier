@@ -2,56 +2,59 @@ package com.trainshier.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.trainshier.dto.MessageResponseDTO;
-import com.trainshier.dto.UsuarioRequestDTO;
-import com.trainshier.dto.UsuarioResponseDTO;
-import com.trainshier.enums.RolEnum;
-import com.trainshier.security.RequiresRol;
-import com.trainshier.service.UsuarioService;
+import com.trainshier.dto.UserRequestDTO;
+import com.trainshier.dto.UserResponseDTO;
+import com.trainshier.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * User controller.
+ */
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UsuarioService usuarioService;
+    private final UserService userService;
 
     /**
-     * 
-     * @param request
-     * @return
+     * Create user.
+     *
+     * @param request user request
+     * @return message
      */
     @PostMapping
-    @RequiresRol({ RolEnum.admin, RolEnum.instructor})
-    public ResponseEntity<MessageResponseDTO> save(@RequestBody UsuarioRequestDTO request) {
-        try {
-            MessageResponseDTO response = usuarioService.save(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+    public MessageResponseDTO createUser(
+            @RequestBody UserRequestDTO request) {
+
+        return userService.createUser(request);
     }
 
     /**
-     * 
-     * @return 
+     * Get all users.
+     *
+     * @return users
      */
     @GetMapping
-    @RequiresRol({ RolEnum.aprendiz, RolEnum.admin, RolEnum.instructor })
-    public ResponseEntity<List<UsuarioResponseDTO>> findAll() {
-        try {
-            List<UsuarioResponseDTO> response = usuarioService.findAll();
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+    public List<UserResponseDTO> getUsers() {
+
+        return userService.findAll();
+    }
+
+    /**
+     * Find user by id.
+     *
+     * @param id user identifier
+     * @return user
+     */
+    @GetMapping("/{id}")
+    public UserResponseDTO getUser(
+            @PathVariable Long id) {
+
+        return userService.findById(id);
     }
 }

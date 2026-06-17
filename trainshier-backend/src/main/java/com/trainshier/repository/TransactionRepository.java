@@ -1,18 +1,16 @@
 package com.trainshier.repository;
 
-import com.trainshier.entity.Transaction;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 
-/**
- * @param transaction repository
- */
-public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-    /**
-     * @param userId user id
-     * @return transactions
-     */
-    List<Transaction> findByUserId(Long userId);
+import com.trainshier.entity.Transaction;
+
+@Repository
+public interface TransactionRepository
+        extends JpaRepository<Transaction, Long> {
+
+    List<Transaction> findByAccessId(
+            Long accessId);
 }
