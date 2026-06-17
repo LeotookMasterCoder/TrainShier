@@ -38,19 +38,6 @@
   <!-- PANEL FLOTANTE / FIJO DEL CLIENTE ACTUAL -->
   <div class="sticky-customer-panel">
     <div class="card customer-card-horizontal">
-  <div class="simulator-grid">
-
-    <div class="main-panel">
-
-      <div class="card">
-
-        <div class="card-header">
-
-          <h2>Cliente Simulado</h2>
-
-          <span class="mood">
-            {{ currentCustomer.mood }}
-          </span>
 
       <div class="customer-main-info">
         <div class="customer-header-inline">
@@ -74,34 +61,6 @@
           <div class="emotion-bar">
             <div class="emotion-fill" [style.width.%]="customerSatisfaction"></div>
           </div>
-
-        </div>
-
-      </div>
-
-      <div class="card">
-
-        <h2>AI Customer Coach</h2>
-
-        <textarea
-          rows="4"
-          [(ngModel)]="traineeResponse"
-          placeholder="Escribe tu respuesta al cliente..."
-        >
-        </textarea>
-
-        <button
-          class="primary-btn"
-          (click)="evaluateResponse()"
-        >
-          Evaluar Respuesta
-        </button>
-
-        <div
-          *ngIf="coachFeedback"
-          class="coach-feedback"
-        >
-          {{ coachFeedback }}
         </div>
       </div>
 
@@ -109,79 +68,11 @@
         <h3>Tiempo Restante</h3>
         <div class="timer-display" [class.timer-low]="timeLeft < 20">
           {{ timeLeft }}<span class="seconds-unit">s</span>
-      <div class="card">
-
-        <h2>Calendario Comercial</h2>
-
-        <input
-          type="date"
-          [(ngModel)]="saleDate"
-          (change)="updateSpecialDay()"
-        >
-
-        <div class="promotion-card">
-
-          <h3>{{ specialEvent }}</h3>
-
-          <p>
-            Descuento disponible:
-            {{ specialDiscount }}%
-          </p>
-
         </div>
       </div>
 
     </div>
   </div>
-      <div
-        class="card"
-        *ngIf="role === 'INSTRUCTOR'"
-      >
-
-        <h2>
-          Gestión de Productos
-        </h2>
-
-        <div class="form-grid">
-
-          <input
-            type="text"
-            placeholder="Nombre"
-            [(ngModel)]="newProduct.name"
-          >
-
-          <input
-            type="text"
-            placeholder="Código"
-            [(ngModel)]="newProduct.code"
-          >
-
-          <input
-            type="number"
-            placeholder="Precio"
-            [(ngModel)]="newProduct.price"
-          >
-
-          <input
-            type="number"
-            placeholder="Stock"
-            [(ngModel)]="newProduct.stock"
-          >
-
-          <input
-            type="text"
-            placeholder="Código de barras"
-            [(ngModel)]="newProduct.barcode"
-          >
-
-        </div>
-
-        <button
-          class="primary-btn"
-          (click)="addProduct()"
-        >
-          Agregar Producto
-        </button>
 
   <!-- GRID PRINCIPAL DEL SIMULADOR -->
   <div class="simulator-grid">
@@ -209,38 +100,38 @@
         <h2>Venta Actual (Carrito)</h2>
         <table>
           <thead>
-            <tr>
-              <th>Código</th>
-              <th>Producto</th>
-              <th>Cantidad</th>
-              <th>Precio</th>
-              <th>Subtotal</th>
-              <th style="text-align: center;">Quitar</th>
-            </tr>
+          <tr>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+            <th style="text-align: center;">Quitar</th>
+          </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of cart">
-              <td>{{ item.code }}</td>
-              <td>{{ item.name }}</td>
-              <td>
-                <button (click)="decreaseQuantity(item)" style="padding: 2px 6px; margin-right: 5px;">-</button>
-                <strong>{{ item.quantity }}</strong>
-                <button (click)="increaseQuantity(item)" style="padding: 2px 6px; margin-left: 5px;">+</button>
-              </td>
-              <td>{{ item.price | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
-              <td>{{ item.subtotal | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
-              <td style="text-align: center;">
-                <button
-                  (click)="removeItem(item)"
-                  style="background-color: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;"
-                  title="Quitar del carrito">
-                  🗑️
-                </button>
-              </td>
-            </tr>
-            <tr *ngIf="cart.length === 0">
-              <td colspan="6" class="no-results" style="text-align: center;">El carrito está vacío. Digite o escanee un producto para empezar.</td>
-            </tr>
+          <tr *ngFor="let item of cart">
+            <td>{{ item.code }}</td>
+            <td>{{ item.name }}</td>
+            <td>
+              <button (click)="decreaseQuantity(item)" style="padding: 2px 6px; margin-right: 5px;">-</button>
+              <strong>{{ item.quantity }}</strong>
+              <button (click)="increaseQuantity(item)" style="padding: 2px 6px; margin-left: 5px;">+</button>
+            </td>
+            <td>{{ item.price | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td>{{ item.subtotal | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td style="text-align: center;">
+              <button
+                (click)="removeItem(item)"
+                style="background-color: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;"
+                title="Quitar del carrito">
+                🗑️
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="cart.length === 0">
+            <td colspan="6" class="no-results" style="text-align: center;">El carrito está vacío. Digite o escanee un producto para empezar.</td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -261,34 +152,34 @@
 
         <table>
           <thead>
-            <tr>
-              <th>Código</th>
-              <th>Código Barras</th>
-              <th>Producto</th>
-              <th>Stock</th>
-              <th>Precio</th>
-              <th *ngIf="role === 'INSTRUCTOR'">Acciones</th>
-            </tr>
+          <tr>
+            <th>Código</th>
+            <th>Código Barras</th>
+            <th>Producto</th>
+            <th>Stock</th>
+            <th>Precio</th>
+            <th *ngIf="role === 'INSTRUCTOR'">Acciones</th>
+          </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let product of filteredProducts">
-              <td>{{ product.code }}</td>
-              <td><small>{{ product.barcode || 'N/A' }}</small></td>
-              <td>{{ product.name }}</td>
-              <td>
+          <tr *ngFor="let product of filteredProducts">
+            <td>{{ product.code }}</td>
+            <td><small>{{ product.barcode || 'N/A' }}</small></td>
+            <td>{{ product.name }}</td>
+            <td>
                 <span [class.out-stock]="product.stock <= 0">
                   {{ product.stock }}
                 </span>
-              </td>
-              <td>{{ product.price | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
-              <td *ngIf="role === 'INSTRUCTOR'">
-                <button (click)="editProduct(product)">Editar</button>
-                <button (click)="deleteProduct(product)">Eliminar</button>
-              </td>
-            </tr>
-            <tr *ngIf="filteredProducts.length === 0">
-              <td colspan="6" class="no-results">No se encontraron productos coincidentes.</td>
-            </tr>
+            </td>
+            <td>{{ product.price | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+            <td *ngIf="role === 'INSTRUCTOR'">
+              <button (click)="editProduct(product)">Editar</button>
+              <button (click)="deleteProduct(product)">Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredProducts.length === 0">
+            <td colspan="6" class="no-results">No se encontraron productos coincidentes.</td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -297,7 +188,6 @@
 
     <!-- PANEL LATERAL (DERECHO): LIQUIDACIÓN, HISTORIAL Y ACCIONES -->
     <div class="side-panel">
-      <div class="card">
 
       <!-- MODAL/DROPDOWN DE ESTADÍSTICAS FLOTANTES -->
       <div class="card stats-dropdown" *ngIf="showStats" #statsDropdown>
@@ -346,7 +236,7 @@
           [disabled]="!simulationStarted"
           [ngStyle]="{ 'color': simulationStarted ? 'white' : 'gris' }"
           [ngStyle]="{ 'background': simulationStarted ? 'white' : 'gris' }"
-          >
+        >
           Pagar Ahora
         </button>
       </div>
@@ -364,22 +254,6 @@
           <option value="Crédito">Crédito</option>
           <option value="Transferencia">Transferencia</option>
           <option value="QR">QR</option>
-      <div class="card">
-
-        <h2>
-          Pago
-        </h2>
-
-        <select
-          [(ngModel)]="paymentMethod"
-        >
-
-          <option>Efectivo</option>
-          <option>Débito</option>
-          <option>Crédito</option>
-          <option>Transferencia</option>
-          <option>QR</option>
-
         </select>
 
         <input
@@ -394,24 +268,6 @@
         </div>
 
         <!-- Botón Registrar Venta reubicado coherentemente aquí abajo -->
-      </div>
-
-      <div class="actions">
-
-        <button
-          class="primary-btn"
-          (click)="startSimulation()"
-        >
-          Iniciar
-        </button>
-
-        <button
-          class="warning-btn"
-          (click)="calculatePayment()"
-        >
-          Total a Pagar
-        </button>
-
         <button
           class="success-btn"
           style="width: 100%; margin-top: 15px;"
@@ -422,10 +278,6 @@
       </div>
 
       <!-- CALENDARIO COMERCIAL -->
-    </div>
-
-    <div class="side-panel">
-
       <div class="card">
         <h2>Calendario Comercial</h2>
         <input type="date" [(ngModel)]="saleDate" (change)="updateSpecialDay()" [disabled]="simulationStarted">
