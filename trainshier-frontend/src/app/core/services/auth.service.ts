@@ -1,91 +1,79 @@
 import { Injectable } from '@angular/core';
-import { Observable,of } from 'rxjs';
+
+import {
+  HttpClient
+} from '@angular/common/http';
+
+import {
+  Observable,
+  tap
+} from 'rxjs';
 
 @Injectable({
-  providedIn:'root'
+  providedIn: 'root'
 })
+export class AuthService {
 
-export class AuthService{
+  private apiUrl =
+    'http://localhost:8080/auth';
 
-  users=[
+  constructor(
+    private http: HttpClient
+  ) {}
 
-    {
-      role:'admin',
-      email:'admin@trainshier.com',
-      password:'Admin123',
-      name:'Administrador'
-    },
+  login(
+    credentials: any
+  ): Observable<any> {
 
-    {
-      role:'instructor',
-      email:'instructor@trainshier.com',
-      password:'Instructor123',
-      name:'Carlos Instructor'
-    },
+    return this.http
+      .post<any>(
+        `${this.apiUrl}/login`,
+        credentials
+      )
+      .pipe(
 
-    {
-      role:'aprendiz',
-      email:'aprendiz@trainshier.com',
-      password:'Aprendiz123',
-      name:'Laura Aprendiz'
-    }
+        tap(response => {
 
-  ];
+          localStorage.setItem(
+            'token',
+            response.token
+          );
 
-  login(data:any):Observable<any>{
+          localStorage.setItem(
+            'role',
+            response.role
+          );
 
-    const user=this.users.find(
-      item=>
-        item.email===data.email &&
-        item.password===data.password
-    );
+          localStorage.setItem(
+            'name',
+            response.name
+          );
 
-    if(user){
+          localStorage.setItem(
+            'userId',
+            String(response.userId)
+          );
 
-      localStorage.setItem(
-        'user',
-        JSON.stringify(user)
+        })
+
       );
 
-      return of({
-        success:true,
-        user
-      });
-
-    }
-
-    return of({
-      success:false
-    });
-
   }
 
-  register(data:any):Observable<any>{
+  register(
+    data: any
+  ): Observable<any> {
 
-    this.users.push({
-      role:'aprendiz',
-      email:data.email,
-      password:data.password,
-      name:data.name
-    });
-
-    return of({
-      success:true
-    });
-
-  }
-
-  logout(){
-
-    localStorage.removeItem('user');
-
-  }
-
-  getUser(){
-
-    return JSON.parse(
-      localStorage.getItem('user') || '{}'
+    return this.http.post(
+      `${this.apiUrl}/register`,
+      data
     );
+
+  }
+
+  logout(): void {
+
+    localStorage.clear();
 
   }
 

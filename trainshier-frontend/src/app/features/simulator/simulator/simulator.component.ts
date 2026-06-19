@@ -40,14 +40,21 @@ interface SimulationSummary {
 })
 export class SimulatorComponent implements OnInit {
 
+  /* =========================================
+      ESTADÍSTICAS FLOTANTES
+  ========================================= */
   showStats: boolean = false;
   h: boolean = false;
   @ViewChild('statsDropdown') statsDropdown!: ElementRef;
 
+  /* =========================================
+      ROLES
+  ========================================= */
   role: string = 'APRENDIZ';
 
-  role: string = 'APRENDIZ';
-
+  /* =========================================
+      ESTADO GENERAL Y MENSAJES (TOASTS)
+  ========================================= */
   simulationStarted = false;
   simulationFinished = false;
 
@@ -64,20 +71,29 @@ export class SimulatorComponent implements OnInit {
 
   difficulty = 'MEDIA';
 
+  /* =========================================
+      REPORTE GUARDADO
+  ========================================= */
   savedSimulationReport: SimulationSummary | null = null;
 
+  /* =========================================
+      IA COACH
+  ========================================= */
   traineeResponse = '';
   coachFeedback = '';
   customerSatisfaction = 100;
 
+  /* =========================================
+      CALENDARIO
+  ========================================= */
   saleDate = new Date().toISOString().split('T')[0];
-  saleDate =
-    new Date().toISOString().split('T')[0];
-
   specialEvent = 'Día Normal';
   specialDiscount = 0;
   discountValue = 0;
 
+  /* =========================================
+      CLIENTE IA
+  ========================================= */
   currentCustomer: any = {
     name: '',
     mood: '',
@@ -124,6 +140,9 @@ export class SimulatorComponent implements OnInit {
     }
   ];
 
+  /* =========================================
+      PRODUCTOS Y BUSCADOR
+  ========================================= */
   products: Product[] = [];
 
   newProduct = {
@@ -147,6 +166,9 @@ export class SimulatorComponent implements OnInit {
     );
   }
 
+  /* =========================================
+      CARRITO
+  ========================================= */
   cart: CartItem[] = [];
   productCode = '';
   subtotal = 0;
@@ -157,10 +179,14 @@ export class SimulatorComponent implements OnInit {
   cashReceived : number | null = null;
   change = 0;
 
+  /* =========================================
+      HISTORIAL
+  ========================================= */
   salesHistory: Sale[] = [];
 
-  salesHistory: Sale[] = [];
-
+  /* =========================================
+      INIT
+  ========================================= */
   ngOnInit(): void {
     const savedRole = localStorage.getItem('role');
 
@@ -174,6 +200,9 @@ export class SimulatorComponent implements OnInit {
     this.updateSpecialDay();
   }
 
+  /* =========================================
+      SISTEMA AUXILIAR DE NOTIFICACIONES (TOAST)
+  ========================================= */
   private showToast(message: string, isError: boolean = false): void {
     if (isError) {
       this.errorMessage = message;
@@ -186,6 +215,9 @@ export class SimulatorComponent implements OnInit {
     }
   }
 
+  /* =========================================
+      MÉTODOS CONTROL DE INTERFAZ
+  ========================================= */
   toggleStats(event: Event): void {
     event.stopPropagation();
     this.showStats = !this.showStats;
@@ -202,6 +234,9 @@ export class SimulatorComponent implements OnInit {
     }
   }
 
+  /* =========================================
+      LOCAL STORAGE
+  ========================================= */
   loadProducts(): void {
     const savedProducts = localStorage.getItem('trainshier_products');
 
@@ -236,6 +271,9 @@ export class SimulatorComponent implements OnInit {
     localStorage.setItem('trainshier_sales', JSON.stringify(this.salesHistory));
   }
 
+  /* =========================================
+      CLIENTE IA
+  ========================================= */
   generateCustomer(): void {
     const randomIndex = Math.floor(Math.random() * this.customers.length);
     this.currentCustomer = this.customers[randomIndex];
@@ -243,6 +281,9 @@ export class SimulatorComponent implements OnInit {
     this.totalClients++;
   }
 
+  /* =========================================
+      CALENDARIO COMERCIAL
+  ========================================= */
   updateSpecialDay(): void {
     const date = new Date(this.saleDate);
     const day = date.getDate();
@@ -266,6 +307,9 @@ export class SimulatorComponent implements OnInit {
     }
   }
 
+  /* =========================================
+      CRUD PRODUCTOS
+  ========================================= */
   addProduct(): void {
     if (!this.newProduct.name || !this.newProduct.code) {
       return;
@@ -303,6 +347,9 @@ export class SimulatorComponent implements OnInit {
     this.saveProducts();
   }
 
+  /* =========================================
+      SIMULACIÓN Y CONTADOR DE TIEMPO
+  ========================================= */
   startSimulation(): void {
     if (this.role === 'OBSERVADOR') {
       this.showToast('Los observadores no pueden iniciar simulaciones', true);
@@ -347,42 +394,6 @@ export class SimulatorComponent implements OnInit {
     this.timeLeft = this.currentCustomer.patience * baseTimePerPatiencePoint;
   }
 
-    registerByCode(): void {
-
-      if (!this.productCode) {
-        return;
-      }
-
-      const product = this.products.find(
-
-        p =>
-          p.code === this.productCode ||
-          p.barcode === this.productCode
-
-      );
-
-      if (!product) {
-
-        this.errorMessage =
-          'Producto no encontrado';
-
-        return;
-
-      }
-
-      if (product.stock <= 0) {
-
-        this.errorMessage =
-          'Producto sin stock';
-
-        return;
-
-      }
-
-      this.addToCart(product);
-
-      this.productCode = '';
-
   /* =========================================
       REGISTRO POR CÓDIGO (OPTIMIZADO PISTOLA)
   ========================================= */
@@ -392,20 +403,6 @@ export class SimulatorComponent implements OnInit {
     }
 
     const limpiado = this.productCode.trim();
-    simulateBarcodeScan(): void {
-
-      if (this.products.length === 0) {
-        return;
-      }
-
-      const randomProduct =
-
-        this.products[
-          Math.floor(
-            Math.random() *
-            this.products.length
-          )
-        ];
 
     const product = this.products.find(
       p => p.code === limpiado || p.barcode === limpiado
@@ -421,53 +418,15 @@ export class SimulatorComponent implements OnInit {
       this.showToast(`El producto ${product.name} no tiene stock`, true);
       this.productCode = '';
       return;
-    addToCart(product: Product): void {
-
-      const existingItem =
-        this.cart.find(
-
-          item =>
-            item.code === product.code
-
-        );
-
-      if (existingItem) {
-
-        existingItem.quantity++;
-
-        existingItem.subtotal =
-          existingItem.quantity *
-          existingItem.price;
-
-      }
-
-      else {
-
-        this.cart.push({
-
-          code: product.code,
-
-          name: product.name,
-
-          price: product.price,
-
-          quantity: 1,
-
-          subtotal: product.price
-
-        });
-
-      }
-
-      this.calculateTotals();
-
     }
 
     this.addToCart(product);
     this.productCode = '';
   }
 
-
+  /* =========================================
+      CARRITO Y CONTROLES DE FLUJO
+  ========================================= */
   addToCart(product: Product): void {
     const existingItem = this.cart.find(item => item.code === product.code);
 
@@ -515,6 +474,9 @@ export class SimulatorComponent implements OnInit {
     this.calculateTotals();
   }
 
+  /* =========================================
+      CÁLCULOS
+  ========================================= */
   calculateTotals(): void {
     this.subtotal = 0;
 
@@ -546,35 +508,6 @@ export class SimulatorComponent implements OnInit {
     if (this.cart.length === 0) {
       this.showToast('No hay productos registrados', true);
       return;
-    calculateTotals(): void {
-
-      this.subtotal = 0;
-
-      this.cart.forEach(item => {
-
-        this.subtotal +=
-          item.subtotal;
-
-      });
-
-      this.ivaValue =
-
-        this.subtotal *
-        (this.ivaPercentage / 100);
-
-      this.discountValue =
-
-        this.subtotal *
-        (this.specialDiscount / 100);
-
-      this.totalToPay =
-
-        this.subtotal +
-        this.ivaValue -
-        this.discountValue;
-
-      this.calculatePayment();
-
     }
 
     if (this.paymentMethod === 'Efectivo' && cash < this.totalToPay) {
@@ -586,29 +519,6 @@ export class SimulatorComponent implements OnInit {
       const product = this.products.find(p => p.code === item.code);
       if (product) {
         product.stock -= item.quantity;
-    registerSale(): void {
-
-      if (this.cart.length === 0) {
-
-        this.errorMessage =
-          'No hay productos registrados';
-
-        return;
-
-      }
-
-      if (
-
-        this.paymentMethod === 'Efectivo' &&
-        this.cashReceived < this.totalToPay
-
-      ) {
-
-        this.errorMessage =
-          'Dinero insuficiente';
-
-        return;
-
       }
 
       this.salesHistory.push({
@@ -621,73 +531,6 @@ export class SimulatorComponent implements OnInit {
 
     this.saveProducts();
     this.saveSalesHistory();
-      this.saveProducts();
-
-      this.saveSalesHistory();
-
-      this.salesCount++;
-
-      this.servedProducts +=
-        this.cart.length;
-
-      this.score += 100;
-
-      this.successMessage =
-        'Venta registrada correctamente';
-
-      this.errorMessage = '';
-
-      this.customerSatisfaction =
-        Math.min(
-          100,
-          this.customerSatisfaction + 10
-        );
-
-      this.clearCart();
-
-      this.cashReceived = 0;
-
-      this.change = 0;
-
-      this.generateCustomer();
-
-    }
-
-    evaluateResponse(): void {
-
-      const response =
-
-        this.traineeResponse
-        .toLowerCase();
-
-      if (
-
-        response.includes('buenos') ||
-        response.includes('gracias') ||
-        response.includes('claro') ||
-        response.includes('ayudar')
-
-      ) {
-
-        this.coachFeedback =
-
-          'Excelente atención al cliente. Respuesta amable y profesional.';
-
-        this.score += 25;
-
-        this.customerSatisfaction += 5;
-
-      }
-
-      else {
-
-        this.coachFeedback =
-
-          'La respuesta puede mejorar. Usa lenguaje amable y cordial.';
-
-        this.score -= 5;
-
-        this.customerSatisfaction -= 5;
 
     this.salesCount++;
     this.servedProducts += this.cart.length;
@@ -700,7 +543,6 @@ export class SimulatorComponent implements OnInit {
     this.change = 0;
 
     this.generateCustomer();
-    finishSimulation(): void {
 
     if (this.simulationStarted) {
       clearInterval(this.timer);
@@ -718,6 +560,9 @@ export class SimulatorComponent implements OnInit {
     }
   }
 
+  /* =========================================
+      AI COACH
+  ========================================= */
   evaluateResponse(): void {
     const response = this.traineeResponse.toLowerCase();
 
@@ -737,6 +582,9 @@ export class SimulatorComponent implements OnInit {
     }
   }
 
+  /* =========================================
+      FINALIZAR SIMULACIÓN
+  ========================================= */
   finishSimulation(): void {
     clearInterval(this.timer);
 
@@ -748,7 +596,6 @@ export class SimulatorComponent implements OnInit {
       averageSatisfaction: this.customerSatisfaction,
       completionDate: new Date().toISOString()
     };
-    resetSimulation(): void {
 
     console.log('Estadísticas capturadas para uso posterior:', this.savedSimulationReport);
 
@@ -759,6 +606,9 @@ export class SimulatorComponent implements OnInit {
     this.showToast('Simulación finalizada y datos restaurados');
   }
 
+  /* =========================================
+      REINICIAR / LIMPIAR VARIABLES
+  ========================================= */
   resetSimulation(): void {
     clearInterval(this.timer);
 

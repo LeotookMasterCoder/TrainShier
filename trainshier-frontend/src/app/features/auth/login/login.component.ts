@@ -3,20 +3,31 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
+
 import { Router } from '@angular/router';
+
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector:'app-login',
   templateUrl:'./login.component.html',
   styleUrls:['./login.component.scss']
 })
-export class LoginComponent{
+export class LoginComponent {
 
-  showConfirm:boolean=false;
+  showConfirm:boolean = false;
 
-  previewUser:any={};
+  previewUser:any = {};
 
-  form=this.fb.group({
+  errorMessage:string = '';
+
+  constructor(
+    private fb:FormBuilder,
+    private router:Router,
+    private authService:AuthService
+  ){}
+
+  form = this.fb.group({
 
     email:[
       '',
@@ -29,85 +40,64 @@ export class LoginComponent{
     password:[
       '',
       [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.pattern(
-          /^(?=.*[!@#$%^&*(),.?":{}|<>]).+$/
-        )
+        Validators.required
       ]
     ]
 
   });
 
-  constructor(
-    private fb:FormBuilder,
-    private router:Router
-  ){}
-
-  validateLogin():void{
+  validateLogin():void {
 
     if(this.form.invalid){
 
       this.form.markAllAsTouched();
+
       return;
-
     }
 
-    const email=this.form.value.email;
+    this.previewUser = {
 
-    if(email==='admin@trainshier.com'){
+      email:this.form.value.email,
 
-      this.previewUser={
-        name:'Administrador Principal',
-        email,
-        role:'ADMIN'
-      };
+      name:'Usuario',
 
-    }else if(email==='instructor@trainshier.com'){
+      role:'APRENDIZ'
 
-      this.previewUser={
-        name:'Instructor Demo',
-        email,
-        role:'INSTRUCTOR'
-      };
+    };
 
-    }else{
-
-      this.previewUser={
-        name:'Aprendiz Demo',
-        email,
-        role:'APRENDIZ'
-      };
-
-    }
-
-    this.showConfirm=true;
-
+    this.showConfirm = true;
   }
 
-  login():void{
+  login():void {
 
-    localStorage.setItem(
-      'token',
-      'trainshier-token'
-    );
+    this.authService.login(this.form.value)
+      .subscribe({
 
-    localStorage.setItem(
-      'role',
-      this.previewUser.role
-    );
+        next:(response)=>{
 
-    localStorage.setItem(
-      'name',
-      this.previewUser.name
-    );
+          this.previewUser = {
 
-    localStorage.setItem(
-      'email',
-      this.previewUser.email
-    );
+            name:response.name,
 
-    this.router.navigate(['/home']);
+            email:this.form.value.email,
+
+            role:response.role
+
+          };
+
+          this.router.navigate(['/home']);
+
+        },
+
+        error:(err)=>{
+
+          this.errorMessage =
+            err.error?.message ||
+            'Correo o contraseña incorrectos';
+
+        }
+
+      });
 
   }
 
