@@ -41,4 +41,21 @@ export class ProductService {
 
   }
 
+  update(product:any): Observable<any> {
+
+    return this.http.post<any>(
+      this.apiUrl,
+      product
+    );
+
+  }
+
+  delete(id:number): Observable<any> {
+
+    return this.http.delete<any>(
+      `${this.apiUrl}/${id}`
+    );
+
+  }
+
 }

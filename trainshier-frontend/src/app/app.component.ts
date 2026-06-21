@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,9 +7,21 @@ import { Router } from '@angular/router';
   styleUrls:['./app.component.scss']
 })
 
-export class AppComponent{
+export class AppComponent implements OnInit {
 
   constructor(private router:Router){}
+
+  ngOnInit(): void {
+    const savedTheme = localStorage.getItem('theme');
+    const root = document.documentElement;
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-mode');
+      root.setAttribute('data-theme', 'light');
+    }
+  }
 
   showNavbar():boolean{
 

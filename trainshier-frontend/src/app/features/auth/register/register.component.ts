@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import {
   FormBuilder,
@@ -14,13 +14,15 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl:'./register.component.html',
   styleUrls:['./register.component.scss']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
 
   generatedId:string = '';
 
   successMessage:string = '';
 
   errorMessage:string = '';
+
+  darkMode:boolean = false;
 
   constructor(
     private fb:FormBuilder,
@@ -32,6 +34,24 @@ export class RegisterComponent {
 
   }
 
+  ngOnInit(): void {
+    this.darkMode = localStorage.getItem('theme') === 'dark';
+  }
+
+  toggleTheme(): void {
+    this.darkMode = !this.darkMode;
+    const root = document.documentElement;
+    if (this.darkMode) {
+      document.body.classList.add('dark-mode');
+      root.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-mode');
+      root.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
   form = this.fb.group({
 
     fullName:[
@@ -39,8 +59,16 @@ export class RegisterComponent {
       Validators.required
     ],
 
+    username:[
+      '',
+      [
+        Validators.required,
+        Validators.pattern('^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ]+#[0-9]{4}$')
+      ]
+    ],
+
     role:[
-      'APRENDIZ',
+      'aprendiz',
       Validators.required
     ],
 

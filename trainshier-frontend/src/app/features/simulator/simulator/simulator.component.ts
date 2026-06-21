@@ -1,4 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { ProductService } from '../../../core/services/product.service';
+import { TransactionService } from '../../../core/services/transaction.service';
+import { ReportService } from '../../../core/services/report.service';
 
 interface Product {
   id: number;
@@ -184,6 +187,12 @@ export class SimulatorComponent implements OnInit {
   ========================================= */
   salesHistory: Sale[] = [];
 
+  constructor(
+    private productService: ProductService,
+    private transactionService: TransactionService,
+    private reportService: ReportService
+  ) {}
+
   /* =========================================
       INIT
   ========================================= */
@@ -235,11 +244,67 @@ export class SimulatorComponent implements OnInit {
   }
 
   /* =========================================
-      LOCAL STORAGE
+      LOCAL STORAGE & DATABASE INTEGRATION
   ========================================= */
   loadProducts(): void {
-    const savedProducts = localStorage.getItem('trainshier_products');
+    this.productService.getAll().subscribe({
+      next: (res: any[]) => {
+        if (res && res.length > 0) {
+          this.products = res.map(p => ({
+            id: p.id,
+            code: p.barcode, // Map barcode to code for compatibility
+            barcode: p.barcode,
+            name: p.name,
+            price: p.price,
+            stock: p.stock
+          }));
+          this.saveProducts();
+        } else {
+          this.seedDefaultProducts();
+        }
+      },
+      error: (err) => {
+        console.error('Error loading products from database, using fallback:', err);
+        this.loadProductsFromFallback();
+      }
+    });
+  }
 
+  seedDefaultProducts(): void {
+    const defaultProducts = [
+      { name: 'Leche 1L', price: 4500, stock: 50, barcode: '7701001001', active: true },
+      { name: 'Pan Integral', price: 5500, stock: 40, barcode: '7701001002', active: true },
+      { name: 'Chocolate', price: 3000, stock: 60, barcode: '7701001003', active: true },
+      { name: 'Arroz Premium', price: 8000, stock: 35, barcode: '7701001004', active: true },
+      { name: 'Gaseosa Cola', price: 6000, stock: 80, barcode: '7701001005', active: true }
+    ];
+    
+    let completed = 0;
+    defaultProducts.forEach(prod => {
+      this.productService.create(prod).subscribe({
+        next: () => {
+          completed++;
+          if (completed === defaultProducts.length) {
+            this.productService.getAll().subscribe(res => {
+              this.products = res.map(p => ({
+                id: p.id,
+                code: p.barcode,
+                barcode: p.barcode,
+                name: p.name,
+                price: p.price,
+                stock: p.stock
+              }));
+              this.saveProducts();
+            });
+          }
+        },
+        error: (err) => console.error('Error seeding default product:', err)
+      });
+    });
+  }
+
+  loadProductsFromFallback(): void {
+    const savedProducts = localStorage.getItem('trainshier_products');
     if (savedProducts) {
       this.products = JSON.parse(savedProducts);
       return;
@@ -252,7 +317,6 @@ export class SimulatorComponent implements OnInit {
       { id: 4, code: '1004', barcode: '7701001004', name: 'Arroz Premium', price: 8000, stock: 35 },
       { id: 5, code: '1005', barcode: '7701001005', name: 'Gaseosa Cola', price: 6000, stock: 80 }
     ];
-
     this.saveProducts();
   }
 
@@ -308,33 +372,52 @@ export class SimulatorComponent implements OnInit {
   }
 
   /* =========================================
-      CRUD PRODUCTOS
+      CRUD PRODUCTOS (DATABASE CONNECTED)
   ========================================= */
   addProduct(): void {
     if (!this.newProduct.name || !this.newProduct.code) {
       return;
     }
 
-    const product: Product = {
-      id: Date.now(),
+    const product = {
       name: this.newProduct.name,
-      code: this.newProduct.code,
-      barcode: this.newProduct.barcode,
       price: this.newProduct.price,
-      stock: this.newProduct.stock
+      stock: this.newProduct.stock,
+      barcode: this.newProduct.code, // Use code as barcode
+      active: true
     };
 
-    this.products.push(product);
-    this.saveProducts();
-
-    this.newProduct = { name: '', code: '', barcode: '', price: 0, stock: 0 };
+    this.productService.create(product).subscribe({
+      next: () => {
+        this.loadProducts();
+        this.newProduct = { name: '', code: '', barcode: '', price: 0, stock: 0 };
+        this.showToast('Producto agregado correctamente');
+      },
+      error: (err) => {
+        console.error('Error saving product in DB:', err);
+        this.showToast('Error al agregar el producto', true);
+      }
+    });
   }
 
   editProduct(product: Product): void {
     const newPrice = prompt('Nuevo precio', product.price.toString());
     if (newPrice) {
-      product.price = Number(newPrice);
-      this.saveProducts();
+      const updatedProduct = {
+        id: product.id,
+        name: product.name,
+        price: Number(newPrice),
+        stock: product.stock,
+        barcode: product.barcode,
+        active: true
+      };
+      this.productService.update(updatedProduct).subscribe({
+        next: () => {
+          this.loadProducts();
+          this.showToast('Precio actualizado');
+        },
+        error: (err) => console.error(err)
+      });
     }
   }
 
@@ -343,8 +426,17 @@ export class SimulatorComponent implements OnInit {
     if (!confirmed) {
       return;
     }
-    this.products = this.products.filter(p => p.id !== product.id);
-    this.saveProducts();
+    this.productService.delete(product.id).subscribe({
+      next: () => {
+        this.loadProducts();
+        this.showToast('Producto eliminado');
+      },
+      error: (err) => {
+        console.error('Error deleting product from DB, removing locally:', err);
+        this.products = this.products.filter(p => p.id !== product.id);
+        this.saveProducts();
+      }
+    });
   }
 
   /* =========================================
@@ -503,6 +595,9 @@ export class SimulatorComponent implements OnInit {
   /* =========================================
       REGISTRAR VENTA
   ========================================= */
+  /* =========================================
+      REGISTRO VENTA (DATABASE CONNECTED)
+  ========================================= */
   registerSale(): void {
     const cash = this.cashReceived ?? 0;
     if (this.cart.length === 0) {
@@ -515,10 +610,41 @@ export class SimulatorComponent implements OnInit {
       return;
     }
 
+    // Save transaction to DB
+    const errorsCount = this.timeLeft <= 0 ? 1 : 0;
+    const transaction = {
+      status: 'COMPLETED',
+      total: this.totalToPay,
+      errors: errorsCount,
+      effectiveness: this.customerSatisfaction,
+      date: new Date().toISOString()
+    };
+
+    this.transactionService.create(transaction).subscribe({
+      next: (savedTx) => {
+        console.log('Transaction saved in DB:', savedTx);
+      },
+      error: (err) => {
+        console.error('Error saving transaction in DB:', err);
+      }
+    });
+
     this.cart.forEach(item => {
       const product = this.products.find(p => p.code === item.code);
       if (product) {
         product.stock -= item.quantity;
+        // Optionally update stock in backend
+        const updatedProd = {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          stock: product.stock,
+          barcode: product.barcode,
+          active: true
+        };
+        this.productService.update(updatedProd).subscribe({
+          error: (err) => console.error('Error updating stock in DB:', err)
+        });
       }
 
       this.salesHistory.push({
@@ -596,6 +722,23 @@ export class SimulatorComponent implements OnInit {
       averageSatisfaction: this.customerSatisfaction,
       completionDate: new Date().toISOString()
     };
+
+    // Save report to DB
+    const userId = Number(localStorage.getItem('userId')) || null;
+    const report = {
+      score: Number(this.score),
+      effectiveness: Number(this.customerSatisfaction),
+      user: userId ? { id: userId } : null
+    };
+
+    this.reportService.create(report).subscribe({
+      next: (savedReport) => {
+        console.log('Report saved in DB:', savedReport);
+      },
+      error: (err) => {
+        console.error('Error saving report in DB:', err);
+      }
+    });
 
     console.log('Estadísticas capturadas para uso posterior:', this.savedSimulationReport);
 

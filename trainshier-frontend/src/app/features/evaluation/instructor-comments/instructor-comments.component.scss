@@ -1,11 +1,11 @@
 .instructor-page{
   min-height:100vh;
   padding:40px;
-  background:#f4f7fb;
+  background:var(--bg);
 }
 
 .dark-mode .instructor-page{
-  background:#0f172a;
+  background:var(--bg);
 }
 
 .header-card{
@@ -14,7 +14,7 @@
   align-items:center;
   gap:20px;
 
-  background:white;
+  background:var(--surface);
   padding:35px;
   border-radius:24px;
 
@@ -25,13 +25,13 @@
 }
 
 .dark-mode .header-card{
-  background:#111827;
+  background:var(--surface);
 }
 
 .header-card h1{
   font-size:2.5rem;
   font-weight:800;
-  color:#111827;
+  color:var(--surface);
   margin-bottom:10px;
 }
 
@@ -40,7 +40,7 @@
 }
 
 .dark-mode .header-card h1{
-  color:white;
+  color:var(--text);
 }
 
 .dark-mode .header-card p{
@@ -48,7 +48,7 @@
 }
 
 .export-btn{
-  background:#d89a00;
+  background:var(--accent);
   color:black;
 
   border:none;
@@ -79,7 +79,7 @@
 }
 
 .kpi-card{
-  background:white;
+  background:var(--surface);
 
   border-radius:24px;
 
@@ -87,7 +87,7 @@
 
   text-align:center;
 
-  border-left:5px solid #d89a00;
+  border-left:5px solid var(--accent);
 
   box-shadow:
   0 10px 30px rgba(0,0,0,.08);
@@ -100,12 +100,12 @@
 }
 
 .dark-mode .kpi-card{
-  background:#111827;
+  background:var(--surface);
 }
 
 .kpi-card h2{
   font-size:2.3rem;
-  color:#d89a00;
+  color:var(--accent);
   margin-bottom:10px;
 }
 
@@ -119,7 +119,7 @@
 }
 
 .student-card{
-  background:white;
+  background:var(--surface);
 
   border-radius:24px;
 
@@ -139,7 +139,7 @@
 }
 
 .dark-mode .student-card{
-  background:#111827;
+  background:var(--surface);
 }
 
 .student-info{
@@ -155,7 +155,7 @@
 }
 
 .dark-mode .student-info h2{
-  color:white;
+  color:var(--text);
 }
 
 .student-info span{
@@ -189,7 +189,7 @@
 }
 
 .progress-header strong{
-  color:#d89a00;
+  color:var(--accent);
 }
 
 .dark-mode .progress-header span{
@@ -214,7 +214,7 @@
   background:
   linear-gradient(
     90deg,
-    #d89a00,
+    var(--accent),
     #f7b500
   );
 }
@@ -238,7 +238,7 @@
 }
 
 .dark-mode .metric{
-  background:#1f2937;
+  background:var(--surface-2);
 }
 
 .metric h3{
@@ -249,7 +249,7 @@
 .metric p{
   font-size:2rem;
   font-weight:800;
-  color:#111827;
+  color:var(--surface);
 }
 
 .dark-mode .metric h3{
@@ -257,7 +257,7 @@
 }
 
 .dark-mode .metric p{
-  color:white;
+  color:var(--text);
 }
 
 .chart-box{
@@ -274,7 +274,7 @@
 
   background:
   conic-gradient(
-    #d89a00 0% 82%,
+    var(--accent) 0% 82%,
     #e5e7eb 82% 100%
   );
 
@@ -289,7 +289,7 @@
 
   border-radius:50%;
 
-  background:white;
+  background:var(--surface);
 
   display:flex;
   justify-content:center;
@@ -300,12 +300,12 @@
 }
 
 .dark-mode .inner-circle{
-  background:#111827;
-  color:white;
+  background:var(--surface);
+  color:var(--text);
 }
 
 .ai-card{
-  background:white;
+  background:var(--surface);
 
   border-radius:24px;
 
@@ -313,14 +313,14 @@
 
   margin-bottom:35px;
 
-  border-left:6px solid #d89a00;
+  border-left:6px solid var(--accent);
 
   box-shadow:
   0 10px 30px rgba(0,0,0,.08);
 }
 
 .dark-mode .ai-card{
-  background:#111827;
+  background:var(--surface);
 }
 
 .ai-card h2{
@@ -333,7 +333,7 @@
 }
 
 .dark-mode .ai-card h2{
-  color:white;
+  color:var(--text);
 }
 
 .dark-mode .ai-card p{
@@ -341,7 +341,7 @@
 }
 
 .comments-container{
-  background:white;
+  background:var(--surface);
 
   border-radius:24px;
 
@@ -354,7 +354,7 @@
 }
 
 .dark-mode .comments-container{
-  background:#111827;
+  background:var(--surface);
 }
 
 .comments-container h2{
@@ -362,7 +362,7 @@
 }
 
 .dark-mode .comments-container h2{
-  color:white;
+  color:var(--text);
 }
 
 form{
@@ -382,7 +382,7 @@ select{
 
   border-radius:14px;
 
-  background:#f3f4f6;
+  background:var(--surface-2);
 
   font-size:15px;
 }
@@ -390,8 +390,8 @@ select{
 .dark-mode input,
 .dark-mode textarea,
 .dark-mode select{
-  background:#1f2937;
-  color:white;
+  background:var(--surface-2);
+  color:var(--text);
 }
 
 input:focus,
@@ -400,11 +400,11 @@ select:focus{
   outline:none;
 
   box-shadow:
-  0 0 0 2px #d89a00;
+  0 0 0 2px var(--accent);
 }
 
 form button{
-  background:#d89a00;
+  background:var(--accent);
 
   color:black;
 
@@ -439,7 +439,7 @@ form button:hover{
 }
 
 .history-card{
-  background:white;
+  background:var(--surface);
 
   border-radius:24px;
 
@@ -450,7 +450,7 @@ form button:hover{
 }
 
 .dark-mode .history-card{
-  background:#111827;
+  background:var(--surface);
 }
 
 .history-header{
@@ -462,7 +462,7 @@ form button:hover{
 }
 
 .dark-mode .history-header h2{
-  color:white;
+  color:var(--text);
 }
 
 .history-header input{
@@ -485,7 +485,7 @@ form button:hover{
 }
 
 .dark-mode .comment-card{
-  background:#1f2937;
+  background:var(--surface-2);
   border:none;
 }
 
@@ -502,11 +502,11 @@ form button:hover{
 }
 
 .dark-mode .card-top h2{
-  color:white;
+  color:var(--text);
 }
 
 .card-top span{
-  background:#d89a00;
+  background:var(--accent);
   color:black;
 
   padding:8px 14px;

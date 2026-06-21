@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TransactionService } from '../../../core/services/transaction.service';
 
 @Component({
   selector:'app-transaction-form',
@@ -14,7 +15,8 @@ export class TransactionFormComponent{
   successMessage:string='';
 
   constructor(
-    private fb:FormBuilder
+    private fb:FormBuilder,
+    private transactionService: TransactionService
   ){
 
     this.form=this.fb.group({
@@ -29,7 +31,7 @@ export class TransactionFormComponent{
         ]
       ],
 
-      payment:['',Validators.required]
+      price:['', [Validators.required, Validators.min(0)]]
 
     });
 
@@ -44,10 +46,25 @@ export class TransactionFormComponent{
 
     }
 
-    this.successMessage=
-    'Transacción registrada correctamente';
+    const val = this.form.value;
+    const transaction = {
+      status: 'COMPLETED',
+      total: val.quantity * val.price,
+      errors: 0,
+      effectiveness: 100.0,
+      date: new Date().toISOString()
+    };
 
-    this.form.reset();
+    this.transactionService.create(transaction).subscribe({
+      next: (savedTx) => {
+        this.successMessage = 'Transacción registrada correctamente';
+        this.form.reset();
+      },
+      error: (err) => {
+        console.error('Error saving manual transaction in DB:', err);
+        this.successMessage = 'Error al registrar la transacción';
+      }
+    });
 
   }
 
