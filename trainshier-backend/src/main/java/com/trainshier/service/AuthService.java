@@ -9,72 +9,106 @@ import com.trainshier.dto.LoginRequestDTO;
 import com.trainshier.dto.LoginResponseDTO;
 import com.trainshier.dto.MessageResponseDTO;
 import com.trainshier.dto.RefreshTokenResponseDTO;
-import com.trainshier.dto.UsuarioRequestDTO;
-import com.trainshier.entity.Usuario;
-import com.trainshier.repository.UsuarioRepository;
+import com.trainshier.dto.RegisterRequestDTO;
+import com.trainshier.entity.User;
+import com.trainshier.enums.UserRole;
+import com.trainshier.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Authentication service.
+ *
+ * @param passwordEncoder password encoder
+ * @param userRepository user repository
+ * @param jwtService jwt service
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
-
-    private final UsuarioRepository usuarioRepository;
-
+    private final UserRepository userRepository;
     private final JwtService jwtService;
-    //esta es la funcion de registrar
-    public MessageResponseDTO register(UsuarioRequestDTO request) {
+
+    /**
+     * Register a new user.
+     *
+     * @param request registration data
+     * @return response message
+     */
+    public MessageResponseDTO register(RegisterRequestDTO request) {
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(UserRole.APPRENTICE);
+
+        userRepository.save(user);
+
         MessageResponseDTO response = new MessageResponseDTO();
-        response.setMensaje("Registro exitoso");
+        response.setMessage("User registered successfully");
 
-        if (usuarioRepository.findByEmail(request.getCorreo()).isPresent()) {
-            throw new RuntimeException("Este correo ya esta en uso");
-        }
-
-        Usuario usuario = new Usuario();
-        usuario.setNombre(request.getNombre());
-        usuario.setContraseña(passwordEncoder.encode(request.getContraseña()));
-        usuario.setRolId(request.getRolid());
-
-        usuarioRepository.save(usuario);
-
-        return response;
-    }
-    //esta es la funcion de logearse
-    public LoginResponseDTO login(LoginRequestDTO request) {
-        LoginResponseDTO response = new LoginResponseDTO();
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(request.getCorreo());
-
-        if (usuario.isEmpty() && request.getCorreo() != null) {
-            response.setMensaje("Este usuario no se ha registrado aun");
-            return response;
-        }
-
-        Usuario userFound = usuario.get();
-
-        if (!passwordEncoder.matches(request.getContraseña(), userFound.getContraseña())) {
-            throw new RuntimeException("Contraseña incorrecta");
-        }
-        
-        String jwt = jwtService.generateToken(userFound.getId_usuario(), userFound.getNombre(), userFound.getRolId());
-
-        response.setMensaje("Inicio de sesión exitoso");
-        response.setJwt(jwt);
         return response;
     }
 
     /**
-     * Esto es el refresco de el token
-     * @param token jwt viejo
-     * @return nuevo token
+     * Login user.
+     *
+     * @param request login request
+     * @return login response
+     */
+    public LoginResponseDTO login(LoginRequestDTO request) {
+
+        Optional<User> optionalUser =
+                userRepository.findByEmail(request.getEmail());
+
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+
+        User user = optionalUser.get();
+
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword())) {
+
+            throw new RuntimeException("Invalid password");
+        }
+
+        String token = jwtService.generateToken(
+                user.getId(),
+                user.getName(),
+                user.getRole().name());
+
+        LoginResponseDTO response = new LoginResponseDTO();
+        response.setMessage("Login successful");
+        response.setToken(token);
+
+        return response;
+    }
+
+    /**
+     * Refresh JWT token.
+     *
+     * @param token old token
+     * @return refreshed token
      */
     public RefreshTokenResponseDTO refreshToken(String token) {
-        String jwt = jwtService.refreshToken(token);
-        RefreshTokenResponseDTO response = new RefreshTokenResponseDTO();
-        response.setMensaje("ok");
-        response.setJwt(jwt);
+
+        String newToken = jwtService.refreshToken(token);
+
+        RefreshTokenResponseDTO response =
+                new RefreshTokenResponseDTO();
+
+        response.setMessage("Token refreshed");
+        response.setToken(newToken);
+
         return response;
     }
 }

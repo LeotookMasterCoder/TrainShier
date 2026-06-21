@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../../core/services/user.service';
+import { TransactionService } from '../../../core/services/transaction.service';
+import { ReportService } from '../../../core/services/report.service';
+import { ProductService } from '../../../core/services/product.service';
 
 @Component({
   selector: 'app-report-list',
@@ -7,145 +11,109 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReportsComponent implements OnInit {
 
-  totalUsers: number = 18;
-
-  totalTransactions: number = 145;
-
-  totalSimulations: number = 312;
-
-  averageScore: number = 91;
-
-  totalRevenue: number = 5680000;
-
-  totalErrors: number = 102;
-
-  averageAttentionTime: string = '1.8 min';
-
-  activeProducts: number = 15;
+  totalUsers: number = 0;
+  totalTransactions: number = 0;
+  totalSimulations: number = 0;
+  averageScore: number = 0;
+  totalRevenue: number = 0;
+  totalErrors: number = 0;
+  averageAttentionTime: string = '1.5 min';
+  activeProducts: number = 0;
 
   // ==========================
   // FILTROS
   // ==========================
 
   startDate: string = '';
-
   endDate: string = '';
-
   selectedRole: string = 'TODOS';
-
-  users: any[] = [
-
-    {
-      name: 'Laura Gómez',
-      role: 'APRENDIZ',
-      simulations: 22,
-      effectiveness: 94
-    },
-
-    {
-      name: 'Carlos Ruiz',
-      role: 'APRENDIZ',
-      simulations: 18,
-      effectiveness: 87
-    },
-
-    {
-      name: 'Martha Díaz',
-      role: 'INSTRUCTOR',
-      simulations: 0,
-      effectiveness: 100
-    },
-
-    {
-      name: 'Andrés Moreno',
-      role: 'APRENDIZ',
-      simulations: 31,
-      effectiveness: 98
-    },
-
-    {
-      name: 'Valentina Castro',
-      role: 'APRENDIZ',
-      simulations: 25,
-      effectiveness: 92
-    }
-
-  ];
-
+  users: any[] = [];
   originalUsers: any[] = [];
 
-  topUsers: any[] = [
-
-    {
-      name: 'Andrés Moreno',
-      effectiveness: 98
-    },
-
-    {
-      name: 'Laura Gómez',
-      effectiveness: 94
-    },
-
-    {
-      name: 'Valentina Castro',
-      effectiveness: 92
-    },
-
-    {
-      name: 'Carlos Ruiz',
-      effectiveness: 87
-    }
-
-  ];
-
+  topUsers: any[] = [];
   topProducts: any[] = [
-
-    {
-      name: 'Leche Entera',
-      sales: 120
-    },
-
-    {
-      name: 'Pan Integral',
-      sales: 97
-    },
-
-    {
-      name: 'Chocolate',
-      sales: 84
-    },
-
-    {
-      name: 'Arroz Premium',
-      sales: 79
-    },
-
-    {
-      name: 'Queso Mozzarella',
-      sales: 65
-    }
-
+    { name: 'Leche Entera', sales: 120 },
+    { name: 'Pan Integral', sales: 97 },
+    { name: 'Chocolate', sales: 84 },
+    { name: 'Arroz Premium', sales: 79 },
+    { name: 'Queso Mozzarella', sales: 65 }
   ];
 
-  aiReport: string =
-    'Los aprendices presentan un desempeño sobresaliente. El error más frecuente está relacionado con el cálculo del cambio en pagos en efectivo. Se recomienda reforzar ejercicios de caja registradora y validación de descuentos promocionales.';
+  aiReport: string = 'Analizando desempeño general...';
 
-  totalClientsServed: number = 986;
-
-  totalDiscountsApplied: number = 243;
-
-  averageTicket: number = 28500;
-
+  totalClientsServed: number = 0;
+  totalDiscountsApplied: number = 0;
+  averageTicket: number = 0;
   bestSellingDay: string = 'Viernes';
-
   worstSellingDay: string = 'Lunes';
 
+  constructor(
+    private userService: UserService,
+    private transactionService: TransactionService,
+    private reportService: ReportService,
+    private productService: ProductService
+  ) {}
+
   ngOnInit(): void {
+    // Load Users and calculate simulation metrics from reports
+    this.userService.getAll().subscribe({
+      next: (usersList) => {
+        this.totalUsers = usersList.length;
+        this.users = usersList.map(u => ({
+          name: u.name || 'Usuario',
+          role: u.role || 'APRENDIZ',
+          simulations: 0,
+          effectiveness: 100
+        }));
 
-    this.originalUsers = [...this.users];
+        this.reportService.getAll().subscribe({
+          next: (reportsList) => {
+            this.totalSimulations = reportsList.length;
+            
+            if (reportsList.length > 0) {
+              const totalScore = reportsList.reduce((sum, r) => sum + (r.score || 0), 0);
+              this.averageScore = Math.round(totalScore / reportsList.length);
+            }
 
-    this.generateAIAnalysis();
+            this.users.forEach(userItem => {
+              const userReports = reportsList.filter(r => r.user && r.user.name === userItem.name);
+              userItem.simulations = userReports.length;
+              if (userReports.length > 0) {
+                const userSum = userReports.reduce((sum, r) => sum + (r.effectiveness || 0), 0);
+                userItem.effectiveness = Math.round(userSum / userReports.length);
+              }
+            });
 
+            this.topUsers = [...this.users]
+              .sort((a, b) => b.effectiveness - a.effectiveness)
+              .slice(0, 5);
+
+            this.originalUsers = [...this.users];
+            this.generateAIAnalysis();
+          }
+        });
+      }
+    });
+
+    // Load Transactions for financial KPIs
+    this.transactionService.getAll().subscribe({
+      next: (txList) => {
+        this.totalTransactions = txList.length;
+        this.totalRevenue = txList.reduce((sum, t) => sum + (t.total || 0), 0);
+        this.totalErrors = txList.reduce((sum, t) => sum + (t.errors || 0), 0);
+        this.totalClientsServed = txList.length;
+        if (txList.length > 0) {
+          this.averageTicket = Math.round(this.totalRevenue / txList.length);
+        }
+      }
+    });
+
+    // Load Products count
+    this.productService.getAll().subscribe({
+      next: (prodList) => {
+        this.activeProducts = prodList.length;
+      }
+    });
   }
 
   applyFilters(): void {

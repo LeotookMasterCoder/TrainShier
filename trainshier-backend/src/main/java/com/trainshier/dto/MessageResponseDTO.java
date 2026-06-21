@@ -1,11 +1,19 @@
 package com.trainshier.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * Generic response message DTO.
+ */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MessageResponseDTO {
+
     /**
-     * @param mensaje se retorna un dto de mensaje, es generico.
+     * Response message.
      */
-    private String mensaje;
+    private String message;
 }

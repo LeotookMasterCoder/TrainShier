@@ -1,18 +1,22 @@
 package com.trainshier.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * DTO used for user authentication.
+ *
+ * @param email user email
+ * @param password user password
+ */
 @Data
 public class LoginRequestDTO {
 
-/**
- * @param nombre es el nombre de el usuario
- * @param contraseña es la contraseña de el usuario
- * @param correo es el correo de el usuario
- */
-    private String nombre;
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email")
+    private String email;
 
-    private String correo;
-    
-    private String contraseña;
+    @NotBlank(message = "Password is required")
+    private String password;
 }

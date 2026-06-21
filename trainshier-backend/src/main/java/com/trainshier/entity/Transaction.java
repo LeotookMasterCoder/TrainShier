@@ -1,52 +1,33 @@
 package com.trainshier.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-/**
- * @param transaction entity
- */
+import jakarta.persistence.*;
+import lombok.Data;
+import com.trainshier.enums.TransactionStatus;
+
+
 @Entity
+@Table(name = "transactions")
 @Data
 public class Transaction {
 
-    /**
-     * @param id identifier
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * @param user associated user
-     */
-    @ManyToOne
-    private Usuario user;
 
-    /**
-     * @param total amount
-     */
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status;
+
     private Double total;
 
-    /**
-     * @param status transaction status
-     */
-    private String status;
+    private Integer errors;
 
-    /**
-     * @param paymentMethod payment method
-     */
-    private String paymentMethod;
+    private Double effectiveness;
 
-    /**
-     * @param date transaction date
-     */
     private LocalDateTime date;
 
-    /**
-     * @param duration execution time
-     */
-    private Double duration;
+    @ManyToOne
+    private SessionAccess access;
 }

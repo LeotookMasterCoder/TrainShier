@@ -22,10 +22,9 @@ export class NavbarComponent{
 
     const savedTheme=localStorage.getItem('theme');
 
-    if(savedTheme==='dark'){
+    if(savedTheme==='dark' || document.body.classList.contains('dark-mode')){
 
       this.darkMode=true;
-      document.body.classList.add('dark-mode');
 
     }
 
@@ -65,15 +64,18 @@ export class NavbarComponent{
   toggleTheme():void{
 
     this.darkMode=!this.darkMode;
+    const root = document.documentElement;
 
     if(this.darkMode){
 
       document.body.classList.add('dark-mode');
+      root.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme','dark');
 
     }else{
 
       document.body.classList.remove('dark-mode');
+      root.setAttribute('data-theme', 'light');
       localStorage.setItem('theme','light');
 
     }

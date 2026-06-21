@@ -1,10 +1,16 @@
 package com.trainshier.repository;
 
-import com.trainshier.entity.Report;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-/**
- * @param report repository
- */
-public interface ReportRepository extends JpaRepository<Report, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.trainshier.entity.Report;
+
+@Repository
+public interface ReportRepository
+        extends JpaRepository<Report, Long> {
+
+    List<Report> findByUserId(
+            Long userId);
 }

@@ -1,37 +1,25 @@
 package com.trainshier.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
-/**
- * @param report entity
- */
 @Entity
+@Table(name = "reports")
 @Data
 public class Report {
 
-    /**
-     * @param id identifier
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * @param user evaluated user
-     */
-    @ManyToOne
-    private Usuario user;
-
-    /**
-     * @param score performance score
-     */
     private Double score;
 
-    /**
-     * @param date generated date
-     */
-    private LocalDateTime date;
+    private Double effectiveness;
+
+    private LocalDateTime generatedAt;
+
+    @ManyToOne
+    private User user;
 }

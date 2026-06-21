@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ReportService } from '../../../core/services/report.service';
 
 @Component({
   selector: 'app-report-list',
@@ -12,43 +13,57 @@ export class ReportListComponent implements OnInit {
   pendingReports = 0;
 
   searchTerm = '';
-
-  reports = [
-    {
-      title: 'Reporte semanal',
-      description: 'Rendimiento de aprendices durante la semana.',
-      status: 'Completado',
-      date: '2026-06-01',
-      author: 'Instructor Principal'
-    },
-    {
-      title: 'Reporte mensual',
-      description: 'Análisis de caja y desempeño comercial.',
-      status: 'Pendiente',
-      date: '2026-06-05',
-      author: 'Administrador'
-    },
-    {
-      title: 'Reporte de simulaciones',
-      description: 'Estadísticas de simulaciones realizadas.',
-      status: 'Completado',
-      date: '2026-06-08',
-      author: 'Sistema'
-    },
-    {
-      title: 'Reporte de incidencias',
-      description: 'Errores frecuentes detectados.',
-      status: 'Pendiente',
-      date: '2026-06-09',
-      author: 'Instructor'
-    }
-  ];
-
+  reports: any[] = [];
   filteredReports: any[] = [];
 
+  constructor(private reportService: ReportService) {}
+
   ngOnInit(): void {
-    this.filteredReports = [...this.reports];
-    this.calculateKPIs();
+    this.loadReports();
+  }
+
+  loadReports(): void {
+    this.reportService.getAll().subscribe({
+      next: (res: any[]) => {
+        this.reports = res.map(r => ({
+          title: `Reporte de Simulación #${r.id}`,
+          description: `Score de ${r.score} pts con una efectividad del ${r.effectiveness}%.`,
+          status: 'Completado',
+          date: r.generatedAt ? r.generatedAt.split('T')[0] : new Date().toISOString().split('T')[0],
+          author: r.user ? r.user.name : 'Aprendiz'
+        }));
+        
+        // Add a couple of placeholders only if DB is empty, otherwise show DB reports
+        if (this.reports.length === 0) {
+          this.reports = [
+            {
+              title: 'Reporte Semanal de Caja',
+              description: 'Rendimiento de aprendices durante las simulaciones semanales.',
+              status: 'Completado',
+              date: new Date().toISOString().split('T')[0],
+              author: 'Sistema'
+            }
+          ];
+        }
+
+        this.filteredReports = [...this.reports];
+        this.calculateKPIs();
+      },
+      error: (err) => {
+        console.error('Error loading reports from DB, using fallback:', err);
+        this.reports = [
+          {
+            title: 'Reporte semanal',
+            description: 'Rendimiento de aprendices durante la semana.',
+            status: 'Completado',
+            date: '2026-06-01',
+            author: 'Instructor Principal'
+          }
+        ];
+        this.filteredReports = [...this.reports];
+        this.calculateKPIs();
+      }
+    });
   }
 
   calculateKPIs(): void {

@@ -4,20 +4,33 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.trainshier.security.RolInterceptor;
+import com.trainshier.security.RoleInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
-// Configuracion adicional para registrar interceptores en spring
-@RequiredArgsConstructor
+/**
+ * Web configuration.
+ *
+ * @param roleInterceptor role interceptor
+ */
 @Configuration
-public class WebConfig implements WebMvcConfigurer{
-    private final RolInterceptor rolInterceptor;
+@RequiredArgsConstructor
+public class WebConfig implements WebMvcConfigurer {
 
+    private final RoleInterceptor roleInterceptor;
+
+    /**
+     * Register interceptors.
+     *
+     * @param registry interceptor registry
+     */
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(
+            InterceptorRegistry registry
+    ) {
 
-        //Se registra el interceptor para que se ejecute en todas las rutas
-        registry.addInterceptor(rolInterceptor);
+        registry.addInterceptor(
+                roleInterceptor
+        );
     }
 }
