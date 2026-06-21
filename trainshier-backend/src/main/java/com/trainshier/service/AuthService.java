@@ -47,7 +47,19 @@ public class AuthService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(UserRole.APPRENTICE);
+        
+        UserRole userRole = UserRole.APPRENTICE;
+        if (request.getRole() != null) {
+            String roleStr = request.getRole().toUpperCase();
+            if (roleStr.contains("APRENDIZ") || roleStr.contains("APPRENTICE")) {
+                userRole = UserRole.APPRENTICE;
+            } else if (roleStr.contains("INSTRUCTOR")) {
+                userRole = UserRole.INSTRUCTOR;
+            } else if (roleStr.contains("ADMINISTRADOR") || roleStr.contains("ADMINISTRATOR") || roleStr.contains("ADMIN")) {
+                userRole = UserRole.ADMINISTRATOR;
+            }
+        }
+        user.setRole(userRole);
 
         userRepository.save(user);
 
@@ -89,6 +101,9 @@ public class AuthService {
         LoginResponseDTO response = new LoginResponseDTO();
         response.setMessage("Login successful");
         response.setToken(token);
+        response.setUserId(user.getId());
+        response.setName(user.getName());
+        response.setRole(user.getRole().name());
 
         return response;
     }

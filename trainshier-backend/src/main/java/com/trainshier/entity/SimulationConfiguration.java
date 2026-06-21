@@ -11,12 +11,12 @@ import lombok.Data;
  */
 @Entity
 @Table(
-        name = "simulation_configuration",
+        name = "configuracion_ia_simulacion",
         uniqueConstraints = {
                 @UniqueConstraint(
                         columnNames = {
-                                "session_id",
-                                "parameter"
+                                "sesion_id",
+                                "parametro"
                         }
                 )
         }
@@ -26,13 +26,16 @@ public class SimulationConfiguration {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "parametro", nullable = false)
     private String parameter;
 
+    @Column(name = "valor", nullable = false)
     private String value;
 
     @ManyToOne
-    @JoinColumn(name = "session_id")
+    @JoinColumn(name = "sesion_id", nullable = false)
     private SimulationSession session;
 }

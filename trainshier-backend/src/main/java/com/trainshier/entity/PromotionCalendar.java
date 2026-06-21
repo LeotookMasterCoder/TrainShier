@@ -14,25 +14,29 @@ import lombok.Data;
  * @param weekDays active week days
  */
 @Entity
-@Table(name = "promotion_calendar")
+@Table(name = "calendario_promociones")
 @Data
 public class PromotionCalendar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "fecha_inicio", nullable = false)
     private LocalDate startDate;
 
+    @Column(name = "fecha_fin", nullable = false)
     private LocalDate endDate;
 
+    @Column(name = "dias_semana")
     private String weekDays;
 
     @ManyToOne
-    @JoinColumn(name = "promotion_id")
+    @JoinColumn(name = "promocion_id", nullable = false)
     private Promotion promotion;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "producto_id")
     private Product product;
 }

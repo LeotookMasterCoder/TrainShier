@@ -549,10 +549,6 @@ export class SimulatorComponent implements OnInit {
       this.removeItem(item);
       return;
     }
-    const cash = this.cashReceived ?? 0;
-    this.change = cash - this.totalToPay;
-  }
-
     item.quantity--;
     item.subtotal = item.quantity * item.price;
     this.calculateTotals();

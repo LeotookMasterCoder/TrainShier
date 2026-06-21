@@ -15,12 +15,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class ProductController {
 
     private final ProductService productService;
 
     /**
-     * Saves a product.
+     * Saves or updates a product.
      *
      * @param product product data
      * @return saved product
@@ -54,5 +55,17 @@ public class ProductController {
             @PathVariable Long id) {
 
         return productService.findById(id);
+    }
+
+    /**
+     * Deletes a product by id.
+     *
+     * @param id product id
+     */
+    @DeleteMapping("/{id}")
+    public void delete(
+            @PathVariable Long id) {
+
+        productService.delete(id);
     }
 }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/reports")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class ReportController {
 
     private final ReportService reportService;
@@ -34,5 +35,16 @@ public class ReportController {
             @PathVariable Long userId) {
 
         return reportService.findByUser(userId);
+    }
+
+    /**
+     * @param report report
+     * @return saved report
+     */
+    @PostMapping
+    public Report save(
+            @RequestBody Report report) {
+
+        return reportService.save(report);
     }
 }

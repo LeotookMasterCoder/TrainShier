@@ -1,6 +1,7 @@
 package com.trainshier.entity;
 
 import com.trainshier.enums.UserRole;
+import com.trainshier.converter.UserRoleConverter;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,38 +12,30 @@ import lombok.NoArgsConstructor;
  * System user entity.
  */
 @Entity
-@Table(name = "users")
+@Table(name = "usuarios")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
-    /**
-     * User identifier.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private Long id;
 
-    /**
-     * User full name.
-     */
+    @Column(name = "nombre", nullable = false)
     private String name;
 
-    /**
-     * User email.
-     */
-    @Column(unique = true)
+    @Column(name = "correo", unique = true, nullable = false)
     private String email;
 
-    /**
-     * User password.
-     */
+    @Column(name = "contraseña", nullable = false)
     private String password;
 
-    /**
-     * User role.
-     */
-    @Enumerated(EnumType.STRING)
+    @Column(name = "rol", nullable = false)
+    @Convert(converter = UserRoleConverter.class)
     private UserRole role;
+
+    @Column(name = "fecha_registro", nullable = false, insertable = false, updatable = false)
+    private java.time.LocalDate registrationDate;
 }
