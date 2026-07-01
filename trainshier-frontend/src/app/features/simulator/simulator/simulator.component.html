@@ -69,12 +69,12 @@
                   <!-- Barcode (scale=4) -->
                   <div style="text-align: center;">
                     <img 
-                      [src]="'https://bwipjs-api.metafloor.com/?bcid=code128&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=4&rotate=N&includetext'" 
+                      [src]="'https://bwipjs-api.metafloor.com/?bcid=code128&text=' + normalizeBarcode(pendingScans[currentScanIndex].barcode) + '&scale=4&rotate=N&includetext'" 
                       alt="Barcode" 
                       style="height: 120px; width: auto; max-width: 100%; display: block; margin: 5px auto;"
                     >
                     <span style="font-size: 1.1rem; color: #000; font-weight: 800; display: block; margin-top: 8px; text-transform: uppercase; letter-spacing: 2px; font-family: monospace;">
-                      {{ pendingScans[currentScanIndex].barcode }}
+                      {{ normalizeBarcode(pendingScans[currentScanIndex].barcode) }}
                     </span>
                   </div>
                 </div>
@@ -357,7 +357,6 @@
           <option value="Débito">Débito</option>
           <option value="Crédito">Crédito</option>
           <option value="Transferencia">Transferencia</option>
-          <option value="QR">QR</option>
         </select>
 
         <input
