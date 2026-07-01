@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-recover-password',
@@ -10,31 +11,34 @@ import { Router } from '@angular/router';
 export class RecoverPasswordComponent implements OnInit {
 
   darkMode: boolean = false;
+  currentStep: number = 1;
 
   successMessage = '';
   errorMessage = '';
 
   form = this.fb.group({
-
-    email:['',[
+    email: ['', [
       Validators.required,
       Validators.email
     ]],
-
-    newPassword:['',[
+    code: ['', [
+      Validators.required,
+      Validators.pattern(/^\d{6}$/)
+    ]],
+    newPassword: ['', [
       Validators.required,
       Validators.minLength(8),
       Validators.pattern(/^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/)
     ]],
-
-    confirmPassword:['',[
+    confirmPassword: ['', [
       Validators.required
     ]]
   });
 
   constructor(
-    private fb:FormBuilder,
-    private router:Router
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService
   ){}
 
   ngOnInit(): void {
@@ -55,35 +59,120 @@ export class RecoverPasswordComponent implements OnInit {
     }
   }
 
-  submit():void{
-
+  nextStep(): void {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if(this.form.invalid){
-      this.form.markAllAsTouched();
-      this.errorMessage = 'Completa correctamente todos los campos.';
+    if (this.currentStep === 1) {
+      const emailCtrl = this.form.get('email');
+      if (!emailCtrl || emailCtrl.invalid) {
+        emailCtrl?.markAsTouched();
+        this.errorMessage = 'Por favor, ingresa un correo electrónico válido.';
+        return;
+      }
+      this.successMessage = 'Solicitando código de verificación...';
+      this.authService.requestRecoveryCode(emailCtrl.value || '').subscribe({
+        next: (res) => {
+          this.successMessage = 'Código de verificación enviado al correo.';
+          this.errorMessage = '';
+          setTimeout(() => {
+            this.successMessage = '';
+            this.currentStep = 2;
+          }, 1500);
+        },
+        error: (err) => {
+          this.successMessage = '';
+          this.errorMessage = err.error?.message || 'Error al enviar el código de recuperación. El correo podría no estar registrado.';
+        }
+      });
+
+    } else if (this.currentStep === 2) {
+      const codeCtrl = this.form.get('code');
+      if (!codeCtrl || codeCtrl.invalid) {
+        codeCtrl?.markAsTouched();
+        this.errorMessage = 'Por favor, ingresa el código de 6 dígitos.';
+        return;
+      }
+      this.successMessage = 'Verificando código...';
+      this.authService.verifyRecoveryCode(this.form.value.email || '', codeCtrl.value || '').subscribe({
+        next: (res) => {
+          this.successMessage = 'Código verificado correctamente.';
+          this.errorMessage = '';
+          setTimeout(() => {
+            this.successMessage = '';
+            this.currentStep = 3;
+          }, 1000);
+        },
+        error: (err) => {
+          this.successMessage = '';
+          this.errorMessage = err.error?.message || 'Código de verificación inválido o vencido.';
+        }
+      });
+    }
+  }
+
+  submit(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const passCtrl = this.form.get('newPassword');
+    const confCtrl = this.form.get('confirmPassword');
+
+    if (passCtrl?.invalid || confCtrl?.invalid) {
+      passCtrl?.markAsTouched();
+      confCtrl?.markAsTouched();
+      this.errorMessage = 'Por favor, cumple con los requisitos de la contraseña.';
       return;
     }
 
     const password = this.form.value.newPassword;
     const confirm = this.form.value.confirmPassword;
 
-    if(password !== confirm){
+    if (password !== confirm) {
       this.errorMessage = 'Las contraseñas no coinciden.';
       return;
     }
 
-    this.successMessage =
-      'Contraseña actualizada correctamente.';
+    this.authService.recoverPassword({
+      email: this.form.value.email,
+      newPassword: password
+    }).subscribe({
+      next: (res) => {
+        this.successMessage = res.message || 'Contraseña actualizada correctamente.';
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Error al restablecer contraseña. El correo podría no estar registrado.';
+      }
+    });
+  }
 
-    setTimeout(()=>{
+  resendCode(): void {
+    this.errorMessage = '';
+    this.successMessage = 'Reenviando código de verificación...';
+    const email = this.form.get('email')?.value || '';
+    this.authService.requestRecoveryCode(email).subscribe({
+      next: (res: any) => {
+        this.successMessage = res.message || 'Código de verificación reenviado.';
+        this.errorMessage = '';
+      },
+      error: (err: any) => {
+        this.successMessage = '';
+        this.errorMessage = err.error?.message || 'Error al reenviar el código.';
+      }
+    });
+  }
+
+  back(): void {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+      this.errorMessage = '';
+      this.successMessage = '';
+    } else {
       this.router.navigate(['/login']);
-    },1500);
+    }
   }
-
-  back():void{
-    this.router.navigate(['/login']);
-  }
-
 }
+

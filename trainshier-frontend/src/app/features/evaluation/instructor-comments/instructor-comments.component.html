@@ -1,301 +1,297 @@
 <div class="instructor-page">
+
+  <!-- HEADER -->
   <div class="header-card">
-
     <div>
-
-      <h1>
-        Centro de Evaluación
-      </h1>
-
-      <p>
-        Analiza el desempeño de los aprendices y genera retroalimentación profesional.
-      </p>
-
+      <h1>{{ isInstructor ? 'Centro de Evaluación' : 'Mi Desempeño' }}</h1>
+      <p>{{ isInstructor ? 'Analiza el desempeño de los aprendices y genera retroalimentación profesional.' : 'Revisa tus calificaciones y comentarios de retroalimentación recibidos.' }}</p>
     </div>
-
-    <button class="export-btn">
-      Exportar Evaluación
-    </button>
-
+    <button class="export-btn" (click)="exportEvaluation()">Exportar Evaluación</button>
   </div>
 
+  <!-- KPI CARDS — datos reales de la BD -->
   <div class="kpi-grid">
 
     <div class="kpi-card">
-
-      <h2>{{ puntaje }}%</h2>
-
-      <span>
-        Rendimiento
-      </span>
-
+      <h2>{{ getAverageScore() }}%</h2>
+      <span>{{ isInstructor ? 'Rendimiento Promedio' : 'Mi Promedio' }}</span>
     </div>
 
     <div class="kpi-card">
-
-      <h2>{{ tiempo }}</h2>
-
-      <span>
-        Minutos
-      </span>
-
-    </div>
-
-    <div class="kpi-card">
-
-      <h2>{{ errores }}</h2>
-
-      <span>
-        Errores
-      </span>
-
-    </div>
-
-    <div class="kpi-card">
-
       <h2>{{ comments.length }}</h2>
+      <span>{{ isInstructor ? 'Evaluaciones' : 'Calificaciones Recibidas' }}</span>
+    </div>
 
-      <span>
-        Evaluaciones
-      </span>
+    <div class="kpi-card">
+      <h2>{{ getApprovedCount() }}</h2>
+      <span>{{ isInstructor ? 'Aprobados' : 'Módulos Aprobados' }}</span>
+    </div>
 
+    <div class="kpi-card">
+      <h2>{{ getRejectedCount() }}</h2>
+      <span>{{ isInstructor ? 'No Aprobados' : 'Módulos Reprobados' }}</span>
     </div>
 
   </div>
 
-  <div class="student-card">
+  <!-- RESUMEN — si hay evaluaciones -->
+  <div class="student-card" *ngIf="comments.length > 0; else noEvals">
 
     <div>
-
       <div class="student-info">
-
-        <h2>
-          {{ nombreAprendiz }}
-        </h2>
-
+        <h2>{{ isInstructor ? 'Desempeño General del Grupo' : 'Mi Rendimiento General' }}</h2>
         <span
-          [class.approved]="puntaje >= 70"
-          [class.rejected]="puntaje < 70">
-
-          {{ puntaje >= 70 ? 'APROBADO' : 'NO APROBADO' }}
-
+          [class.approved]="getAverageScore() >= 70"
+          [class.rejected]="getAverageScore() < 70">
+          {{ getAverageScore() >= 70 ? 'RENDIMIENTO APROBADO' : 'REQUIERE REFUERZO' }}
         </span>
-
       </div>
 
       <div class="progress-section">
-
         <div class="progress-header">
-
-          <span>
-            Desempeño General
-          </span>
-
-          <strong>
-            {{ puntaje }}%
-          </strong>
-
+          <span>{{ isInstructor ? 'Promedio General' : 'Mi Promedio' }}</span>
+          <strong>{{ getAverageScore() }}%</strong>
         </div>
-
         <div class="progress-bar">
-
-          <div
-            class="progress-fill"
-            [style.width.%]="puntaje">
-          </div>
-
+          <div class="progress-fill" [style.width.%]="getAverageScore()"></div>
         </div>
-
       </div>
 
       <div class="metrics">
-
         <div class="metric">
-
-          <h3>Puntaje</h3>
-
-          <p>{{ puntaje }}%</p>
-
+          <h3>Promedio</h3>
+          <p>{{ getAverageScore() }}%</p>
         </div>
-
         <div class="metric">
-
-          <h3>Tiempo</h3>
-
-          <p>{{ tiempo }} min</p>
-
+          <h3>Aprobados</h3>
+          <p>{{ getApprovedCount() }}</p>
         </div>
-
         <div class="metric">
-
-          <h3>Errores</h3>
-
-          <p>{{ errores }}</p>
-
+          <h3>No Aprobados</h3>
+          <p>{{ getRejectedCount() }}</p>
         </div>
-
       </div>
-
     </div>
 
     <div class="chart-box">
-
       <div class="chart-circle">
-
         <div class="inner-circle">
-
-          {{ puntaje }}%
-
+          {{ getAverageScore() }}%
         </div>
-
       </div>
-
     </div>
 
   </div>
 
+  <!-- EMPTY STATE si no hay evaluaciones -->
+  <ng-template #noEvals>
+    <div class="student-card" style="text-align: center; justify-content: center; padding: 40px; color: var(--text-soft); width: 100%;">
+      <div style="font-size: 3rem; margin-bottom: 15px;">📋</div>
+      <h3 style="color: var(--text); margin-bottom: 10px;">Sin evaluaciones registradas</h3>
+      <p>{{ isInstructor ? 'Cuando completes la primera evaluación de un aprendiz, aquí aparecerán las métricas de desempeño del grupo.' : 'El instructor aún no ha registrado calificaciones para ti en la base de datos.' }}</p>
+    </div>
+  </ng-template>
+
+  <!-- ANÁLISIS INTELIGENTE -->
   <div class="ai-card">
-
-    <h2>
-      Análisis Inteligente
-    </h2>
-
-    <p>
-
-      {{ aiAnalysis }}
-
+    <h2>{{ isInstructor ? 'Análisis Inteligente' : 'Mi Análisis de Rendimiento' }}</h2>
+    <p *ngIf="comments.length === 0; else analysisText">
+      {{ isInstructor ? 'Aún no hay evaluaciones registradas. Usa el formulario de abajo para calificar a los aprendices y obtener el análisis automático.' : 'Aún no tienes calificaciones registradas para generar el análisis automático.' }}
     </p>
-
+    <ng-template #analysisText>
+      <p *ngIf="getAverageScore() >= 90">
+        {{ isInstructor ? 'El rendimiento general es excelente. Los aprendices dominan los procesos de caja, descuentos y atención al cliente. Se recomienda continuar con módulos avanzados.' : '¡Excelente rendimiento! Dominas los procesos de caja, descuentos y atención al cliente. Continúa con este nivel de práctica.' }}
+      </p>
+      <p *ngIf="getAverageScore() >= 70 && getAverageScore() < 90">
+        {{ isInstructor ? 'El rendimiento es bueno. Se observan oportunidades de mejora en tiempos de atención y manejo de descuentos. Se recomienda reforzar los puntos débiles identificados.' : 'Buen rendimiento. Se observan oportunidades de mejora en tus tiempos de atención y el manejo de descuentos.' }}
+      </p>
+      <p *ngIf="getAverageScore() < 70">
+        {{ isInstructor ? 'El desempeño requiere acompañamiento adicional. Se recomienda reforzar los fundamentos del sistema POS y realizar más simulaciones prácticas antes de la evaluación final.' : 'Tu desempeño requiere acompañamiento y refuerzo adicional. Te recomendamos realizar más simulaciones prácticas.' }}
+      </p>
+    </ng-template>
   </div>
 
-  <div class="comments-container">
+  <!-- SOLICITUDES DE AUTORIZACIÓN TRN PENDIENTES (Solo Instructor) -->
+  <div class="comments-container" *ngIf="isInstructor" style="margin-bottom: 30px; border: 1px solid var(--gold); background: rgba(212,175,55,0.02);">
+    <h2>🏷️ Solicitudes de Registro Pendientes (TRN)</h2>
+    <p style="font-size: 0.85rem; color: var(--text-soft); margin-bottom: 15px;">
+      Los aprendices listados abajo solicitaron tu autorización para registrarse en TrainShier.
+    </p>
 
-    <h2>
-      Nueva Retroalimentación
-    </h2>
+    <!-- Loading -->
+    <div *ngIf="trnLoading" style="text-align: center; padding: 15px; color: var(--text-soft);">
+      Cargando solicitudes...
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!trnLoading && trnRequests.length === 0" style="text-align: center; padding: 20px; color: var(--text-soft); font-size: 0.9rem;">
+      No tienes solicitudes de registro TRN pendientes.
+    </div>
+
+    <!-- List -->
+    <div class="comments-list" *ngIf="!trnLoading && trnRequests.length > 0" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
+      <div 
+        class="comment-card" 
+        *ngFor="let item of trnRequests" 
+        style="background: var(--surface-2, rgba(255,255,255,0.02)); border: 1px solid var(--border); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between;"
+      >
+        <div>
+          <h3 style="margin: 0 0 5px 0; color: var(--text); font-size: 1rem; font-weight: bold;">{{ item.studentName }}</h3>
+          <p style="margin: 0 0 10px 0; font-size: 0.82rem; color: var(--text-soft); word-break: break-all;">📧 {{ item.studentEmail }}</p>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <button 
+            type="button" 
+            (click)="approveTrn(item.id)" 
+            style="flex: 1; background: #2ecc71; color: white; border: none; border-radius: 4px; padding: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;"
+          >
+            ✓ Aprobar
+          </button>
+          <button 
+            type="button" 
+            (click)="rejectTrn(item.id)" 
+            style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 4px; padding: 8px; cursor: pointer; transition: all 0.2s;"
+          >
+            ✗ Rechazar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULARIO DE NUEVA RETROALIMENTACIÓN (Solo Instructor) -->
+  <div class="comments-container" *ngIf="isInstructor">
+ 
+    <h2>Nueva Retroalimentación</h2>
 
     <form (ngSubmit)="saveComment()">
 
-      <input
-        type="text"
-        placeholder="Nombre del aprendiz"
-        [(ngModel)]="comment.studentName"
-        name="studentName">
+      <!-- Autocomplete dropdown search for apprentice -->
+      <div class="field" style="position: relative; margin-bottom: 15px;">
+        <input
+          type="text"
+          placeholder="Escribe para buscar y elegir aprendiz *"
+          [(ngModel)]="searchQuery"
+          name="searchQuery"
+          (input)="filterApprentices()"
+          (focus)="showSuggestions = true"
+          (blur)="hideSuggestionsWithDelay()"
+          autocomplete="off"
+          style="width: 100%;"
+          required>
+        
+        <div class="autocomplete-dropdown" *ngIf="showSuggestions && filteredApprentices.length > 0" 
+             style="position: absolute; width: 100%; max-height: 200px; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.3); margin-top: 4px;">
+          <div *ngFor="let app of filteredApprentices" 
+               (click)="selectApprentice(app)" 
+               class="suggestion-item" 
+               style="padding: 10px 12px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.88rem; transition: background 0.2s;"
+               onmouseover="this.style.background='rgba(212,175,55,0.1)'"
+               onmouseout="this.style.background='transparent'">
+            <div style="font-weight: bold; color: var(--text);">{{ app.name }}</div>
+            <div style="font-size: 0.75rem; color: var(--text-soft);">{{ app.email }}</div>
+          </div>
+        </div>
+      </div>
 
       <input
         type="text"
-        placeholder="Módulo evaluado"
+        placeholder="Módulo evaluado (ej. Caja POS) *"
         [(ngModel)]="comment.module"
         name="module">
 
       <input
         type="number"
-        placeholder="Calificación final"
+        placeholder="Calificación final (0-100) *"
         [(ngModel)]="comment.score"
-        name="score">
+        name="score"
+        min="0"
+        max="100">
 
-      <select
-        [(ngModel)]="comment.state"
-        name="state">
-
-        <option value="">
-          Estado
-        </option>
-
-        <option value="Aprobado">
-          Aprobado
-        </option>
-
-        <option value="No aprobado">
-          No aprobado
-        </option>
-
+      <select [(ngModel)]="comment.state" name="state">
+        <option value="">Estado *</option>
+        <option value="Aprobado">Aprobado</option>
+        <option value="No aprobado">No aprobado</option>
       </select>
 
       <textarea
         rows="4"
-        placeholder="Retroalimentación"
+        placeholder="Retroalimentación constructiva *"
         [(ngModel)]="comment.feedback"
         name="feedback">
       </textarea>
 
       <textarea
-        rows="4"
-        placeholder="Errores detectados"
+        rows="3"
+        placeholder="Errores detectados (opcional)"
         [(ngModel)]="comment.errors"
         name="errors">
       </textarea>
 
       <button type="submit">
-
         Guardar Evaluación
-
       </button>
 
     </form>
 
-    <div
-      class="notification"
-      *ngIf="notification">
-
+    <div class="notification" *ngIf="notification">
       {{ notification }}
-
     </div>
 
   </div>
 
+  <!-- HISTORIAL DE EVALUACIONES -->
   <div class="history-card">
-
+ 
     <div class="history-header">
-
-      <h2>
-        Historial de Evaluaciones
-      </h2>
-
-      <input
-        type="text"
-        placeholder="Buscar aprendiz..."
-      >
-
+      <h2>{{ isInstructor ? 'Historial de Evaluaciones' : 'Mis Calificaciones y Retroalimentaciones' }}</h2>
+      <input *ngIf="isInstructor" type="text" placeholder="Buscar aprendiz..." [(ngModel)]="historyFilterQuery" (input)="applyHistoryFilter()">
     </div>
-
-    <div class="comments-list">
-
+ 
+    <!-- Loading -->
+    <div *ngIf="loading" style="text-align: center; padding: 30px; color: var(--text-soft);">
+      Cargando evaluaciones...
+    </div>
+ 
+    <div class="comments-list" *ngIf="!loading">
+ 
+      <!-- Empty state -->
+      <div *ngIf="comments.length === 0" style="text-align: center; padding: 40px; color: var(--text-soft);">
+        <p>No hay evaluaciones registradas aún.</p>
+        <p *ngIf="isInstructor" style="font-size: 0.85rem; margin-top: 8px;">Usa el formulario de arriba para calificar a los aprendices.</p>
+      </div>
+ 
+      <!-- Lista de evaluaciones reales -->
       <div
         class="comment-card"
-        *ngFor="let item of comments">
-
+        *ngFor="let item of filteredComments; let i = index">
+ 
         <div class="card-top">
-
-          <h2>
-            {{ item.studentName }}
-          </h2>
-
-          <span>
+          <h2>{{ item.studentName }}</h2>
+          <span [style.color]="item.state === 'Aprobado' ? '#2ecc71' : '#ef4444'"
+                [style.background]="item.state === 'Aprobado' ? 'rgba(46,204,113,0.1)' : 'rgba(239,68,68,0.1)'"
+                style="padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;">
             {{ item.state }}
           </span>
-
         </div>
-
-        <p>
-          <strong>Módulo:</strong>
-          {{ item.module }}
+ 
+        <p><strong>Módulo:</strong> {{ item.module }}</p>
+        <p><strong>Calificación:</strong> {{ item.score }} / 100</p>
+        <p><strong>Retroalimentación:</strong> {{ item.feedback }}</p>
+        <p *ngIf="item.errors && item.errors !== '0'">
+          <strong>Errores:</strong> {{ item.errors }}
         </p>
-
-        <p>
-          <strong>Calificación:</strong>
-          {{ item.score }}
+        <p style="font-size: 0.78rem; color: var(--text-soft); margin-top: 8px;">
+          Fecha: {{ item.date }}
         </p>
-
-        <p>
-          <strong>Retroalimentación:</strong>
-          {{ item.feedback }}
-        </p>
-
-        <p>
-          <strong>Errores:</strong>
-          {{ item.errors }}
-        </p>
+ 
+        <button
+          *ngIf="isInstructor"
+          type="button"
+          (click)="deleteComment(i)"
+          style="margin-top: 10px; background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer;">
+          🗑 Eliminar
+        </button>
 
       </div>
 

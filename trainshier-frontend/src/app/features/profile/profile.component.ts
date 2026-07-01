@@ -3,6 +3,7 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector:'app-profile',
@@ -11,9 +12,8 @@ import {
 })
 export class ProfileComponent{
 
-  showSuccess:boolean=false;
-
-  profileImage:string='assets/img/default-profile.png';
+  showSuccess: boolean = false;
+  errorMessage: string = '';
 
   role:string='APRENDIZ';
 
@@ -21,8 +21,32 @@ export class ProfileComponent{
 
   userId:string='TRN-0000';
 
-  form=this.fb.group({
+  /** Avatar image path based on role — color variants of the classic profile icon */
+  get avatarImage(): string {
+    const r = this.role.toUpperCase();
+    if (r === 'ADMIN' || r === 'ADMINISTRADOR' || r === 'ADMINISTRATOR') return 'assets/img/avatar_admin.png';
+    if (r === 'INSTRUCTOR') return 'assets/img/avatar_instructor.png';
+    if (r === 'OBSERVADOR') return 'assets/img/avatar_observador.png';
+    return 'assets/img/avatar_aprendiz.png'; // APRENDIZ / default
+  }
 
+  /** Alt text for the avatar */
+  get avatarAlt(): string {
+    return `Avatar de ${this.role}`;
+  }
+
+  isLoggedIn: boolean = false;
+  today: string = new Date().toISOString().split('T')[0];
+  solicitudRol: string = 'instructor';
+  reporteError: string = '';
+  supportSuccessMessage: string = '';
+  userRfidUid: string = '';
+  rfidUidSolicitud: string = '';
+  form=this.fb.group({
+    name:[
+      '',
+      Validators.required
+    ],
     email:[
       '',
       [
@@ -30,7 +54,6 @@ export class ProfileComponent{
         Validators.email
       ]
     ],
-
     username:[
       '',
       [
@@ -40,107 +63,165 @@ export class ProfileComponent{
         )
       ]
     ],
-
     birthDate:['']
-
   });
 
   constructor(
-    private fb:FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService
   ){
+    this.isLoggedIn = !!localStorage.getItem('token');
 
-    this.role=
-      localStorage.getItem('role')
-      || 'APRENDIZ';
+    if (!this.isLoggedIn) {
+      this.role = 'OBSERVADOR';
+      this.name = 'Invitado Observador';
+      this.userId = 'INV-0000';
+      return;
+    }
 
-    this.name=
-      localStorage.getItem('name')
-      || 'Usuario TrainShier';
-
-    this.userId=
-      localStorage.getItem('userId')
-      || 'TRN-5642';
-
-    this.profileImage=
-      localStorage.getItem('profileImage')
-      || 'assets/img/default-profile.png';
+    this.role = localStorage.getItem('role') || 'APRENDIZ';
+    this.name = localStorage.getItem('name') || 'Usuario TrainShier';
+    this.userId = localStorage.getItem('userId') || 'TRN-0000';
 
     this.form.patchValue({
-
-      email:
-        localStorage.getItem('email')
-        || '',
-
-      username:
-        localStorage.getItem('username')
-        || '',
-
-      birthDate:
-        localStorage.getItem('birthDate')
-        || ''
-
+      name: this.name,
+      email: localStorage.getItem('email') || '',
+      username: localStorage.getItem('username') || '',
+      birthDate: localStorage.getItem('birthDate') || ''
     });
 
+    this.loadRfidInfo();
   }
 
-  changePhoto(event:any):void{
-
-    const file=event.target.files[0];
-
-    if(!file){
-      return;
+  loadRfidInfo(): void {
+    const idNum = Number(this.userId);
+    if (!isNaN(idNum) && idNum > 0) {
+      this.userService.getById(idNum).subscribe({
+        next: (user: any) => {
+          this.userRfidUid = user.rfidUid || '';
+          localStorage.setItem('rfidUid', this.userRfidUid);
+        },
+        error: (err) => console.error('Error loading RFID info:', err)
+      });
     }
-
-    const reader=new FileReader();
-
-    reader.onload=()=>{
-
-      this.profileImage=
-        reader.result as string;
-
-      localStorage.setItem(
-        'profileImage',
-        this.profileImage
-      );
-
-    };
-
-    reader.readAsDataURL(file);
-
   }
 
-  saveChanges():void{
-
-    if(this.form.invalid){
-
+  saveChanges(): void {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
-
     }
+    this.errorMessage = '';
 
-    localStorage.setItem(
-      'email',
-      this.form.value.email || ''
-    );
+    const bday = this.form.value.birthDate;
+    if (bday) {
+      const selected = new Date(bday);
+      const todayDate = new Date();
+      selected.setHours(0, 0, 0, 0);
+      todayDate.setHours(0, 0, 0, 0);
+      if (selected > todayDate) {
+        this.errorMessage = 'La fecha de nacimiento no puede ser en el futuro.';
+        return;
+      }
+    }
+    const userIdNum = Number(this.userId);
+    const updatePayload = {
+      name: this.form.value.name,
+      email: this.form.value.email,
+      username: this.form.value.username
+    };
+    this.userService.update(userIdNum, updatePayload).subscribe({
+      next: (updatedUser: any) => {
+        // Save back to localStorage
+        localStorage.setItem('name', updatedUser.name);
+        localStorage.setItem('email', updatedUser.email);
+        localStorage.setItem('username', updatedUser.username || '');
+        localStorage.setItem('birthDate', this.form.value.birthDate || '');
 
-    localStorage.setItem(
-      'username',
-      this.form.value.username || ''
-    );
+        // Update class property
+        this.name = updatedUser.name;
 
-    localStorage.setItem(
-      'birthDate',
-      this.form.value.birthDate || ''
-    );
+        this.showSuccess = true;
+        setTimeout(() => {
+          this.showSuccess = false;
+        }, 3000);
+      },
+      error: (err: any) => {
+        console.error('Error updating profile:', err);
+        this.errorMessage = err.error?.message || 'Error al actualizar perfil en el servidor';
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 4000);
+      }
+    });
+  }
 
-    this.showSuccess=true;
+  requestRoleChange(): void {
+    const savedNotifs = localStorage.getItem('trainshier_notifications');
+    let notifs = savedNotifs ? JSON.parse(savedNotifs) : [];
+    notifs.push({
+      id: String(Date.now()),
+      role: 'ADMIN',
+      message: `👤 Solicitud de Rol: El usuario "${this.name}" solicita cambiar su rol a "${this.solicitudRol.toUpperCase()}".`,
+      actionText: 'Ver Solicitudes',
+      route: '/statistics',
+      read: false
+    });
+    localStorage.setItem('trainshier_notifications', JSON.stringify(notifs));
+    this.supportSuccessMessage = 'Solicitud de cambio de rol enviada al administrador.';
+    setTimeout(() => this.supportSuccessMessage = '', 3000);
+  }
 
-    setTimeout(()=>{
+  reportSystemError(): void {
+    if (!this.reporteError || !this.reporteError.trim()) return;
+    const savedNotifs = localStorage.getItem('trainshier_notifications');
+    let notifs = savedNotifs ? JSON.parse(savedNotifs) : [];
+    notifs.push({
+      id: String(Date.now()),
+      role: 'ADMIN',
+      message: `⚠️ Reporte de Error: "${this.reporteError.trim()}" (enviado por "${this.name}").`,
+      actionText: 'Ver Reportes',
+      route: '/reports',
+      read: false
+    });
+    localStorage.setItem('trainshier_notifications', JSON.stringify(notifs));
+    this.reporteError = '';
+    this.supportSuccessMessage = 'Reporte de error enviado al administrador.';
+    setTimeout(() => this.supportSuccessMessage = '', 3000);
+  }
 
-      this.showSuccess=false;
+  requestRfidAssociation(): void {
+    if (!this.rfidUidSolicitud || !this.rfidUidSolicitud.trim()) {
+      this.errorMessage = 'Por favor ingresa un UID de tarjeta RFID válido.';
+      return;
+    }
+    const userIdNum = Number(this.userId);
+    this.userService.submitRfidRequest(userIdNum, this.rfidUidSolicitud.trim()).subscribe({
+      next: () => {
+        // Push notification to admin role
+        const savedNotifs = localStorage.getItem('trainshier_notifications');
+        let notifs = savedNotifs ? JSON.parse(savedNotifs) : [];
+        notifs.push({
+          id: String(Date.now()),
+          role: 'ADMIN',
+          message: `📡 El usuario "${this.name}" (${this.role}) ha solicitado asociar la tarjeta RFID: ${this.rfidUidSolicitud.trim()}.`,
+          actionText: 'Ver Peticiones RFID',
+          route: '/statistics?tab=rfid',
+          read: false
+        });
+        localStorage.setItem('trainshier_notifications', JSON.stringify(notifs));
 
-    },3000);
-
+        this.supportSuccessMessage = 'Solicitud de asociación RFID enviada al administrador.';
+        this.rfidUidSolicitud = '';
+        this.loadRfidInfo();
+        setTimeout(() => this.supportSuccessMessage = '', 3000);
+      },
+      error: (err) => {
+        console.error('Error submitting RFID request:', err);
+        this.errorMessage = err.error?.message || 'Error al enviar la solicitud RFID';
+        setTimeout(() => this.errorMessage = '', 3000);
+      }
+    });
   }
 
 }

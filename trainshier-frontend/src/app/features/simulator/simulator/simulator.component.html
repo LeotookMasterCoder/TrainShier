@@ -19,10 +19,16 @@
         inventario, facturación y caja registradora.
       </p>
     </div>
-
     <div class="header-badges">
       <button class="stats-toggle-btn" (click)="toggleStats($event)">
-        📊 Ver Estadísticas
+        📊 {{ showStats ? 'Ocultar Estadísticas' : 'Ver Estadísticas' }}
+      </button>
+      <button 
+        *ngIf="!simulationStarted"
+        class="warning-btn go-to-config-btn"
+        (click)="scrollToConfig()"
+        style="background: var(--accent); color: var(--accent-ink); border: 1.5px solid var(--accent); font-weight: 700; padding: 10px 16px; border-radius: 999px; cursor: pointer; transition: all 0.2s ease;">
+        ⚙️ Configurar e Iniciar
       </button>
 
       <span class="badge role">
@@ -36,7 +42,7 @@
   </div>
 
   <!-- PANEL FLOTANTE / FIJO DEL CLIENTE ACTUAL -->
-  <div class="sticky-customer-panel">
+  <div class="sticky-customer-panel" *ngIf="simulationStarted">
     <div class="card customer-card-horizontal">
 
       <div class="customer-main-info">
@@ -64,6 +70,47 @@
         </div>
       </div>
 
+      <!-- QR/Barcode Scan Zone -->
+      <div class="customer-scan-zone" *ngIf="pendingScans.length > 0" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-item); padding: 12px 18px; border-radius: 15px; border: 1px solid var(--border-color); min-width: 280px; align-self: center; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+        <h3 style="margin: 0 0 8px 0; font-size: 0.82rem; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">📡 Escanea este Artículo:</h3>
+        
+        <ng-container *ngIf="currentScanIndex < pendingScans.length; else allScanned">
+          <!-- Expected product name and progress -->
+          <div style="font-weight: 800; color: var(--gold); font-size: 0.95rem; margin-bottom: 8px;">
+            {{ pendingScans[currentScanIndex].productName }} 
+            <span style="font-size: 0.8rem; color: var(--text-soft); font-weight: 600;">({{ currentScanIndex + 1 }} de {{ pendingScans.length }})</span>
+          </div>
+
+          <div style="display: flex; gap: 15px; background: #ffffff; padding: 10px; border-radius: 8px; align-items: center; justify-content: center; box-shadow: inset 0 2px 5px rgba(0,0,0,0.15);">
+            <!-- QR Code -->
+            <div style="text-align: center;">
+              <img 
+                [src]="'https://bwipjs-api.metafloor.com/?bcid=qrcode&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=3'" 
+                alt="QR Code" 
+                style="width: 80px; height: 80px; display: block; margin: 0 auto;"
+              >
+              <span style="font-size: 0.65rem; color: #555; font-weight: 700; display: block; margin-top: 3px;">Código QR</span>
+            </div>
+
+            <!-- Barcode -->
+            <div style="text-align: center; border-left: 1px solid #e0e0e0; padding-left: 15px;">
+              <img 
+                [src]="'https://bwipjs-api.metafloor.com/?bcid=code128&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=3&rotate=N'" 
+                alt="Barcode" 
+                style="width: 130px; height: 60px; display: block; margin: 5px auto;"
+              >
+              <span style="font-size: 0.65rem; color: #555; font-weight: 700; display: block; margin-top: 3px;">Código de Barras</span>
+            </div>
+          </div>
+        </ng-container>
+        
+        <ng-template #allScanned>
+          <div style="color: #2ecc71; font-weight: 800; font-size: 1rem; padding: 20px 0;">
+            ✓ ¡Todos los artículos registrados!
+          </div>
+        </ng-template>
+      </div>
+
       <div class="customer-timer-zone">
         <h3>Tiempo Restante</h3>
         <div class="timer-display" [class.timer-low]="timeLeft < 20">
@@ -80,23 +127,53 @@
     <!-- PANEL PRINCIPAL (IZQUIERDO): OPERACIÓN DE CAJA -->
     <div class="main-panel">
 
-      <!-- ENTRADA DE FACTURACIÓN (DOBLE PROPÓSITO: PISTOLA Y MANUAL) -->
-      <div class="card">
+      <!-- BIENVENIDA E INSTRUCCIONES (SOLO ANTES DE INICIAR) -->
+      <div class="card" *ngIf="!simulationStarted">
+        <h2 style="color: var(--gold); font-size: 1.45rem; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          💼 Simulador de Punto de Venta TrainShier
+        </h2>
+        <p style="color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px;">
+          Practica el registro de mercancías, el cálculo dinámico del IVA por producto, y la conciliación de caja mediante auditorías sorpresa (arqueo de caja).
+        </p>
+        <div style="background: var(--surface-2); border-left: 4px solid var(--gold); padding: 15px 18px; border-radius: 8px; font-size: 0.88rem; color: var(--text-soft); line-height: 1.55; margin-bottom: 5px;">
+          <strong style="color: var(--text); display: block; margin-bottom: 6px;">Guía de Operación:</strong>
+          <ol style="margin: 0; padding-left: 20px;">
+            <li>Configura la dificultad y la actitud del cliente en el panel de la derecha.</li>
+            <li>Inicia la simulación y declara el fondo de caja inicial (Base de Apertura).</li>
+            <li>Revisa el pedido del cliente en pantalla. Escanea o escribe los códigos de barra provistos.</li>
+            <li>Registra el pago correspondiente en efectivo o tarjeta.</li>
+            <li>Finaliza la jornada comercial realizando la conciliación sorpresa (Arqueo de Caja).</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- ENTRADA DE FACTURACIÓN (SOLO CUANDO INICIA SIMULACIÓN) -->
+      <div class="card" *ngIf="simulationStarted">
         <h2>Registro de Productos (Facturación)</h2>
-        <div class="scan-section">
+        <div class="scan-section" style="display: flex; gap: 10px; align-items: center;">
           <input
             type="text"
             placeholder="Escanee con la pistola o digite el código..."
             [(ngModel)]="productCode"
             (keyup.enter)="registerByCode()"
             [disabled]="!simulationStarted"
+            style="flex: 1;"
             autofocus>
-          <button (click)="registerByCode()" [disabled]="!simulationStarted">Registrar Código</button>
+          <button (click)="registerByCode()" [disabled]="!simulationStarted" class="primary-btn">Registrar Código</button>
+          <button 
+            type="button" 
+            (click)="showSearchProductsModal = true" 
+            [disabled]="!simulationStarted" 
+            class="secondary-btn" 
+            style="background: var(--surface-2); border: 1px solid var(--border-soft); color: var(--gold); font-weight: 600; padding: 10px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
+          >
+            🔍 Buscar Producto
+          </button>
         </div>
       </div>
 
-      <!-- TABLA DEL CARRITO DE COMPRAS CON INTERACCIÓN DE MODIFICACIÓN -->
-      <div class="card">
+      <!-- TABLA DEL CARRITO DE COMPRAS CON INTERACCIÓN DE MODIFICACIÓN (SOLO CUANDO INICIA SIMULACIÓN) -->
+      <div class="card" *ngIf="simulationStarted">
         <h2>Venta Actual (Carrito)</h2>
         <table>
           <thead>
@@ -136,10 +213,10 @@
         </table>
       </div>
 
-      <!-- VISUALIZADOR DE INVENTARIO -->
-      <div class="card">
+      <!-- GESTIÓN DEL CATÁLOGO DE PRODUCTOS (SOLO ANTES DE INICIAR PARA INSTRUCTOR) -->
+      <div class="card" *ngIf="!simulationStarted && (role === 'INSTRUCTOR' || role === 'ADMINISTRADOR' || role === 'ADMIN')">
         <div class="inventory-header-row">
-          <h2>Inventario de Productos</h2>
+          <h2>Catálogo y Gestión de Productos</h2>
 
           <div class="search-container">
             <input
@@ -150,11 +227,10 @@
           </div>
         </div>
 
-        <table>
+        <table style="width: 100%; border-collapse: collapse;">
           <thead>
           <tr>
             <th>Código</th>
-            <th>Código Barras</th>
             <th>Producto</th>
             <th>Stock</th>
             <th>Precio</th>
@@ -162,9 +238,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let product of filteredProducts">
+          <tr *ngFor="let product of filteredProducts | slice:0:visibleProductsCount">
             <td>{{ product.code }}</td>
-            <td><small>{{ product.barcode || 'N/A' }}</small></td>
             <td>{{ product.name }}</td>
             <td>
                 <span [class.out-stock]="product.stock <= 0">
@@ -178,10 +253,49 @@
             </td>
           </tr>
           <tr *ngIf="filteredProducts.length === 0">
-            <td colspan="6" class="no-results">No se encontraron productos coincidentes.</td>
+            <td [attr.colspan]="role === 'INSTRUCTOR' ? 5 : 4" class="no-results">No se encontraron productos coincidentes.</td>
           </tr>
           </tbody>
         </table>
+
+        <!-- Ver más Button -->
+        <div *ngIf="filteredProducts.length > visibleProductsCount" style="text-align: center; margin-top: 15px;">
+          <button 
+            type="button"
+            (click)="visibleProductsCount = visibleProductsCount + 10" 
+            style="background: var(--accent-soft, rgba(99,102,241,0.1)); color: var(--accent); border: 1px solid var(--accent); padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem;"
+          >
+            🔄 Ver más productos (+10)
+          </button>
+        </div>
+      </div>
+
+      <!-- CHAT INTERACTIVO CON EL CLIENTE (IA GEMINI) -->
+      <div class="card customer-chat-card" *ngIf="simulationStarted">
+        <h2>Conversar con {{ currentCustomer.name }} (IA Cliente)</h2>
+        <div class="chat-messages-container" #chatContainer>
+          <div *ngFor="let msg of chatMessages" class="chat-bubble-wrapper" [class.user]="msg.sender === 'Cajero (Tú)'" [class.system]="msg.sender === 'Sistema'">
+            <div class="chat-sender">{{ msg.sender }}</div>
+            <div class="chat-bubble">
+              <div style="white-space: pre-line;">{{ msg.text }}</div>
+            </div>
+          </div>
+          <div class="chat-loading-bubble" *ngIf="isChatLoading">
+            <span>El cliente está pensando...</span>
+          </div>
+        </div>
+        
+        <div class="chat-input-row">
+          <input 
+            type="text" 
+            placeholder="Pregúntale detalles de su compra o responde a sus inquietudes..." 
+            [(ngModel)]="chatMessageInput" 
+            (keyup.enter)="sendMessageToCustomer()"
+            [disabled]="isChatLoading">
+          <button (click)="sendMessageToCustomer()" [disabled]="isChatLoading || !chatMessageInput.trim()">
+            Enviar 💬
+          </button>
+        </div>
       </div>
 
     </div>
@@ -211,7 +325,7 @@
       </div>
 
       <!-- RESUMEN DE FACTURA -->
-      <div class="card" *ngIf="!h">
+      <div class="card" *ngIf="simulationStarted && !h">
         <h2>Liquidación</h2>
         <div class="invoice-row">
           <span>Subtotal</span>
@@ -234,15 +348,13 @@
           style="width: 100%; margin-top: 15px;"
           (click)="cambiar()"
           [disabled]="!simulationStarted"
-          [ngStyle]="{ 'color': simulationStarted ? 'white' : 'gris' }"
-          [ngStyle]="{ 'background': simulationStarted ? 'white' : 'gris' }"
         >
           Pagar Ahora
         </button>
       </div>
 
       <!-- CAJA REGISTRADORA Y PASARELA DE DINERO -->
-      <div class="card" *ngIf="h">
+      <div class="card" *ngIf="simulationStarted && h">
         <h2>Caja y Pago</h2>
         <div class="invoice-row total">
           <span>Total</span>
@@ -278,7 +390,7 @@
       </div>
 
       <!-- CALENDARIO COMERCIAL -->
-      <div class="card">
+      <div class="card" *ngIf="!simulationStarted">
         <h2>Calendario Comercial</h2>
         <input type="date" [(ngModel)]="saleDate" (change)="updateSpecialDay()" [disabled]="simulationStarted">
         <div class="promotion-card">
@@ -288,7 +400,7 @@
       </div>
 
       <!-- SECCIÓN EXCLUSIVA DE GESTIÓN PARA EL INSTRUCTOR -->
-      <div class="card" *ngIf="role === 'INSTRUCTOR'">
+      <div class="card" *ngIf="!simulationStarted && role === 'INSTRUCTOR'">
         <h2>Gestión de Productos</h2>
         <div class="form-grid">
           <input type="text" placeholder="Nombre" [(ngModel)]="newProduct.name">
@@ -297,11 +409,16 @@
           <input type="number" placeholder="Stock" [(ngModel)]="newProduct.stock">
           <input type="text" placeholder="Código de barras" [(ngModel)]="newProduct.barcode">
         </div>
-        <button class="primary-btn" (click)="addProduct()">Agregar Producto</button>
+        <div class="product-form-actions" style="display: flex; gap: 10px; margin-top: 15px; width: 100%;">
+          <button class="primary-btn" (click)="addProduct()" style="flex: 1;">Agregar Producto</button>
+          <button class="secondary-btn" (click)="autofillProduct()" style="flex: 1; border: 1px dashed rgba(212,175,55,0.5); color: #ffe259; background: rgba(212,175,55,0.05); cursor: pointer; font-weight: 600; border-radius: 8px; font-size: 0.9rem;">
+            ⚡ Llenar Rápido
+          </button>
+        </div>
       </div>
 
       <!-- HISTORIAL DE TICKETS GENERADOS -->
-      <div class="card">
+      <div class="card" *ngIf="!simulationStarted">
         <h2>Historial de Ventas</h2>
         <div class="history-container">
           <div *ngFor="let sale of salesHistory" class="history-item">
@@ -315,14 +432,341 @@
         </div>
       </div>
 
+      <!-- CONFIGURACIÓN DE ESCENARIO (SOLO ANTES DE INICIAR) -->
+      <div class="card scenario-settings-card" *ngIf="!simulationStarted">
+        <h2>Configurar Escenario</h2>
+        
+        <div class="form-group">
+          <label>Nivel de Dificultad:</label>
+          <div class="difficulty-options">
+            <button 
+              type="button" 
+              class="difficulty-btn" 
+              [class.active]="selectedDifficulty === 'Fácil'" 
+              (click)="selectedDifficulty = 'Fácil'">
+              🟢 Fácil
+            </button>
+            <button 
+              type="button" 
+              class="difficulty-btn" 
+              [class.active]="selectedDifficulty === 'Media'" 
+              (click)="selectedDifficulty = 'Media'">
+              🟡 Media
+            </button>
+            <button 
+              type="button" 
+              class="difficulty-btn" 
+              [class.active]="selectedDifficulty === 'Difícil'" 
+              (click)="selectedDifficulty = 'Difícil'">
+              🔴 Difícil
+            </button>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="moodSelect">Actitud del Cliente:</label>
+          <select id="moodSelect" [(ngModel)]="selectedMood" class="mood-select">
+            <option value="Amable">😊 Amable</option>
+            <option value="Impaciente">⏱️ Impaciente</option>
+            <option value="Enojado">😠 Enojado</option>
+            <option value="Confundido">❓ Confundido</option>
+          </select>
+        </div>
+        
+        <div class="scenario-preview-desc">
+          <p *ngIf="selectedMood === 'Amable'">
+            <strong>Cliente Amable:</strong> Tiene mucha paciencia (5/5). El tiempo baja lentamente y tolera bien las demoras.
+          </p>
+          <p *ngIf="selectedMood === 'Impaciente'">
+            <strong>Cliente Impaciente:</strong> Tiene poca paciencia (3/5). El tiempo baja rápido y su satisfacción cae más rápido.
+          </p>
+          <p *ngIf="selectedMood === 'Enojado'">
+            <strong>Cliente Enojado:</strong> Tiene muy mala actitud y baja paciencia (2/5). Exige un cobro perfecto y rápido.
+          </p>
+          <p *ngIf="selectedMood === 'Confundido'">
+            <strong>Cliente Confundido:</strong> Hará preguntas sobre precios y descuentos del calendario comercial.
+          </p>
+        </div>
+      </div>
+
       <!-- CONTROLES GLOBALES DE LA COMPRA -->
       <div class="actions vertical-actions">
-        <button class="primary-btn" *ngIf="!simulationStarted" (click)="startSimulation()">Iniciar Simulación</button>
-        <button class="danger-btn" *ngIf="simulationStarted" (click)="finishSimulation()">Finalizar</button>
+        <button class="primary-btn" *ngIf="!simulationStarted" (click)="openAperturaModal()">Iniciar Simulación</button>
+        <button class="danger-btn" *ngIf="simulationStarted" (click)="openArqueoModal()">Finalizar y Hacer Arqueo</button>
       </div>
 
     </div>
 
+  </div>
+
+  <!-- MODAL DE BÚSQUEDA DE PRODUCTOS -->
+  <div class="rfid-modal-overlay" *ngIf="showSearchProductsModal" (click)="showSearchProductsModal = false" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 99999; display: flex; align-items: center; justify-content: center; overflow-y: auto;">
+    <div class="rfid-modal animate-scale-in" (click)="$event.stopPropagation()" style="background: var(--surface); border: 1px solid var(--border-soft); border-radius: 16px; max-width: 800px; width: 95%; padding: 30px; box-shadow: var(--shadow-lg); text-align: left; margin: 20px auto;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-soft); padding-bottom: 15px; margin-bottom: 20px;">
+        <h3 style="margin: 0; color: var(--gold); font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+          🔍 Catálogo de Productos y Búsqueda
+        </h3>
+        <button 
+          (click)="showSearchProductsModal = false" 
+          style="background: transparent; border: none; color: var(--text-soft); font-size: 1.5rem; cursor: pointer; line-height: 1;"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <input
+          type="text"
+          placeholder="🔍 Buscar producto por nombre, código o código de barras..."
+          [(ngModel)]="searchQuery"
+          style="width: 100%; padding: 12px 16px; background: var(--surface-2); color: var(--text); border: 1px solid var(--border-soft); border-radius: 8px; outline: none; font-size: 1rem; box-sizing: border-box;"
+        >
+      </div>
+
+      <div style="max-height: 380px; overflow-y: auto; border: 1px solid var(--border-soft); border-radius: 8px; background: var(--surface-2);">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead style="background: var(--surface); border-bottom: 1px solid var(--border-soft); position: sticky; top: 0; z-index: 10;">
+            <tr>
+              <th style="padding: 12px; color: var(--gold);">Código</th>
+              <th style="padding: 12px; color: var(--gold);">Nombre</th>
+              <th style="padding: 12px; color: var(--gold); text-align: right;">Precio (COP)</th>
+              <th style="padding: 12px; color: var(--gold); text-align: center;">Stock</th>
+              <th style="padding: 12px; color: var(--gold); text-align: center;">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr 
+              *ngFor="let product of filteredProducts" 
+              (click)="selectAndAddProduct(product)"
+              style="border-bottom: 1px solid var(--border-soft); cursor: pointer; transition: background 0.2s;"
+              onmouseover="this.style.background='rgba(255,255,255,0.03)'"
+              onmouseout="this.style.background='transparent'"
+            >
+              <td style="padding: 12px; font-family: monospace;">{{ product.code }}</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--text);">{{ product.name }}</td>
+              <td style="padding: 12px; text-align: right; font-weight: 700; color: var(--gold);">{{ product.price | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+              <td style="padding: 12px; text-align: center;">
+                <span 
+                  [style.color]="product.stock > 0 ? '#2ecc71' : '#e74c3c'"
+                  style="font-weight: 600;"
+                >
+                  {{ product.stock }}
+                </span>
+              </td>
+              <td style="padding: 12px; text-align: center;">
+                <button 
+                  type="button"
+                  style="background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.8rem;"
+                >
+                  Agregar
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredProducts.length === 0">
+              <td colspan="5" style="padding: 20px; text-align: center; color: var(--text-soft);">
+                No se encontraron productos coincidentes.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+        <button 
+          type="button" 
+          (click)="showSearchProductsModal = false" 
+          style="background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem;"
+        >
+          Cerrar Catálogo
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BARCODE MODAL OVERLAY -->
+  <div class="rfid-modal-overlay" *ngIf="showBarcodeModalFlag" (click)="showBarcodeModalFlag = false" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 99999; display: flex; align-items: center; justify-content: center;">
+    <div class="rfid-modal animate-scale-in" (click)="$event.stopPropagation()" style="background: var(--surface); border: 1px solid var(--border-soft); border-radius: 12px; max-width: 480px; width: 90%; padding: 30px; box-shadow: var(--shadow-lg); text-align: center;">
+      <h3 style="margin: 0 0 10px 0; color: var(--gold); font-size: 1.3rem; font-weight: 700;">🏷️ Código de Barras de Producto</h3>
+      <p style="margin: 0 0 20px 0; font-size: 0.88rem; color: var(--text-soft); line-height: 1.4;">Apunta tu pistola física de código de barras <strong>SAT PCS</strong> a la pantalla para registrar el producto.</p>
+      
+      <div style="background: white; padding: 20px; border-radius: 10px; display: inline-block; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+        <img [src]="barcodeModalUrl" alt="Barcode" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+      </div>
+      
+      <div style="font-weight: 700; font-size: 1.15rem; color: var(--text); margin-bottom: 25px;">
+        {{ barcodeModalName }}
+      </div>
+      
+      <div style="display: flex; justify-content: center;">
+        <button 
+          type="button" 
+          (click)="showBarcodeModalFlag = false" 
+          style="background: var(--accent); color: white; border: none; padding: 10px 30px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: background 0.2s;"
+          onmouseover="this.style.background='var(--accent-hover)'"
+          onmouseout="this.style.background='var(--accent)'"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APERTURA DE CAJA MODAL OVERLAY -->
+  <div class="rfid-modal-overlay" *ngIf="showAperturaModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 99999; display: flex; align-items: center; justify-content: center;">
+    <div class="rfid-modal animate-scale-in" style="background: var(--surface); border: 1px solid var(--border-soft); border-radius: 12px; max-width: 450px; width: 90%; padding: 30px; box-shadow: var(--shadow-lg); text-align: center;">
+      <!-- Custom Cash Opening Logo -->
+      <div style="width: 65px; height: 65px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.02) 70%); border: 1.5px solid rgba(99,102,241,0.4); border-radius: 50%; box-shadow: 0 6px 20px rgba(99,102,241,0.2);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 30px; height: 30px;">
+          <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+          <line x1="12" y1="4" x2="12" y2="20"></line>
+        </svg>
+      </div>
+      <h3 style="margin: 0 0 10px 0; color: var(--gold); font-size: 1.4rem; font-weight: 700;">Apertura de Caja Registradora</h3>
+      <p style="margin: 0 0 20px 0; font-size: 0.9rem; color: var(--text-soft); line-height: 1.4;">Establece el dinero base inicial que tienes en la caja física antes de iniciar la jornada de simulación.</p>
+      
+      <div style="margin-bottom: 25px; text-align: left;">
+        <label style="display: block; font-size: 0.85rem; color: var(--text-soft); margin-bottom: 8px; font-weight: 600;">Monto de Apertura (COP):</label>
+        <input 
+          type="number" 
+          [(ngModel)]="initialCash" 
+          placeholder="Ej. 100000"
+          style="width: 100%; padding: 12px; background: var(--surface-2); color: var(--text); border: 1px solid var(--border-soft); border-radius: 8px; outline: none; font-size: 1.1rem; font-weight: 700; box-sizing: border-box;"
+        >
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button 
+          type="button" 
+          (click)="showAperturaModal = false" 
+          style="background: transparent; color: var(--text-soft); border: 1px solid var(--border-soft); padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem;"
+        >
+          Cancelar
+        </button>
+        <button 
+          type="button" 
+          (click)="confirmApertura()" 
+          style="background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem;"
+        >
+          Confirmar e Iniciar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARQUEO DE CAJA / CIERRE MODAL OVERLAY -->
+  <div class="rfid-modal-overlay" *ngIf="showArqueoModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 99999; display: flex; align-items: center; justify-content: center; overflow-y: auto;">
+    <div class="rfid-modal animate-scale-in" style="background: var(--surface); border: 1px solid var(--border-soft); border-radius: 16px; max-width: 550px; width: 90%; padding: 35px; box-shadow: var(--shadow-lg); text-align: center; margin: 20px auto;">
+      <!-- Custom Cash Audit Logo -->
+      <div style="width: 75px; height: 75px; margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.02) 70%); border: 2px solid rgba(212,175,55,0.4); border-radius: 50%; box-shadow: 0 8px 25px rgba(212,175,55,0.25);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 34px; height: 34px; filter: drop-shadow(0 2px 6px rgba(212,175,55,0.35));">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 6v6l4 2"></path>
+        </svg>
+      </div>
+      <h3 style="margin: 0 0 10px 0; color: var(--gold); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px;">Arqueo y Conciliación de Caja</h3>
+      <p style="margin: 0 0 25px 0; font-size: 0.9rem; color: var(--text-soft); line-height: 1.4;">Finalización de jornada comercial. Realiza el conteo físico de billetes y monedas en la gaveta y compáralo con el saldo esperado.</p>
+      
+      <!-- Detalle de cuentas en formato ticket/business model -->
+      <div style="background: var(--surface-2); border: 1px solid var(--border-soft); border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 25px; font-family: monospace; font-size: 0.9rem; line-height: 1.6; color: var(--text);">
+        <div style="text-align: center; font-weight: 800; border-bottom: 1px dashed var(--border-soft); padding-bottom: 10px; margin-bottom: 15px; font-size: 1.1rem; color: var(--gold);">TRAINSHIER POS AUDIT</div>
+        <div style="display: flex; justify-content: space-between;">
+          <span>(+) Base de Caja (Apertura):</span>
+          <strong>{{ initialCash | currency:'COP':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span>(+) Ventas Registradas (Efectivo):</span>
+          <strong>{{ cashSalesTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-soft); padding-bottom: 8px; margin-bottom: 8px;">
+          <span>(+) Ventas Registradas (Tarjetas):</span>
+          <strong>{{ cardSalesTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; color: var(--gold); margin-top: 5px;">
+          <span>(=) Efectivo Esperado en Caja:</span>
+          <span>{{ (initialCash + cashSalesTotal) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <!-- Conteo físico entrada -->
+      <div style="margin-bottom: 25px; text-align: left;" *ngIf="!arqueoResult">
+        <label style="display: block; font-size: 0.85rem; color: var(--text-soft); margin-bottom: 8px; font-weight: 600;">Efectivo Físico Contado en Caja (COP):</label>
+        <input 
+          type="number" 
+          [(ngModel)]="physicalCashCount" 
+          placeholder="Digita el dinero físico en la gaveta..."
+          style="width: 100%; padding: 12px; background: var(--surface-2); color: var(--text); border: 1px solid var(--border-soft); border-radius: 8px; outline: none; font-size: 1.1rem; font-weight: 700; box-sizing: border-box;"
+        >
+      </div>
+
+      <!-- Resultados del arqueo (Sobrante/Faltante) -->
+      <div *ngIf="arqueoResult" style="border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: left; border: 1px solid;"
+           [style.background]="arqueoResult.status === 'CUADRADO' ? 'rgba(16,185,129,0.08)' : arqueoResult.status === 'SOBRANTE' ? 'rgba(245,158,11,0.08)' : 'rgba(239,68,68,0.08)'"
+           [style.borderColor]="arqueoResult.status === 'CUADRADO' ? 'rgba(16,185,129,0.3)' : arqueoResult.status === 'SOBRANTE' ? 'rgba(245,158,11,0.3)' : 'rgba(239,68,68,0.3)'">
+        <h4 style="margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 700;"
+            [style.color]="arqueoResult.status === 'CUADRADO' ? '#10b981' : arqueoResult.status === 'SOBRANTE' ? '#f59e0b' : '#ef4444'">
+          Resultado: {{ arqueoResult.status }}
+        </h4>
+        <p style="margin: 0 0 12px 0; font-size: 0.88rem; color: var(--text); line-height: 1.4;">{{ arqueoResult.message }}</p>
+        <p *ngIf="arqueoResult.difference < 0" style="margin: 8px 0 0 0; font-size: 0.85rem; color: #ef4444; font-weight: 700; background: rgba(239,68,68,0.1); padding: 8px; border-radius: 4px; border-left: 3px solid #ef4444; line-height: 1.45;">
+          ⚠️ Regla del negocio: Todo faltante de caja será descontado directamente de tu salario.
+        </p>
+        <div style="font-family: monospace; font-size: 0.85rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; display: grid; gap: 4px; color: var(--text-soft);">
+          <div style="display: flex; justify-content: space-between;">
+            <span>Efectivo Físico Contado:</span>
+            <span style="color: var(--text);">{{ physicalCashCount | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Efectivo Esperado:</span>
+            <span style="color: var(--text);">{{ arqueoResult.expected | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-weight: 700; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">
+            <span>Diferencia de Caja:</span>
+            <span [style.color]="arqueoResult.status === 'CUADRADO' ? '#10b981' : arqueoResult.status === 'SOBRANTE' ? '#f59e0b' : '#ef4444'">
+              {{ (arqueoResult.difference > 0 ? '+' : '') }}{{ arqueoResult.difference | currency:'COP':'symbol-narrow':'1.0-0' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones de control -->
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button 
+          type="button" 
+          *ngIf="!arqueoResult"
+          (click)="cancelArqueo()" 
+          style="background: transparent; color: var(--text-soft); border: 1px solid var(--border-soft); padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem;"
+        >
+          Regresar a Venta
+        </button>
+        <button 
+          type="button" 
+          *ngIf="!arqueoResult"
+          (click)="calculateArqueo()" 
+          style="background: var(--accent); color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem;"
+        >
+          Conciliar y Hacer Arqueo
+        </button>
+        
+        <button 
+          type="button" 
+          *ngIf="arqueoResult"
+          (click)="arqueoResult = null" 
+          style="background: transparent; color: var(--text-soft); border: 1px solid var(--border-soft); padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem;"
+        >
+          Modificar Conteo
+        </button>
+        <button 
+          type="button" 
+          *ngIf="arqueoResult"
+          (click)="submitArqueoAndFinish()" 
+          style="background: #10b981; color: white; border: none; padding: 10px 30px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(16,185,129,0.25);"
+        >
+          Cerrar Caja y Terminar Simulación
+        </button>
+      </div>
+    </div>
   </div>
 
 </div>

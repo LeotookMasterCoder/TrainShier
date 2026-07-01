@@ -19,4 +19,16 @@ public interface UserRepository
      * @return optional user
      */
     Optional<User> findByEmail(String email);
+
+    /**
+     * Find user by RFID UID.
+     *
+     * @param rfidUid RFID UID
+     * @return optional user
+     */
+    Optional<User> findByRfidUid(String rfidUid);
+
+    boolean existsByUsername(String username);
+
+    boolean existsByUsernameEndingWith(String suffix);
 }

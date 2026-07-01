@@ -1,5 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommentService } from '../../../core/services/comment.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-instructor-comments',
@@ -7,11 +9,7 @@ import { CommentService } from '../../../core/services/comment.service';
   styleUrls: ['./instructor-comments.component.scss']
 })
 export class InstructorCommentsComponent implements OnInit {
-  nombreAprendiz: string = 'Carlos Ramírez';
-  puntaje: number = 82;
-  tiempo: number = 14;
-  errores: number = 3;
-  aiAnalysis: string = 'Analizando desempeño...';
+
   notification: string = '';
 
   comment: any = {
@@ -24,80 +22,94 @@ export class InstructorCommentsComponent implements OnInit {
   };
 
   comments: any[] = [];
+  loading: boolean = true;
 
-  constructor(private commentService: CommentService) {}
+  trnRequests: any[] = [];
+  trnLoading: boolean = false;
+  currentInstructorId: number = 0;
+
+  // Autocomplete properties
+  apprentices: any[] = [];
+  filteredApprentices: any[] = [];
+  searchQuery: string = '';
+  showSuggestions: boolean = false;
+  selectedApprenticeObj: any = null;
+
+  isInstructor: boolean = false;
+  isApprentice: boolean = false;
+
+  // History filtering
+  historyFilterQuery: string = '';
+  filteredComments: any[] = [];
+
+  constructor(
+    private commentService: CommentService,
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    this.loadComments();
-    this.generateAIAnalysis();
+    const role = localStorage.getItem('role') || 'APRENDIZ';
+    this.isInstructor = role.toUpperCase() === 'INSTRUCTOR';
+    this.isApprentice = role.toUpperCase() === 'APRENDIZ';
 
-    setTimeout(() => {
-      this.notification = 'El aprendiz terminó correctamente la simulación.';
-    }, 1500);
+    this.currentInstructorId = Number(localStorage.getItem('userId') || 0);
+    this.loadComments();
+    
+    if (this.isInstructor) {
+      this.loadTrnRequests();
+      this.loadApprentices();
+    }
   }
 
   loadComments(): void {
+    this.loading = true;
     this.commentService.getAll().subscribe({
       next: (res: any[]) => {
         this.comments = res.map(item => {
-          let parsed = {
+          let parsed: any = {
             studentName: 'Aprendiz',
-            module: 'Caja POS',
+            module: 'Simulación',
             state: 'Aprobado',
             feedback: item.comment,
             errors: '0'
           };
           try {
-            parsed = JSON.parse(item.comment);
-          } catch (e) {
-            // Fallback if not JSON
+            const p = JSON.parse(item.comment);
+            if (p && typeof p === 'object') {
+              parsed = { ...parsed, ...p };
+            }
+          } catch {
             parsed.feedback = item.comment;
           }
           return {
             id: item.id,
-            studentName: parsed.studentName,
-            module: parsed.module,
+            studentName: parsed.studentName || 'Aprendiz',
+            module: parsed.module || 'Simulación',
             score: item.score,
-            state: parsed.state,
-            feedback: parsed.feedback,
-            errors: parsed.errors,
+            state: parsed.state || 'Aprobado',
+            feedback: parsed.feedback || item.comment,
+            errors: parsed.errors || '0',
             date: item.date ? item.date.split('T')[0] : new Date().toLocaleDateString()
           };
         });
 
-        // Seed some defaults only if database is empty
-        if (this.comments.length === 0) {
-          this.comments = [
-            {
-              studentName: 'Carlos Ramírez',
-              module: 'Arqueo de Caja',
-              score: 82,
-              state: 'Aprobado',
-              feedback: 'Buen desempeño general en la simulación, pero debe mejorar la velocidad en el cobro con tarjeta.',
-              errors: '3',
-              date: new Date().toISOString().split('T')[0]
-            }
-          ];
+        if (this.isApprentice) {
+          const studentName = localStorage.getItem('name') || '';
+          this.comments = this.comments.filter(c => c.studentName?.toLowerCase() === studentName.toLowerCase());
         }
+
+        this.applyHistoryFilter();
+        this.loading = false;
       },
       error: (err) => {
-        console.error('Error loading comments from DB, using fallback:', err);
-        const savedComments = localStorage.getItem('comments');
-        if (savedComments) {
-          this.comments = JSON.parse(savedComments);
-        }
+        console.error('Error loading comments:', err);
+        const saved = localStorage.getItem('comments');
+        this.comments = saved ? JSON.parse(saved) : [];
+        this.applyHistoryFilter();
+        this.loading = false;
       }
     });
-  }
-
-  generateAIAnalysis(): void {
-    if (this.puntaje >= 90) {
-      this.aiAnalysis = 'Excelente desempeño. El aprendiz domina los procesos POS, la atención al cliente y la gestión de promociones.';
-    } else if (this.puntaje >= 70) {
-      this.aiAnalysis = 'Buen rendimiento general. Se recomienda reforzar la velocidad de atención y el cálculo correcto del cambio al cliente.';
-    } else {
-      this.aiAnalysis = 'Se requiere práctica adicional. Es recomendable fortalecer el manejo de descuentos, procesos POS y validación de productos.';
-    }
   }
 
   saveComment(): void {
@@ -109,6 +121,7 @@ export class InstructorCommentsComponent implements OnInit {
       !this.comment.feedback
     ) {
       this.notification = 'Completa todos los campos obligatorios.';
+      setTimeout(() => this.notification = '', 3000);
       return;
     }
 
@@ -125,113 +138,239 @@ export class InstructorCommentsComponent implements OnInit {
     };
 
     this.commentService.create(payload).subscribe({
-      next: (savedComment) => {
+      next: () => {
+        // Notify the apprentice
+        const savedNotifs = localStorage.getItem('trainshier_notifications');
+        let notifs = savedNotifs ? JSON.parse(savedNotifs) : [];
+        const notif: any = {
+          id: String(Date.now()),
+          role: 'APRENDIZ',
+          message: `📋 El instructor calificó tu simulación de "${this.comment.module}" con un puntaje de ${this.comment.score}.`,
+          actionText: 'Ver Calificación',
+          route: '/evaluation',
+          read: false
+        };
+        if (this.selectedApprenticeObj) {
+          notif.targetEmail = this.selectedApprenticeObj.email;
+          notif.targetUsername = this.selectedApprenticeObj.username;
+        }
+        notifs.push(notif);
+        localStorage.setItem('trainshier_notifications', JSON.stringify(notifs));
+
         this.loadComments();
         this.notification = 'Evaluación guardada correctamente.';
-        this.comment = {
-          studentName: '',
-          module: '',
-          score: '',
-          state: '',
-          feedback: '',
-          errors: ''
-        };
+        this.comment = { studentName: '', module: '', score: '', state: '', feedback: '', errors: '' };
+        this.selectedApprenticeObj = null;
+        this.searchQuery = '';
+        setTimeout(() => this.notification = '', 3000);
       },
       error: (err) => {
-        console.error('Error saving comment in DB:', err);
+        console.error('Error saving comment:', err);
         this.notification = 'Error al guardar la evaluación.';
+        setTimeout(() => this.notification = '', 3000);
       }
     });
   }
 
+  // Autocomplete filter helpers
+  loadApprentices(): void {
+    this.userService.getAll().subscribe({
+      next: (users) => {
+        this.apprentices = users.filter(u => 
+          u.role?.toUpperCase() === 'APRENDIZ' || 
+          u.role?.toUpperCase() === 'APPRENTICE'
+        );
+        this.filteredApprentices = [...this.apprentices];
+      },
+      error: (err) => {
+        console.error('Error loading apprentices:', err);
+      }
+    });
+  }
+
+  filterApprentices(): void {
+    const query = this.searchQuery ? this.searchQuery.toLowerCase().trim() : '';
+    if (!query) {
+      this.filteredApprentices = [...this.apprentices];
+    } else {
+      this.filteredApprentices = this.apprentices.filter(a =>
+        a.name?.toLowerCase().includes(query) || a.email?.toLowerCase().includes(query)
+      );
+    }
+    // Set studentName to query while typing to maintain model state
+    this.comment.studentName = this.searchQuery;
+  }
+
+  selectApprentice(app: any): void {
+    this.selectedApprenticeObj = app;
+    this.comment.studentName = app.name;
+    this.searchQuery = app.name;
+    this.showSuggestions = false;
+  }
+
+  hideSuggestionsWithDelay(): void {
+    setTimeout(() => {
+      this.showSuggestions = false;
+    }, 200);
+  }
+
+  applyHistoryFilter(): void {
+    const q = this.historyFilterQuery ? this.historyFilterQuery.toLowerCase().trim() : '';
+    if (!q) {
+      this.filteredComments = [...this.comments];
+    } else {
+      this.filteredComments = this.comments.filter(c =>
+        c.studentName?.toLowerCase().includes(q) || c.module?.toLowerCase().includes(q)
+      );
+    }
+  }
+
   deleteComment(index: number): void {
-    const target = this.comments[index];
+    const target = this.filteredComments[index];
     if (target && target.id) {
       this.commentService.delete(target.id).subscribe({
         next: () => {
           this.loadComments();
-          this.notification = 'Evaluación eliminada correctamente.';
+          this.notification = 'Evaluación eliminada.';
+          setTimeout(() => this.notification = '', 3000);
         },
-        error: (err) => {
-          console.error('Error deleting comment from DB:', err);
-          this.comments.splice(index, 1);
+        error: () => {
+          const mainIdx = this.comments.indexOf(target);
+          if (mainIdx > -1) this.comments.splice(mainIdx, 1);
+          this.filteredComments.splice(index, 1);
           this.notification = 'Evaluación eliminada localmente.';
+          setTimeout(() => this.notification = '', 3000);
         }
       });
     } else {
-      this.comments.splice(index, 1);
-      this.notification = 'Evaluación eliminada.';
+      const mainIdx = this.comments.indexOf(target);
+      if (mainIdx > -1) this.comments.splice(mainIdx, 1);
+      this.filteredComments.splice(index, 1);
     }
+  }
+
+  loadTrnRequests(): void {
+    if (!this.currentInstructorId) return;
+    this.trnLoading = true;
+    this.authService.getPendingTrnRequests(this.currentInstructorId).subscribe({
+      next: (reqs) => {
+        this.trnRequests = reqs;
+        this.trnLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading TRN requests:', err);
+        this.trnLoading = false;
+      }
+    });
+  }
+
+  approveTrn(id: number): void {
+    this.authService.approveTrnRequest(id).subscribe({
+      next: (res) => {
+        this.notification = `Solicitud aprobada. Código generado: ${res.trnCode}`;
+        this.loadTrnRequests();
+
+        // Push real-time notification to the apprentice
+        const savedNotifs = localStorage.getItem('trainshier_notifications');
+        let notifs = savedNotifs ? JSON.parse(savedNotifs) : [];
+        notifs.push({
+          id: String(Date.now()),
+          role: 'APRENDIZ',
+          message: `🎉 ¡Tu solicitud de registro TRN ha sido aprobada! Código: ${res.trnCode}`,
+          actionText: 'Completar Registro',
+          route: '/register',
+          read: false
+        });
+        localStorage.setItem('trainshier_notifications', JSON.stringify(notifs));
+
+        setTimeout(() => this.notification = '', 4000);
+      },
+      error: (err) => {
+        console.error('Error approving TRN:', err);
+        this.notification = 'Error al aprobar la solicitud TRN.';
+        setTimeout(() => this.notification = '', 3000);
+      }
+    });
+  }
+
+  rejectTrn(id: number): void {
+    this.authService.rejectTrnRequest(id).subscribe({
+      next: () => {
+        this.notification = 'Solicitud rechazada.';
+        this.loadTrnRequests();
+
+        // Push real-time notification to the apprentice
+        const savedNotifs = localStorage.getItem('trainshier_notifications');
+        let notifs = savedNotifs ? JSON.parse(savedNotifs) : [];
+        notifs.push({
+          id: String(Date.now()),
+          role: 'APRENDIZ',
+          message: `❌ Tu solicitud de registro TRN fue rechazada por el instructor.`,
+          actionText: 'Intentar de Nuevo',
+          route: '/register',
+          read: false
+        });
+        localStorage.setItem('trainshier_notifications', JSON.stringify(notifs));
+
+        setTimeout(() => this.notification = '', 3000);
+      },
+      error: (err) => {
+        console.error('Error rejecting TRN:', err);
+        this.notification = 'Error al rechazar la solicitud TRN.';
+        setTimeout(() => this.notification = '', 3000);
+      }
+    });
   }
 
   exportEvaluation(): void {
+    if (this.filteredComments.length === 0) {
+      this.notification = 'No hay evaluaciones para exportar.';
+      setTimeout(() => this.notification = '', 3000);
+      return;
+    }
 
-    this.notification =
-      'Función de exportación disponible próximamente.';
+    const headers = ['Estudiante', 'Modulo', 'Calificacion', 'Estado', 'Retroalimentacion', 'Errores', 'Fecha'];
+    const rows = this.filteredComments.map(c => [
+      `"${(c.studentName || '').replace(/"/g, '""')}"`,
+      `"${(c.module || '').replace(/"/g, '""')}"`,
+      c.score,
+      `"${(c.state || '').replace(/"/g, '""')}"`,
+      `"${(c.feedback || '').replace(/"/g, '""')}"`,
+      `"${(c.errors || '').replace(/"/g, '""')}"`,
+      c.date
+    ]);
 
+    const csvContent = "\uFEFF" + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `evaluaciones_trainshier_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    this.notification = 'Evaluaciones exportadas con éxito (CSV).';
+    setTimeout(() => this.notification = '', 3000);
   }
 
   @HostListener('document:keydown.enter')
-
   handleEnter(): void {
-
-    const buttons =
-      document.querySelectorAll('button');
-
-    if (buttons.length > 0) {
-
-      (buttons[0] as HTMLButtonElement).focus();
-
-    }
-
+    const buttons = document.querySelectorAll('button');
+    if (buttons.length > 0) (buttons[0] as HTMLButtonElement).focus();
   }
 
   getApprovedCount(): number {
-
-    return this.comments.filter(
-
-      comment =>
-        comment.state === 'Aprobado'
-
-    ).length;
-
+    return this.filteredComments.filter(c => c.state === 'Aprobado').length;
   }
 
   getRejectedCount(): number {
-
-    return this.comments.filter(
-
-      comment =>
-        comment.state === 'No aprobado'
-
-    ).length;
-
+    return this.filteredComments.filter(c => c.state === 'No aprobado').length;
   }
 
   getAverageScore(): number {
-
-    if (this.comments.length === 0) {
-
-      return 0;
-
-    }
-
-    const total =
-      this.comments.reduce(
-
-        (sum, item) =>
-          sum + Number(item.score),
-
-        0
-
-      );
-
-    return Math.round(
-
-      total / this.comments.length
-
-    );
-
+    if (this.filteredComments.length === 0) return 0;
+    const total = this.filteredComments.reduce((sum, item) => sum + Number(item.score), 0);
+    return Math.round(total / this.filteredComments.length);
   }
-
 }

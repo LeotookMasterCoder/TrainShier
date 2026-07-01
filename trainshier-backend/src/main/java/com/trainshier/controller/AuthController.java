@@ -8,10 +8,16 @@ import com.trainshier.dto.LoginResponseDTO;
 import com.trainshier.dto.MessageResponseDTO;
 import com.trainshier.dto.RefreshTokenResponseDTO;
 import com.trainshier.dto.RegisterRequestDTO;
+import com.trainshier.dto.RecoverPasswordRequestDTO;
+import com.trainshier.dto.RfidLoginRequestDTO;
+import com.trainshier.dto.UserResponseDTO;
 import com.trainshier.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 
 /**
  * Authentication controller.
@@ -58,6 +64,52 @@ public class AuthController {
     }
 
     /**
+     * Authenticates a user using RFID.
+     *
+     * @param request RFID login request
+     * @return login response
+     */
+    @PostMapping("/rfid-login")
+    public ResponseEntity<LoginResponseDTO> rfidLogin(
+            @RequestBody RfidLoginRequestDTO request) {
+
+        LoginResponseDTO response =
+                authService.rfidLogin(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Recovers password for a user.
+     *
+     * @param request recover password request DTO
+     * @return response message
+     */
+    @PostMapping("/recover-password")
+    public ResponseEntity<MessageResponseDTO> recoverPassword(
+            @RequestBody RecoverPasswordRequestDTO request) {
+
+        MessageResponseDTO response =
+                authService.recoverPassword(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/recover-password/request")
+    public ResponseEntity<MessageResponseDTO> requestRecoveryCode(@RequestParam String email) {
+        MessageResponseDTO response = authService.requestRecoveryCode(email);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/recover-password/verify")
+    public ResponseEntity<MessageResponseDTO> verifyRecoveryCode(
+            @RequestParam String email,
+            @RequestParam String code) {
+        MessageResponseDTO response = authService.verifyRecoveryCode(email, code);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Refreshes JWT token.
      *
      * @param request HTTP request
@@ -84,4 +136,15 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
-}
+
+    /**
+     * Returns the list of instructors for the public registration flow.
+     * No authentication required - used by the apprentice registration form.
+     *
+     * @return list of instructor users
+     */
+    @GetMapping("/instructors")
+    public ResponseEntity<List<UserResponseDTO>> getPublicInstructors() {
+        return ResponseEntity.ok(authService.getPublicInstructors());
+    }
+}

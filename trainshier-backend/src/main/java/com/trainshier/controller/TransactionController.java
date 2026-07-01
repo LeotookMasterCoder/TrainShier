@@ -10,7 +10,7 @@ import com.trainshier.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/transactions")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class TransactionController {
@@ -27,9 +27,12 @@ public class TransactionController {
     @PostMapping
     public Transaction save(
             @RequestBody Transaction transaction) {
-
+        if (transaction.getDetails() != null) {
+            for (com.trainshier.entity.TransactionDetail detail : transaction.getDetails()) {
+                detail.setTransaction(transaction);
+            }
+        }
         return repository.save(transaction);
-
     }
 
 }

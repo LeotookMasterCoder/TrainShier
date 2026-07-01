@@ -18,6 +18,7 @@ import { AppComponent } from './app.component';
 
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { SystemAssistantComponent } from './shared/components/system-assistant/system-assistant.component';
 
 
 import { DashboardComponent } from './features/dashboard/dashboard.component';
@@ -32,9 +33,10 @@ import { RecoverPasswordComponent } from './features/auth/recover-password/recov
 import { SimulatorComponent } from './features/simulator/simulator/simulator.component';
 
 import { ProfileComponent } from './features/profile/profile.component';
-
+import { ManualComponent } from './features/manual/manual.component';
 
 import { TransactionFormComponent } from './features/transactions/transaction-form/transaction-form.component';
+import { TransactionListComponent } from './features/transactions/transaction-list/transaction-list.component';
 
 
 import { InstructorCommentsComponent } from './features/evaluation/instructor-comments/instructor-comments.component';
@@ -42,6 +44,8 @@ import { InstructorCommentsComponent } from './features/evaluation/instructor-co
 import { ReportsComponent }     from './features/reports/report-list/report-list.component';
 
 import { StatisticsComponent }  from './features/statistics/statistics/statistics.component';
+import { CoreModule } from './core/core.module';
+
 @NgModule({
 
   declarations:[
@@ -50,6 +54,7 @@ import { StatisticsComponent }  from './features/statistics/statistics/statistic
 
     NavbarComponent,
     FooterComponent,
+    SystemAssistantComponent,
 
     DashboardComponent,
 
@@ -58,11 +63,13 @@ import { StatisticsComponent }  from './features/statistics/statistics/statistic
     LoginComponent,
     RegisterComponent,
     RecoverPasswordComponent,
+    ManualComponent,
 
 
     ProfileComponent,
 
     TransactionFormComponent,
+    TransactionListComponent,
 
     InstructorCommentsComponent,
 
@@ -86,7 +93,9 @@ import { StatisticsComponent }  from './features/statistics/statistics/statistic
 
     FormsModule,
 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+
+    CoreModule
 
   ],
 

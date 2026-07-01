@@ -6,31 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * User response DTO.
- */
+/** User response DTO. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponseDTO {
 
-    /**
-     * User identifier.
-     */
     private Long id;
-
-    /**
-     * User full name.
-     */
     private String name;
-
-    /**
-     * User email.
-     */
     private String email;
-
-    /**
-     * User role.
-     */
+    private String username;
     private UserRole role;
+    private String rfidUid;
+    private Boolean active;
 }

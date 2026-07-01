@@ -37,6 +37,12 @@
   align-items: center;
   margin-bottom: 30px;
   gap: 20px;
+  
+  @media (max-width: 992px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
 }
 
 .simulator-header h1 {
@@ -53,6 +59,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .badge {
@@ -114,10 +121,17 @@
   gap: 30px;
   border-left: 5px solid var(--accent);
   transition: all 0.3s ease;
+  
+  @media (max-width: 992px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
 }
 
 .customer-main-info {
   flex: 1;
+  min-width: 0;
 }
 
 .customer-header-inline {
@@ -125,6 +139,7 @@
   align-items: center;
   gap: 15px;
   margin-bottom: 15px;
+  flex-wrap: wrap;
 
   h2 {
     margin: 0;
@@ -148,18 +163,26 @@
 }
 
 .customer-details-row {
-  display: flex;
-  gap: 25px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   margin-bottom: 15px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
 
 .detail-item {
-  flex: 1;
   background: var(--bg-item);
   color: var(--text-main);
   padding: 12px 16px;
   border-radius: 12px;
   border: 1px solid var(--border-color);
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
 
   strong {
     display: block;
@@ -195,12 +218,16 @@
 .customer-timer-zone {
   background: var(--bg-item);
   color: var(--text-main);
-  margin-top: auto;
   padding: 15px 25px;
   border-radius: 15px;
   text-align: center;
   min-width: 150px;
   border: 1px solid var(--border-color);
+  align-self: center;
+
+  @media (max-width: 992px) {
+    align-self: stretch;
+  }
 
   h3 {
     margin: 0 0 5px 0;
@@ -229,9 +256,7 @@
   }
 }
 
-/* ==========================
-   GRID PRINCIPAL
-
+/* ========================== GRID PRINCIPAL ========================== */
 .simulator-grid {
   display: grid;
   grid-template-columns: 1fr 340px;
@@ -243,11 +268,14 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
+
+  select, input {
+    margin-top: 12px;
+  }
 }
 
-/* ==========================
-   CARD BASE
-
+/* ========================== CARD BASE ========================== */
 .card {
   background: var(--bg-card);
   border-radius: 20px;
@@ -362,12 +390,44 @@ textarea {
 
 .scan-section {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  align-items: center;
   flex-wrap: wrap;
 
   input {
-    flex: 1;
+    flex: 2 1 300px;
     margin-top: 0;
+    height: 46px;
+    padding: 12px 16px;
+    box-sizing: border-box;
+  }
+
+  button:not(.scanner-cam-btn) {
+    flex: 1 1 150px;
+    margin-top: 0;
+    height: 46px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    box-sizing: border-box;
+    background: var(--btn2-bg);
+    color: var(--btn2-ink);
+
+    &:hover {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+    
+    &:disabled {
+      background: var(--border-soft);
+      color: var(--text-mute);
+      cursor: not-allowed;
+      transform: none;
+    }
   }
 }
 
@@ -393,6 +453,7 @@ td {
   padding: 14px;
   border-bottom: 1px solid var(--border-color);
   font-size: 0.95rem;
+  word-break: break-word;
 }
 
 tbody tr:hover {
@@ -414,17 +475,37 @@ tbody tr:hover {
 .invoice-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  padding: 4px 6px;
   color: var(--text-main);
+
+  span {
+    font-size: 0.98rem;
+    color: var(--text-soft);
+
+    &:first-child {
+      font-weight: 500;
+    }
+
+    &:last-child {
+      font-weight: 750;
+      color: var(--text-main);
+    }
+  }
 }
 
 .invoice-row.total {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 2px solid var(--accent);
-  font-size: 1.3rem;
-  font-weight: bold;
+  margin-top: 18px;
+  padding: 18px 6px 4px;
+  border-top: 2px dashed var(--accent);
+  font-size: 1.35rem;
+  font-weight: 800;
   color: var(--text-main);
+
+  span {
+    color: var(--text-main) !important;
+    font-weight: 800 !important;
+  }
 }
 
 .change-box {
@@ -489,7 +570,25 @@ button {
 
 .primary-btn { background: #2563eb; color: white; }
 .warning-btn { background: var(--accent); color: black; }
-.success-btn { display: flex; }
+.success-btn {
+  display: flex;
+  background: #22c55e;
+  color: white;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background: #16a34a;
+  }
+
+  &:disabled {
+    background: var(--border-soft);
+    color: var(--text-mute);
+    cursor: not-allowed;
+    transform: none;
+    filter: none;
+  }
+}
 .danger-btn { background: #ef4444; color: white; }
 
 /* ESTADÍSTICAS E HISTORIAL INTERNO */
@@ -557,24 +656,8 @@ button {
 @media (max-width: 768px) {
   .simulator-page { padding: 15px; }
 
-  .simulator-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-  }
-
   .sticky-customer-panel {
     top: 0; /* Reset top for mobile if header changes stack */
-  }
-
-  .customer-card-horizontal {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 20px;
-  }
-
-  .customer-timer-zone {
-    min-width: auto;
   }
 
   .customer-details-row {
@@ -599,6 +682,65 @@ button {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+  }
+}
+
+@media (max-width: 500px) {
+  .card {
+    padding: 14px !important; /* Reducir padding de tarjeta en móviles */
+  }
+
+  .scan-section {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+
+    input {
+      flex: 1 1 auto !important;
+      width: 100% !important;
+      min-width: 0 !important;
+    }
+
+    button {
+      flex: 1 1 auto !important;
+      width: 100% !important;
+      min-width: 0 !important;
+    }
+
+    .scanner-cam-btn {
+      flex: 1 1 auto !important;
+      width: 100% !important;
+      min-width: 0 !important;
+    }
+  }
+
+  .difficulty-options {
+    grid-template-columns: 1fr !important; /* Apilar Fácil, Media y Difícil */
+    gap: 8px !important;
+  }
+
+  .difficulty-btn {
+    padding: 12px 10px !important;
+    font-size: 0.9rem !important;
+    white-space: normal !important;
+  }
+
+  .chat-input-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+
+    input {
+      width: 100% !important;
+    }
+
+    button {
+      width: 100% !important;
+    }
+  }
+
+  .invoice-row {
+    padding: 4px 0 !important;
   }
 }
 
@@ -636,3 +778,457 @@ button {
   color: var(--toast-error-text);
   border-color: var(--toast-error-border);
 }
+
+/* =========================================
+   NUEVOS ESTILOS: ESCENARIOS, ESCÁNER Y CHAT IA
+   ========================================= */
+
+/* Botón Cámara */
+.scanner-cam-btn {
+  flex: 1 1 160px;
+  height: 46px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+
+  &:hover {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: transparent;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 25%, transparent);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--border-soft);
+    color: var(--text-mute);
+    border-color: var(--border-soft);
+    transform: none;
+  }
+}
+
+/* Tarjeta de Configuración de Escenario */
+.scenario-settings-card {
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+
+  h2 {
+    color: var(--accent);
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+  }
+
+  .difficulty-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .difficulty-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    color: var(--text);
+    padding: 10px 4px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    &:hover {
+      background: var(--input-border);
+      border-color: var(--border);
+    }
+
+    &.active {
+      background: var(--accent) !important;
+      color: var(--accent-ink) !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 30%, transparent) !important;
+    }
+  }
+
+  .mood-select {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+
+    &:focus {
+      border-color: var(--accent);
+      box-shadow: var(--ring);
+    }
+  }
+
+  .scenario-preview-desc {
+    background: var(--surface-2);
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+
+    p {
+      margin: 0;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: var(--text);
+
+      strong {
+        color: var(--text);
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+/* Tarjeta Chat Cliente IA */
+.customer-chat-card {
+  margin-bottom: 25px;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-item) !important; /* Muted background */
+
+  h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-soft); /* Menos llamativo, color normal de texto */
+  }
+
+  .chat-messages-container {
+    height: 150px; /* Más compacto, de 250px a 150px */
+    overflow-y: auto;
+    background: var(--surface); /* Fondo neutral */
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid var(--border-soft);
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--border-soft);
+      border-radius: 10px;
+    }
+  }
+
+  .chat-bubble-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 80%;
+
+    .chat-sender {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      margin-bottom: 3px;
+      padding-left: 5px;
+    }
+
+    .chat-bubble {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border-soft);
+      padding: 10px 14px;
+      border-radius: 12px 12px 12px 2px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    &.user {
+      align-self: flex-end;
+      align-items: flex-end;
+
+      .chat-sender {
+        color: var(--text-soft);
+        padding-right: 5px;
+      }
+
+      .chat-bubble {
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border-soft);
+        border-radius: 12px 12px 2px 12px;
+      }
+    }
+
+    &.system {
+      align-self: center;
+      max-width: 95%;
+      align-items: center;
+
+      .chat-sender {
+        display: none;
+      }
+
+      .chat-bubble {
+        background: color-mix(in srgb, var(--text-mute) 10%, var(--surface));
+        color: var(--text-soft);
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-style: italic;
+        border: 1px solid var(--border-soft);
+      }
+    }
+  }
+
+  .chat-loading-bubble {
+    align-self: flex-start;
+    color: var(--text-soft);
+    font-size: 0.8rem;
+    font-style: italic;
+    padding-left: 5px;
+    animation: pulse 1.5s infinite;
+  }
+
+  .chat-input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+
+    input {
+      flex: 1;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+
+      &:focus {
+        border-color: var(--accent);
+        box-shadow: var(--ring);
+      }
+    }
+
+    button {
+      background: var(--btn2-bg);
+      color: var(--btn2-ink);
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background: var(--accent);
+        color: var(--accent-ink);
+        box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 25%, transparent);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: var(--border-soft);
+        color: var(--text-mute);
+      }
+    }
+  }
+}
+
+/* Modal del Escáner de Cámara */
+.scanner-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.scanner-modal {
+  background: #1e2230;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  animation: fadeInModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scanner-modal-header {
+  background: #15171e;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  h3 {
+    color: #ffe259;
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .close-btn {
+    background: transparent;
+    border: none;
+    color: #a0aec0;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.scanner-device-select {
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    font-weight: 600;
+  }
+
+  select {
+    flex: 1;
+    background: #1b1d26;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    outline: none;
+  }
+}
+
+.scanner-preview-window {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  overflow: hidden;
+
+  zxing-scanner {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Láser de Escáner Animado */
+  .scanner-laser-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 10%, #ff0055 50%, transparent 90%);
+    box-shadow: 0 0 12px #ff0055, 0 0 4px #ff80aa;
+    animation: scannerLaser 2s infinite linear;
+    z-index: 10;
+  }
+}
+
+.scanner-modal-footer {
+  padding: 15px 20px;
+  background: #15171e;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: center;
+
+  .scanner-tip {
+    font-size: 0.8rem;
+    color: #718096;
+    margin: 0 0 12px 0;
+  }
+
+  .btn-cancel {
+    background: rgba(255, 255, 255, 0.05);
+    color: #cbd5e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+  }
+}
+
+/* Animaciones */
+@keyframes scannerLaser {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.customer-scan-zone {
+  @media (max-width: 992px) {
+    align-self: stretch !important;
+    min-width: unset !important;
+  }
+}
+
+

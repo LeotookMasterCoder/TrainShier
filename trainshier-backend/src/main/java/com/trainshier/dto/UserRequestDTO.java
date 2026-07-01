@@ -25,6 +25,8 @@ public class UserRequestDTO {
     @NotBlank
     private String email;
 
+    private String username;
+
     /**
      * User password.
      */
@@ -35,4 +37,9 @@ public class UserRequestDTO {
      * User role.
      */
     private UserRole role;
+
+    /**
+     * User RFID UID.
+     */
+    private String rfidUid;
 }
