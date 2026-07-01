@@ -61,29 +61,21 @@
             <div *ngIf="pendingScans.length > 0" style="background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 12px; border: 2px dashed var(--accent); margin-top: 10px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);">
               <ng-container *ngIf="currentScanIndex < pendingScans.length; else allScanned">
                 <div style="font-weight: 800; color: var(--gold); font-size: 1.15rem; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                  <span>👉 Escanear ahora: <strong style="color: #fff; text-decoration: underline; font-size: 1.2rem;">{{ pendingScans[currentScanIndex].productName }}</strong></span>
+                  <span>👉 Escanear ahora: <strong style="color: #000 !important; text-decoration: underline; font-size: 1.2rem;">{{ pendingScans[currentScanIndex].productName }}</strong></span>
                   <span style="font-size: 0.85rem; color: var(--text-soft); background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 999px; font-weight: 700;">{{ currentScanIndex + 1 }} de {{ pendingScans.length }}</span>
                 </div>
                 
                 <div style="display: flex; gap: 25px; background: #ffffff; padding: 20px; border-radius: 10px; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); flex-wrap: wrap;">
-                  <!-- QR Code (scale=4) -->
+                  <!-- Barcode (scale=4) -->
                   <div style="text-align: center;">
                     <img 
-                      [src]="'https://bwipjs-api.metafloor.com/?bcid=qrcode&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=4'" 
-                      alt="QR Code" 
-                      style="width: 125px; height: 125px; display: block; margin: 0 auto;"
-                    >
-                    <span style="font-size: 0.72rem; color: #111; font-weight: 800; display: block; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Código QR</span>
-                  </div>
-
-                  <!-- Barcode (scale=4) -->
-                  <div style="text-align: center; border-left: 2.5px solid #eaeaea; padding-left: 25px;">
-                    <img 
-                      [src]="'https://bwipjs-api.metafloor.com/?bcid=code128&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=4&rotate=N'" 
+                      [src]="'https://bwipjs-api.metafloor.com/?bcid=code128&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=4&rotate=N&includetext'" 
                       alt="Barcode" 
-                      style="width: 250px; height: 90px; display: block; margin: 5px auto;"
+                      style="height: 120px; width: auto; max-width: 100%; display: block; margin: 5px auto;"
                     >
-                    <span style="font-size: 0.72rem; color: #111; font-weight: 800; display: block; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Código de Barras</span>
+                    <span style="font-size: 1.1rem; color: #000; font-weight: 800; display: block; margin-top: 8px; text-transform: uppercase; letter-spacing: 2px; font-family: monospace;">
+                      {{ pendingScans[currentScanIndex].barcode }}
+                    </span>
                   </div>
                 </div>
               </ng-container>
@@ -154,6 +146,7 @@
             type="text"
             placeholder="Escanee con la pistola o digite el código..."
             [(ngModel)]="productCode"
+            (input)="onInputChange()"
             (keyup.enter)="registerByCode()"
             [disabled]="!simulationStarted"
             style="flex: 1;"

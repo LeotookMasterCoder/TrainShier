@@ -28,12 +28,13 @@ export class InstructorCommentsComponent implements OnInit {
   trnLoading: boolean = false;
   currentInstructorId: number = 0;
 
-  // Autocomplete properties
+  // Autocomplete/Select properties
   apprentices: any[] = [];
   filteredApprentices: any[] = [];
   searchQuery: string = '';
   showSuggestions: boolean = false;
   selectedApprenticeObj: any = null;
+  selectedApprenticeId: number | null = null;
 
   isInstructor: boolean = false;
   isApprentice: boolean = false;
@@ -161,6 +162,7 @@ export class InstructorCommentsComponent implements OnInit {
         this.notification = 'Evaluación guardada correctamente.';
         this.comment = { studentName: '', module: '', score: '', state: '', feedback: '', errors: '' };
         this.selectedApprenticeObj = null;
+        this.selectedApprenticeId = null;
         this.searchQuery = '';
         setTimeout(() => this.notification = '', 3000);
       },
@@ -206,6 +208,17 @@ export class InstructorCommentsComponent implements OnInit {
     this.comment.studentName = app.name;
     this.searchQuery = app.name;
     this.showSuggestions = false;
+  }
+
+  onApprenticeSelectChange(): void {
+    const app = this.apprentices.find(a => a.id === Number(this.selectedApprenticeId));
+    if (app) {
+      this.selectedApprenticeObj = app;
+      this.comment.studentName = app.name;
+    } else {
+      this.selectedApprenticeObj = null;
+      this.comment.studentName = '';
+    }
   }
 
   hideSuggestionsWithDelay(): void {

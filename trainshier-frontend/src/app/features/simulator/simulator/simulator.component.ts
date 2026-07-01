@@ -614,10 +614,13 @@ export class SimulatorComponent implements OnInit {
     }
 
     const limpiado = this.productCode.trim();
+    const normalized = limpiado.toLowerCase().replace(/^barcode_/, '');
 
-    const product = this.products.find(
-      p => p.code === limpiado || p.barcode === limpiado
-    );
+    const product = this.products.find(p => {
+      const pCode = (p.code || '').toLowerCase().replace(/^barcode_/, '');
+      const pBarcode = (p.barcode || '').toLowerCase().replace(/^barcode_/, '');
+      return pCode === normalized || pBarcode === normalized;
+    });
 
     if (!product) {
       this.showToast(`Código ${limpiado} no encontrado`, true);
@@ -635,13 +638,31 @@ export class SimulatorComponent implements OnInit {
     this.productCode = '';
   }
 
+  onInputChange(): void {
+    if (!this.productCode) return;
+    const value = this.productCode.trim();
+    const normalized = value.toLowerCase().replace(/^barcode_/, '');
+    const matched = this.products.find(p => {
+      const pCode = (p.code || '').toLowerCase().replace(/^barcode_/, '');
+      const pBarcode = (p.barcode || '').toLowerCase().replace(/^barcode_/, '');
+      return pCode === normalized || pBarcode === normalized;
+    });
+    if (matched) {
+      this.registerByCode();
+    }
+  }
+
   /* =========================================
       CARRITO Y CONTROLES DE FLUJO
   ========================================= */
   addToCart(product: Product): void {
     if (this.currentScanIndex < this.pendingScans.length) {
       const currentExpected = this.pendingScans[this.currentScanIndex];
-      if (product.code === currentExpected.barcode || product.barcode === currentExpected.barcode) {
+      const normExpected = (currentExpected.barcode || '').toLowerCase().replace(/^barcode_/, '');
+      const normProdCode = (product.code || '').toLowerCase().replace(/^barcode_/, '');
+      const normProdBarcode = (product.barcode || '').toLowerCase().replace(/^barcode_/, '');
+      
+      if (normProdCode === normExpected || normProdBarcode === normExpected) {
         this.currentScanIndex++;
       }
     }
