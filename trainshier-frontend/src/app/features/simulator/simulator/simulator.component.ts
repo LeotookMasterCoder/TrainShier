@@ -1066,7 +1066,7 @@ export class SimulatorComponent implements OnInit {
       }
     });
 
-    const message = `${welcome}${itemsList}`;
+    const message = welcome;
 
     return { request: requestSummary, message, patience, barcodes, pendingScans };
   }

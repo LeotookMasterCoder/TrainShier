@@ -214,15 +214,29 @@ export class InstructorCommentsComponent implements OnInit {
     }, 200);
   }
 
+  selectedApprenticeFilter: string = '';
+
   applyHistoryFilter(): void {
+    let temp = [...this.comments];
+
+    // 1. Filter by selected apprentice dropdown
+    if (this.selectedApprenticeFilter) {
+      temp = temp.filter(c => c.studentName?.toLowerCase() === this.selectedApprenticeFilter.toLowerCase());
+    }
+
+    // 2. Filter by search box query
     const q = this.historyFilterQuery ? this.historyFilterQuery.toLowerCase().trim() : '';
-    if (!q) {
-      this.filteredComments = [...this.comments];
-    } else {
-      this.filteredComments = this.comments.filter(c =>
+    if (q) {
+      temp = temp.filter(c =>
         c.studentName?.toLowerCase().includes(q) || c.module?.toLowerCase().includes(q)
       );
     }
+
+    this.filteredComments = temp;
+  }
+
+  onFilterApprenticeChange(): void {
+    this.applyHistoryFilter();
   }
 
   deleteComment(index: number): void {

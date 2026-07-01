@@ -51,64 +51,63 @@
           <span class="mood-badge">{{ currentCustomer.mood }}</span>
         </div>
 
-        <div class="customer-details-row">
+        <div class="customer-details-row" style="grid-template-columns: 1fr;">
+          <!-- Combined Artículos pedidos and QR/Barcode Scanner -->
           <div class="detail-item">
-            <strong>Artículos pedidos:</strong>
-            <p class="request-text">{{ currentCustomer.request }}</p>
+            <strong>Artículos pedidos (Escanear en orden):</strong>
+            <p class="request-text" style="font-size: 1.15rem; font-weight: 800; color: var(--accent); margin-bottom: 12px;">{{ currentCustomer.request }}</p>
+            
+            <!-- Large Scan Card inside -->
+            <div *ngIf="pendingScans.length > 0" style="background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 12px; border: 2px dashed var(--accent); margin-top: 10px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);">
+              <ng-container *ngIf="currentScanIndex < pendingScans.length; else allScanned">
+                <div style="font-weight: 800; color: var(--gold); font-size: 1.15rem; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                  <span>👉 Escanear ahora: <strong style="color: #fff; text-decoration: underline; font-size: 1.2rem;">{{ pendingScans[currentScanIndex].productName }}</strong></span>
+                  <span style="font-size: 0.85rem; color: var(--text-soft); background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 999px; font-weight: 700;">{{ currentScanIndex + 1 }} de {{ pendingScans.length }}</span>
+                </div>
+                
+                <div style="display: flex; gap: 25px; background: #ffffff; padding: 20px; border-radius: 10px; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); flex-wrap: wrap;">
+                  <!-- QR Code (scale=4) -->
+                  <div style="text-align: center;">
+                    <img 
+                      [src]="'https://bwipjs-api.metafloor.com/?bcid=qrcode&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=4'" 
+                      alt="QR Code" 
+                      style="width: 125px; height: 125px; display: block; margin: 0 auto;"
+                    >
+                    <span style="font-size: 0.72rem; color: #111; font-weight: 800; display: block; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Código QR</span>
+                  </div>
+
+                  <!-- Barcode (scale=4) -->
+                  <div style="text-align: center; border-left: 2.5px solid #eaeaea; padding-left: 25px;">
+                    <img 
+                      [src]="'https://bwipjs-api.metafloor.com/?bcid=code128&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=4&rotate=N'" 
+                      alt="Barcode" 
+                      style="width: 250px; height: 90px; display: block; margin: 5px auto;"
+                    >
+                    <span style="font-size: 0.72rem; color: #111; font-weight: 800; display: block; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Código de Barras</span>
+                  </div>
+                </div>
+              </ng-container>
+              
+              <ng-template #allScanned>
+                <div style="color: #2ecc71; font-weight: 800; font-size: 1.15rem; text-align: center; padding: 15px 0;">
+                  ✅ ¡Todos los artículos registrados con éxito! Procede con el pago del cliente.
+                </div>
+              </ng-template>
+            </div>
           </div>
+          
           <div class="detail-item">
-            <strong>Mensaje:</strong>
-            <p class="customer-message">"{{ currentCustomer.message }}"</p>
+            <strong>Mensaje del Cliente:</strong>
+            <p class="customer-message" style="font-size: 1rem; color: #fff; font-style: italic;">"{{ currentCustomer.message }}"</p>
           </div>
         </div>
 
-        <div class="satisfaction-section">
+        <div class="satisfaction-section" style="margin-top: 15px;">
           <span class="patience-label">Paciencia: {{ currentCustomer.patience }} / 5</span>
           <div class="emotion-bar">
             <div class="emotion-fill" [style.width.%]="customerSatisfaction"></div>
           </div>
         </div>
-      </div>
-
-      <!-- QR/Barcode Scan Zone -->
-      <div class="customer-scan-zone" *ngIf="pendingScans.length > 0" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-item); padding: 12px 18px; border-radius: 15px; border: 1px solid var(--border-color); min-width: 280px; align-self: center; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-        <h3 style="margin: 0 0 8px 0; font-size: 0.82rem; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">📡 Escanea este Artículo:</h3>
-        
-        <ng-container *ngIf="currentScanIndex < pendingScans.length; else allScanned">
-          <!-- Expected product name and progress -->
-          <div style="font-weight: 800; color: var(--gold); font-size: 0.95rem; margin-bottom: 8px;">
-            {{ pendingScans[currentScanIndex].productName }} 
-            <span style="font-size: 0.8rem; color: var(--text-soft); font-weight: 600;">({{ currentScanIndex + 1 }} de {{ pendingScans.length }})</span>
-          </div>
-
-          <div style="display: flex; gap: 15px; background: #ffffff; padding: 10px; border-radius: 8px; align-items: center; justify-content: center; box-shadow: inset 0 2px 5px rgba(0,0,0,0.15);">
-            <!-- QR Code -->
-            <div style="text-align: center;">
-              <img 
-                [src]="'https://bwipjs-api.metafloor.com/?bcid=qrcode&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=3'" 
-                alt="QR Code" 
-                style="width: 80px; height: 80px; display: block; margin: 0 auto;"
-              >
-              <span style="font-size: 0.65rem; color: #555; font-weight: 700; display: block; margin-top: 3px;">Código QR</span>
-            </div>
-
-            <!-- Barcode -->
-            <div style="text-align: center; border-left: 1px solid #e0e0e0; padding-left: 15px;">
-              <img 
-                [src]="'https://bwipjs-api.metafloor.com/?bcid=code128&text=' + pendingScans[currentScanIndex].barcode.trim() + '&scale=3&rotate=N'" 
-                alt="Barcode" 
-                style="width: 130px; height: 60px; display: block; margin: 5px auto;"
-              >
-              <span style="font-size: 0.65rem; color: #555; font-weight: 700; display: block; margin-top: 3px;">Código de Barras</span>
-            </div>
-          </div>
-        </ng-container>
-        
-        <ng-template #allScanned>
-          <div style="color: #2ecc71; font-weight: 800; font-size: 1rem; padding: 20px 0;">
-            ✓ ¡Todos los artículos registrados!
-          </div>
-        </ng-template>
       </div>
 
       <div class="customer-timer-zone">

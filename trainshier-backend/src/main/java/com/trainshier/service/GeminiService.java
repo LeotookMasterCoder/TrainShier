@@ -46,9 +46,14 @@ public class GeminiService {
     }
 
     public String generateAssistantResponse(String message) {
+        String msg = message == null ? "" : message.toLowerCase().trim();
+        if (msg.contains("simulador") || msg.contains("como uso") || msg.contains("cómo uso") || msg.contains("como se usa") || msg.contains("cómo se usa") || msg.contains("como usar") || msg.contains("cómo usar") || msg.contains("como funciona") || msg.contains("cómo funciona") || msg.contains("que es") || msg.contains("qué es") || msg.contains("ayuda") || msg.contains("como juego") || msg.contains("cómo juego") || msg.contains("arqueo") || msg.contains("trainshier")) {
+            return "El simulador de caja registradora de TrainShier te permite practicar la facturación e inventario. Para usarlo: 1. Configura la dificultad y la actitud del cliente a la derecha. 2. Inicia la simulación y declara la Base de Apertura de caja. 3. Revisa los artículos del cliente arriba a la izquierda. 4. Escanea o registra los productos en orden usando los códigos provistos. 5. Registra el pago en la caja. 6. Finaliza realizando el Arqueo de Caja sorpresa para verificar tus cuentas.";
+        }
+
         if (apiKey == null || apiKey.trim().isEmpty()) {
             log.info("No Gemini API key found. Using simulated assistant response.");
-            return "Lo siento, la API Key de Gemini no está configurada, por lo que el asistente interactivo está deshabilitado en este momento. Por favor revisa el manual de operaciones o contacta al administrador.";
+            return "Lo siento, la API Key de Gemini no está configurada, por lo que el asistente interactivo está deshabilitado en este momento. Sin embargo, puedes preguntarme sobre cómo funciona o se usa el simulador y podré responderte con ayuda local pregrabada.";
         }
 
         try {
@@ -169,7 +174,7 @@ public class GeminiService {
     private String getSimulatedResponse(String mood, String message) {
         String msg = message.toLowerCase();
         
-        if (msg.contains("simulador") || msg.contains("como uso") || msg.contains("cómo uso") || msg.contains("que es") || msg.contains("qué es") || msg.contains("ayuda") || msg.contains("como juego") || msg.contains("cómo juego") || msg.contains("arqueo")) {
+        if (msg.contains("simulador") || msg.contains("como uso") || msg.contains("cómo uso") || msg.contains("como se usa") || msg.contains("cómo se usa") || msg.contains("como usar") || msg.contains("cómo usar") || msg.contains("como funciona") || msg.contains("cómo funciona") || msg.contains("que es") || msg.contains("qué es") || msg.contains("ayuda") || msg.contains("como juego") || msg.contains("cómo juego") || msg.contains("arqueo") || msg.contains("trainshier")) {
             return "Como asistente de TrainShier te oriento: El simulador de caja registradora te permite practicar la facturación. Configura la dificultad a la derecha, dale a 'Iniciar Simulación', digita o busca productos por el botón 'Buscar Producto', registra el pago y realiza al final tu Arqueo de Caja sorpresa.";
         }
 

@@ -127,51 +127,7 @@
                 style="width: 100%; background: var(--surface); border: 1px solid var(--border-soft); border-radius: 6px; padding: 10px 12px; color: var(--text); font-family: monospace; font-size: 0.95rem;">
             </div>
 
-            <!-- Botón de escáner por cámara -->
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;" *ngIf="cameraEnabled">
-              <button
-                type="button"
-                (click)="startScanner()"
-                *ngIf="!scannerActive"
-                style="background: var(--accent-soft, rgba(99,102,241,0.15)); color: var(--accent, #6366f1); border: 1px solid var(--accent, #6366f1); border-radius: 7px; padding: 9px 16px; font-weight: 600; cursor: pointer; font-size: 0.88rem; transition: all 0.2s;">
-                📷 Usar Cámara
-              </button>
-              <button
-                type="button"
-                (click)="stopScanner()"
-                *ngIf="scannerActive"
-                style="background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid #ef4444; border-radius: 7px; padding: 9px 16px; font-weight: 600; cursor: pointer; font-size: 0.88rem;">
-                ⏹ Detener Cámara
-              </button>
-              <span *ngIf="scannedCode" style="font-family: monospace; font-size: 0.82rem; color: var(--text-soft); background: var(--surface); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border-soft);">
-                Código: {{ scannedCode }}
-              </span>
-            </div>
 
-            <!-- Cámara deshabilitada info -->
-            <div *ngIf="!cameraEnabled" style="font-size: 0.85rem; color: var(--text-soft); font-style: italic;">
-              📷 Cámara de escaneo deshabilitada por configuración del sistema. Usa el lector de pistola USB.
-            </div>
-
-            <!-- Producto encontrado -->
-            <div *ngIf="scannedProduct" style="margin-top: 12px; padding: 10px; background: rgba(46,204,113,0.08); border: 1px solid #2ecc71; border-radius: 7px;">
-              <strong style="color: #2ecc71;">✅ {{ scannedProduct.name }}</strong>
-              <span style="color: var(--text-soft); font-size: 0.85rem; margin-left: 12px;">Precio: ${{ scannedProduct.price | number }}</span>
-            </div>
-
-            <!-- Video del escáner de cámara -->
-            <div *ngIf="scannerActive" style="margin-top: 14px; border-radius: 10px; overflow: hidden; position: relative;">
-              <div *ngIf="scannerLoading" style="text-align: center; padding: 30px; color: var(--text-soft);">
-                🔄 Iniciando cámara...
-              </div>
-              <video #videoElement
-                     style="width: 100%; border-radius: 8px; display: block;"
-                     autoplay
-                     playsinline
-                     muted>
-              </video>
-              <div style="position: absolute; top: 50%; left: 10%; right: 10%; height: 2px; background: #ef4444; opacity: 0.7; transform: translateY(-50%); pointer-events: none;"></div>
-            </div>
           </div>
 
           <!-- Formulario manual -->
