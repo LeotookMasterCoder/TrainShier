@@ -100,8 +100,7 @@
 ========================== */
 
 .sticky-customer-panel {
-  position: sticky;
-  top: 85px; /* Altura del navbar sticky */
+  position: relative;
   z-index: 99;
   background: var(--bg-page);
   padding-bottom: 20px;
